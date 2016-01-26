@@ -1,0 +1,33 @@
+- popup : quelles données afficher ?
+-> ok pour l'instant
+- vue détaillée popup en fenêtre child ou en nouvel onglet ?
+-> page html avec url propre et toutes les infos de la fiche
++ remettre template Underscore
+- récupérer données des types et cibles en lien avec chaque action
+-> URGENT
+- comprendre fields de actionlocalisation
+- passer données avec paramètre safe ??
+- passer les données faritra au chargement initial
+-> remanier. Geodjango permet integration shp dans la BD en créant les modèles qui vont bien etc.
+- interface admin des actions : supprimer carte et remplacer par une liste déroulante régions/communes
+-> liste déroulante avec zoom à la commune ou champs coord géogr
+tana : liste fuchtan
+regionale : liste regions
+locale : liste communes
+points couleur différentes (nat/reg/loc), localises sur cap de régions si pas plus précis
+Joana regarde cmt faire le shp des nouvelles limites adm
+
+- echelle nationale (Action) / echelle localisation (Actionlocalisation): fusionner dans Actionlocalisation
+
+//si pas, override les paramètres de OSMGeoAdmin : on laisse tomber pour l'instant
+- vérifier les TODO en commentaires
+- différence entre creation, maj et login_maj dans Action ?
+-> utilisateur courant à la place de login_maj(datefield)
+- class Status inutilisée ? oui - suppr
+- changer fournisseur tuiles
+- licence
+- attributions
+- quels fields obligatoires et quels optionnels
+-> quasi pas obligatoires
+
+- type et cible : changer de liste à BD
