@@ -1,5 +1,4 @@
 ﻿#-*- coding: utf-8 -*-
-#L# from django.db import models
 from django.contrib.gis.db import models #L# as gismodels
 from django.contrib.auth.models import User
 from django.utils.timezone import now
@@ -149,12 +148,9 @@ class Typeintervention(models.Model):
 #        return 'test'.format(self.nom)
 
 
-
+# ACTION
 class Action(models.Model):
-    REGION_STATUS = (
-    ('non', 'Non'),
-    ('oui', 'Oui'),
-    )
+# TODO add help_text option to each field
     AVANCEMENT = (
    (u'en attente', u'En attente'),
    (u'en cours', u'En cours'),
@@ -165,16 +161,22 @@ class Action(models.Model):
     (u'EUR', u'EUR'),
     (u'USD', u'USD'),
     )
-        
+    ECHELLE_LOCALISATION = (
+    (u'nationale', u'nationale'),
+    (u'tananarive', u'Tananarive'),
+    (u'régionale', u'régionale'),
+    (u'locale', u'locale'),
+        )
     titre = models.CharField(max_length = 250, verbose_name="Titre de l'action")
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme maître d'œuvre")
-    #typeintervention = models.ManyToManyField(Typeintervention, through='ActionTypeintervention') 
-    #cible = models.ManyToManyField(Cible, through='ActionCible')
+    typeintervention = models.ManyToManyField(Typeintervention, verbose_name="Type d'intervention")#, through='ActionTypeintervention') 
+    cible = models.ManyToManyField(Cible, verbose_name="Public cible")#, through='ActionCible')
+    objectif = models.PositiveIntegerField(null=True, blank=True, verbose_name="Nombre de personnes visées")
     
     date_debut = models.DateField("Date de démarrage", auto_now_add=False, auto_now=False)
     date_fin = models.DateField("Date de fin", auto_now_add=False, auto_now=False)
     duree = models.CharField(max_length=40, blank=True, default='', verbose_name="Durée de l'action") # Remplir automatiquement et cacher dans le formulaire ?
-    avancement = models.CharField( max_length=10,choices=AVANCEMENT, default='en cours',verbose_name="Etat d'avancement") 
+    avancement = models.CharField( max_length=10,choices=AVANCEMENT, default='en cours',verbose_name="État d'avancement") 
 
     createur = models.ForeignKey(Utilisateur, verbose_name="Nom du responsable de la fiche")
     description = models.TextField(blank=True, default='', verbose_name="Description de l'action")
@@ -186,7 +188,7 @@ class Action(models.Model):
     bailleurfond = models.CharField(max_length = 100, blank=True, verbose_name="Bailleurs de fond", default='')
     origine = models.CharField(max_length = 100,verbose_name="Origine de la donnée", blank=True, default='')
     contact = models.EmailField(max_length = 100,verbose_name="Mail du contact à l'origine de la donnée")
-    echelle_localisation = models.CharField(max_length=10, choices=REGION_STATUS, verbose_name="Echelle nationale ?", default='non')
+    echelle_localisation = models.CharField(max_length=10, choices=ECHELLE_LOCALISATION, verbose_name="Échelle de l'action", default='nationale')
     
     operateur = models.CharField(max_length = 100, blank=True, verbose_name="Opérateur en lien avec l'action", default='')
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
@@ -266,8 +268,6 @@ class ActionLocalisation(models.Model):
     )
     action = models.ForeignKey(Action)
     region_status =  models.CharField(max_length = 50, choices=ECHELLE_LOCALISATION, default='tananarive', verbose_name="Définir la localisation de l'action ?")
-    #!!! if selon la valeur de 'region_status', le champs correspondant se remplit automatiquement. !!!
-    # euh???
     choix_status = models.CharField(max_length = 50, blank=True, verbose_name="limite choisie", default='')
 #L#    mpoly = models.MultiPolygonField(null=True)
 #    geom = models.PointField(srid=3857,default='SRID=3857;POINT(0.0 0.0)')
