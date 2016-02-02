@@ -235,9 +235,8 @@
             minZoom: 4,
             maxZoom: 10
         });
-
-// TODO EN CHANGER !
-        L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png').addTo(map);
+// TODO check tile server's terms of use
+        L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {attribution: "Tiles courtesy of <a href='http://www.mapquest.com/'>MapQuest</a>, &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://www.opendatacommons.org/licenses/odbl'>ODbL</a>"} ).addTo(map);
 
 
         popupTpl = _.template( $('.js-tpl-popup').html() );
@@ -285,7 +284,7 @@
 
 //        $.ajax(window.appConfig.testDataPath).done( buildFeatures );
 //        $.ajax('http://djangodev.ddns.net:8002/geoactions/').done( buildFeatures );
-        buildFeatures(actionloc);
+//        buildFeatures(actionloc);
         
         $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
             regionsGeoJson = geojson;
