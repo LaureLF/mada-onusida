@@ -1,6 +1,7 @@
 *.pyc
 *.rar
 *.rar
-
 db.txt
 cartong/perso.py
+cnls/TODO.txt
+cnls/migrations/*

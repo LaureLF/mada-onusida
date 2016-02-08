@@ -1,84 +1,28 @@
 # Register your models here.
-#from django.contrib import admin
-#Activer l une ou l autre des 2 instruction ci dessous JPN 13/10/2015
 from django.contrib.gis import admin
-#from leaflet.admin import LeafletGeoAdmin
-from cnls.osmgeo_inline import OSMGeoTabularInline
 
+from .models import Organisme, Utilisateur, Action, Typeintervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Region, Commune, Fokontany
 
-from .models import Organisme, Utilisateur, Action, Typeintervention, Cible, ActionLocalisation, ActionCible, ActionTypeintervention#, Status
-
-## PERMISSIONS (ajout nvx element de la liste) ##
-
-class CibleAdmin(admin.ModelAdmin):
-
-    def has_add_permission(self, request, obj=None):
-#        return False
-        return True
-
-class TypeinterventionAdmin(admin.ModelAdmin):
-
-    def has_add_permission(self, request, obj=None):
-        return True
-
-
-## SECTIONS  ##
-
-#class ActionCibleAdmin(admin.TabularInline):
-class ActionCibleInline(admin.TabularInline):
-    model = ActionCible
-    extra = 2
-    max_num = 3 # TODO Augmenter en production
-
-#class ActionTypeinterventionAdmin(admin.TabularInline):
-class ActionTypeinterventionInline(admin.TabularInline):
-    model = ActionTypeintervention  
-    extra = 2
-    max_num = 3 # TODO Augmenter en production
-
-#class ActionLocalisationAdmin(admin.TabularInline):
-#class ActionLocalisationInline(admin.TabularInline):
-class ActionLocalisationInline(OSMGeoTabularInline):
-    model = ActionLocalisation  
-    extra = 1
-    max_num = 2
-    scale_text = False
-    openlayers_url = '/static/OpenLayers.js'
-    layerswitcher = False
-    default_zoom = 3
- #'map_width': 200, 'map_height': 200, 'default_lon': -22, 'default_lat': 43, 'default_zoom': 10, 'layerswitcher': False, 'max_zoom': 15, 'min_zoom': 5, 'scale_text': False, 'debug' = True, }
-    # cf. liste des paramètres modifiables https://github.com/django/django/blob/master/django/contrib/gis/admin/options.py
-"""    
-class ActionLocalisationAdmin(admin.OSMGeoAdmin):
-    model = ActionLocalisation
-    scale_text = False
-    default_zoom = 3
-    layerswitcher = False
-    openlayers_url = '/static/OpenLayers.js'
-#    map_width = 100
-#    map_height = 100
-    default_lon = -22
-    default_lat = 43
-"""
-
-        
-## L'Admin Principal compose des SECTIONS ##
+## SECTIONS  ##       
 
 class ActionAdmin(admin.ModelAdmin):
-#class ActionAdmin(admin.OSMGeoAdmin):
-    model = Action
-    radio_fields = {"echelle_localisation": admin.HORIZONTAL, "devise": admin.HORIZONTAL, "avancement": admin.HORIZONTAL}
-#    inlines = [ActionLocalisationInline]#, ActionCibleInline, ActionTypeinterventionInline] # On a agrege les sections
-    fieldsets = (
+    radio_fields = {"devise": admin.HORIZONTAL, "avancement": admin.HORIZONTAL}
+#    filter_horizontal = ('cible', 'typeintervention')
+    readonly_fields= ('echelle_localisation', 'mpoint')
+
+    class Meta:
+        abstract = True
+    
+    def ordre_fieldsets(nom_localisation, description):
+        fieldsets = (
         (u'Informations générales', {
-            'fields': ('titre', 'organisme', 'typeintervention', 'cible', 'objectif', 'operateur',),
+            'fields': ('titre', 'description', 'organisme', 'typeintervention', 'cible', 'objectif', 'operateur',),
             'classes': ('wide',),
-#            'description': '<i>texte</i>',
-        }),
+        }),     
         (u'Localisation', {
-            'fields': ('echelle_localisation',),
+            'fields': ('echelle_localisation', ('latitude', 'longitude',), nom_localisation),
             'classes': ('wide',),
-#            'description': '<i>texte</i>',
+            'description': "<i><p>L'action sera symbolisée par un marqueur de couleur " + description + ".</p><p>NB. Pour enregistrer des actions à d'autres échelles, veuillez retourner à la page d'accueil.</i>", 
         }),
         (u'Période', {
             'fields': ('date_debut', 'date_fin', 'duree', 'avancement'),
@@ -103,20 +47,41 @@ class ActionAdmin(admin.ModelAdmin):
 
         (u'Informations avancées', {
             'classes': ('wide',), #'collapse',),
-            'fields': ('description', 'commentaire'),
+            'fields': ('commentaire',),
         }),            
     )
-    filter_horizontal = ('cible', 'typeintervention')
-       
+        return fieldsets
+            
+class ActionNationaleAdmin(ActionAdmin):
+    fieldsets = ActionAdmin.ordre_fieldsets("", "sur la capitale") # TODO ou un point dans la mer ? # TODO préciser couleur
+    model = ActionTananarive
+
+class ActionTananariveAdmin(ActionAdmin):
+    fieldsets = ActionAdmin.ordre_fieldsets("fokontany", "sur la capitale") # TODO préciser couleur
+    model = ActionTananarive
+    filter_horizontal = ('cible', 'typeintervention', 'fokontany')
+
+class ActionRegionaleAdmin(ActionAdmin):
+    fieldsets = ActionAdmin.ordre_fieldsets("region", "sur la capitale de région") # TODO préciser couleur
+    model = ActionTananarive
+    filter_horizontal = ('cible', 'typeintervention', 'region')
+
+class ActionLocaleAdmin(ActionAdmin):
+    fieldsets = ActionAdmin.ordre_fieldsets("commune", "sur la commune") # TODO préciser couleur
+    model = ActionTananarive
+    filter_horizontal = ('cible', 'typeintervention', 'commune')
 
 # On enregistre les classes que l'on veut pouvoir modifier depuis l'interface d'administration, suivies éventuellement des modifications de l'interface par défaut
 
 #admin.site.register(mdgRegion, admin.OSMGeoAdmin)
 admin.site.register(Organisme)
 admin.site.register(Utilisateur)
-admin.site.register(Action,ActionAdmin)
-#admin.site.register(ActionLocalisation, ActionLocalisationAdmin) #admin.OSMGeoAdmin) #, LeafletGeoAdmin)
+admin.site.register(ActionNationale,ActionNationaleAdmin)
+admin.site.register(ActionTananarive,ActionTananariveAdmin)
+admin.site.register(ActionRegionale,ActionRegionaleAdmin)
+admin.site.register(ActionLocale,ActionLocaleAdmin)
 admin.site.register(Typeintervention)
-
-#admin.site.register(Status)
 admin.site.register(Cible)
+admin.site.register(Region)
+admin.site.register(Commune)
+admin.site.register(Fokontany)

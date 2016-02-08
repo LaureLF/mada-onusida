@@ -50,11 +50,10 @@
     function buildFeatures(data) {
         L.geoJson(data, {
             onEachFeature: function (feature, layer) {
-                var popupData = feature.properties.action;
-    // TODO réutiliser le template Underscore dans index.html
+//                printObject(feature.properties); 
+                var popupData = feature.properties;
                 var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: features.length }) );
-//                var popup = L.popup().setContent("<h4>" + popupData[0] + "</h4> <p>" + popupData[1] + "</p>");
-              layer.bindPopup(popup);
+                layer.bindPopup(popup);
                 feature.layer = layer;
                 feature.show = true;
                 features.push(feature);
@@ -284,7 +283,8 @@
 
 //        $.ajax(window.appConfig.testDataPath).done( buildFeatures );
 //        $.ajax('http://djangodev.ddns.net:8002/geoactions/').done( buildFeatures );
-//        buildFeatures(actionloc);
+        buildFeatures(actionloc);
+        
         
         $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
             regionsGeoJson = geojson;

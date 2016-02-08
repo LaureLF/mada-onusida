@@ -11,8 +11,7 @@
 
   <link rel="stylesheet" type="text/css" href="{% static "./vendors.css" %}">
   <link rel="stylesheet" type="text/css" href="{% static "./assets/main.css" %}">
-  <link rel="stylesheet" type="text/css" href="{% static "./assets/onusida.css" %}">
-
+ 
   <script type="text/javascript">
 var actionloc;
 {% if data %}
@@ -103,7 +102,7 @@ var actionloc;
               </label>
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="communication">
-                <abbr title="Sensibilisation lors de manifestations ou évènements culturels, Unité Mobile Vidéo, Programme radiophonique, programme télévisé, etc...">Communication de masse</abbr>
+                <abbr title="Sensibilisation lors de manifestations ou événements culturels, Unité Mobile Vidéo, programme radiophonique, programme télévisé, etc...">Communication de masse</abbr>
               </label>
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="ist">
@@ -115,11 +114,11 @@ var actionloc;
               </label>
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="prise_en_charge">
-                <abbr title="Prise en charge IST et Prise en charge médicale des PVVIH (suivi biologique, traitement ARV, traitement des infections opportunistes). ">Prise en charge médicale</abbr>
+                <abbr title="Prise en charge IST et prise en charge médicale des PVVIH (suivi biologique, traitement ARV, traitement des infections opportunistes). ">Prise en charge médicale</abbr>
               </label>
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="soutien">
-                <abbr title="soutiens des personnes infectées et affectées par le VIH (prise en charge psychosociale, appuis nutritionnels, appuis économiques, éducation thérapeutique, conseil, etc)">Soutien</abbr>
+                <abbr title="soutien des personnes infectées et affectées par le VIH (prise en charge psychosociale, appuis nutritionnels, appuis économiques, éducation thérapeutique, conseil, etc)">Soutien</abbr>
               </label>
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="coordination">
@@ -338,43 +337,50 @@ var actionloc;
 
 
 
-<!-- actuellement inutilisé car erreur node.js sur un child element - TODO à reprendre -->
+<!-- popupTpl -TODO à déplacer dans un fichier html propre ? -->
   <script type="text/template" class="js-tpl-popup">
     <div class="js-popup" data-index="<%= internalIndex %>">
       <div class="popup-title">
-        <%= data[0] %>
-        <% if (data[1] === 'termine') { %>
-          <span class="label label-default">terminée</span>
-        <% } else if (data[2] === 'en attente') { %>
-          <span class="label label-warning">en attente</span>
-        <% } %>
+        <%= data.titre %>
+        <% if (data.avancement === 'en cours') { %>
+          <span class="label label-default">en cours</span>
+        <% } else if (data.avancement === 'en attente') { %>
+          <span class="label label-default">en attente</span>
+        <% } else { %> 
+          <span class="label label-default">terminé</span>
+        <% } %>  
 
       </div>
 
       <table class="popup-table table table-striped">
         <tr>
           <td>ONG</td>
-          <td><%= data[2] %></td>
+          <td><%= data.organisme %></td>
         </tr>
         <tr>
           <td>Localisation</td>
-          <td><%= data.localisation %></td>
+          <td><% if (data.region) print(data.region)
+                 else if (data.commune) print(data.commune)
+                 else if (data.fokontany) print(data.fokontany)
+                 else print("&Eacute;chelle nationale")
+              %>
+          </td>
         </tr>
         <tr>
           <td>Catégorie</td>
-          <td><%= data.type %></td>
+          <td><%= data.typeintervention %></td>
         </tr>
         <tr>
           <td>Population</td>
-          <td><%= data.population %></td>
+          <td><%= data.cible %></td>
         </tr>
         <tr>
           <td>Date début</td>
-          <td><% if (data[3]) print(moment(data[3], 'YYYY-MM-DD').format('ll')) %></td>
+          <td><% if (data.date_debut) print(moment(data.date_debut, 'YYYY-MM-DD').format('ll')) %></td>
         </tr>
         <tr>
           <td>Date fin</td>
-          <td><% if (data[4]) print(moment(data[4], 'YYYY-MM-DD').format('ll')) %></td>
+          <td><% if (data.date_fin) print(moment(data.date_fin, 'YYYY-MM-DD').format('ll')) %></td>
         </tr>
 
       </table>
@@ -394,7 +400,8 @@ var actionloc;
             <h4 class="modal-title" id="myModalLabel"><%= data.titre %></h4>
           </div>
           <div class="modal-body">
-            <%= data.description %>
+          <% if (data.description == "") print("(pas de description enregistr&eacute;e)")
+             else print(data.description) %>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>

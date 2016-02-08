@@ -1,3 +1,21 @@
+.bottomLeftLogo {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.bottomLeftLogo img {
+  width: 120px;
+}
+
+.aligned label {
+    display: block;
+    padding: 3px 10px 0 0;
+    float: left;
+    width: 20em;
+    word-wrap: break-word;
+}
+
 @font-face {
   font-family: 'Glyphicons Halflings';
 
@@ -115,13 +133,16 @@ a.underline {
 
 .popup-table tr td:first-child {
   font-weight: bold;
-  text-align: right;
+#  text-align: right;
 }
 
 .popup-table td {
   padding: 10px;
 }
 
+.js-popup .popup-title .label-default {
+  float:right;
+}
 
 .panel {
     border: 0;
@@ -248,3 +269,4 @@ label {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+

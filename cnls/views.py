@@ -6,7 +6,7 @@ from django.template import Context, loader
 from django.core import serializers
 from django.conf import settings as djangoSettings
 
-from .models import ActionLocalisation
+from .models import ActionRegionale
 
 # !! les noms des class models devraient commencer par une Majuscule !!
 
@@ -21,9 +21,10 @@ def home(request):
 #    context = Context({'data' : actionlocalisations})
 #    return HttpResponse(template.render(context))
 
-    actionlocalisations = serializers.serialize('geojson', ActionLocalisation.objects.all(), srid='4326', use_natural_foreign_keys=True)
-    return HttpResponse(template.render(Context({'data' : actionlocalisations})))
+    actions = serializers.serialize('geojson', ActionRegionale.objects.all(), srid='4326', use_natural_foreign_keys=True)
+    return HttpResponse(template.render(Context({'data' : actions})))
 
+"""
 def get_actions(request):
     actions = Action.objects.all()
     data = serializers.serialize('json', actions)
@@ -33,12 +34,13 @@ def get_actions_by_title(request, title):
     actions = Action.objects.filter(titre=title)
     data = serializers.serialize('json', actions)
     return HttpResponse(data)    
-
+"""
 def get_geoactions(request):
-    actions = ActionLocalisation.objects.all()
+#    actions = ActionLocalisation.objects.all()
+    actions = ActionRegionale.objects.all()
     data = serializers.serialize('geojson', actions, srid='4326', use_natural_foreign_keys=True)
     return HttpResponse(data, content_type='application/json')
-
+"""
 def api_action(request, id):
     if request.method == 'GET':
         action = Action.objects.get(pk=id)
@@ -50,7 +52,7 @@ def api_action(request, id):
         action.description = request.post.description
         action.save()
         return HttpResponse('OK')    
-
+"""
 #def get_faritra(request):
 #    faritra = open(djangoSettings.STATIC_ROOT + 'json/faritra.json', 'r')
 #    #faritra = serializers.serialize('json', data)
