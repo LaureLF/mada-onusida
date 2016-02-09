@@ -17,13 +17,13 @@ var actionsNationales = {{actionsN|safe}}; // TODO Check if OK
 var actionsTananarive = {{actionsT|safe}};
 var actionsRegionales = {{actionsR|safe}};
 var actionsLocales = {{actionsL|safe}};
+  </script>
 
-
-</script>
-
+  <script type="text/javascript" src="{% static "./assets/app.js" %}"></script>
+  
 </head>
 
-<body>
+<body onload="init();">
   <nav class="navbar navbar-inverse navbar-fixed-top">
     <div class="container-fluid">
       <div class="navbar-header">
@@ -413,7 +413,7 @@ var actionsLocales = {{actionsL|safe}};
 
 
 
-  <script type="text/javascript" src="{% static "./vendors.js" %}"></script>
+  <script type="text/javascript" src="{% static "./vendors.js" %}"></script><!-- pour JQuery : à supprimer à terme si on charge les régions par django-->
 
 
   <script type="text/javascript">
@@ -425,6 +425,6 @@ var actionsLocales = {{actionsL|safe}};
     };
   </script>
 
-  <script type="text/javascript" src="{% static "./assets/app.js" %}"></script>
+
 </body>
 </html>
