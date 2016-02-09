@@ -13,12 +13,12 @@
   <link rel="stylesheet" type="text/css" href="{% static "./assets/main.css" %}">
  
   <script type="text/javascript">
-var actionloc;
-{% if data %}
-  actionloc = {{data|safe}}; // TODO Check if OK   
-{% else %}
-  actionloc = null;
-{% endif %}
+var actionsNationales = {{actionsN|safe}}; // TODO Check if OK   
+var actionsTananarive = {{actionsT|safe}};
+var actionsRegionales = {{actionsR|safe}};
+var actionsLocales = {{actionsL|safe}};
+
+
 </script>
 
 </head>

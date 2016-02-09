@@ -1,6 +1,6 @@
 ﻿#-*- coding: utf-8 -*-
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import GEOSGeometry, MultiPoint as GEOSMultiPoint, Point as GEOSPoint
+from django.contrib.gis.geos import MultiPoint as GEOSMultiPoint, Point as GEOSPoint
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 
@@ -32,20 +32,20 @@ class Region(models.Model):
 class Commune(models.Model):
     nom = models.CharField(max_length=50, verbose_name=u"Nom de la commune", default='') 
     mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la commmune")
-#    mpoint = models.PointField(null=True, verbose_name=u"Coordonnées de la commmune")
     objects = models.GeoManager()
     class Meta:
         verbose_name = "Commune"
         verbose_name_plural = "Communes"
     def __str__(self):
         return self.nom
+    def natural_key(self):
+        return (self.nom,)
 
 
 # FOKONTANY
 class Fokontany(models.Model):
     nom = models.CharField(max_length=50, verbose_name=u"Nom du fokontany", default='') 
     mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées du fokontany")
-#    mpoint = models.PointField(null=True, verbose_name=u"Coordonnées du fokontany")
     objects = models.GeoManager()
     class Meta:
         verbose_name = "Fokontany"
@@ -192,7 +192,9 @@ class Action(models.Model):
     (u'EUR', u'EUR'),
     (u'USD', u'USD'),
     )
-
+    TANANARIVE = GEOSPoint(-18.933333, 47.516667, srid=4326)
+    NATIONALE = GEOSPoint(-19.647189, 43.881133, srid=4326)
+    
     titre = models.CharField(max_length = 250, verbose_name="Titre de l'action")
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme maître d'œuvre")
     typeintervention = models.ManyToManyField(Typeintervention, verbose_name="Types d'interventions")
@@ -219,9 +221,9 @@ class Action(models.Model):
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
     priorite_psn = models.CharField(max_length = 100, blank=True, verbose_name="Priorité du PSN que l'activité appuie", default='')
 
-    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=-18.933333, verbose_name="Latitude", null=True, blank=True)
-    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=47.516667, verbose_name="Longitude", null=True, blank=True)
-    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((0.0 0.0),(0.0 0.0))')
+    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.x, verbose_name="Latitude", null=True, blank=True)
+    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.y, verbose_name="Longitude", null=True, blank=True)
+    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%d %d))'%(NATIONALE.x,NATIONALE.y))
 #    mpoint = models.PointField(null=True)
     objects = models.GeoManager()
  
@@ -251,6 +253,7 @@ class Action(models.Model):
         return u"%s - %s\n%s - %s" % (self.titre, self.date.strftime("%b %d, %I:%M %p"), self.Avancement)
     short.allow_tags = True
 
+# TODO
 #    def save(self, *args, **kwargs):
 #        if not self.id:
 #            self.creation = now()
@@ -264,41 +267,33 @@ class Action(models.Model):
 
 # ActionNationale
 class ActionNationale(Action):
-    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='nationale')
-#    geom = models.PointField(verbose_name=u"Coordonnées de Tananarive") # TODO ou un point dans la mer?
+#    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='nationale')
+#    mpoint = models.PointField(verbose_name=u"Coordonnées de Tananarive") # TODO ou un point dans la mer?
     class Meta:
         verbose_name = "'Action au niveau national'"
         verbose_name_plural = "   Actions au niveau national"
 
 # ActionTananarive
 class ActionTananarive(Action):
-    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='Tananarive') 
+#    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='Tananarive') 
     fokontany = models.ManyToManyField(Fokontany, verbose_name="Fokontany(s)")
     class Meta:
         verbose_name = "'Action dans la capitale'"
         verbose_name_plural = "  Actions dans la capitale"
- 
+
+# TODO: remove latitude and longitude columns from database
+
 # ActionRegionale
 class ActionRegionale(Action):
-    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='régionale') 
+#    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='régionale') 
     region = models.ManyToManyField(Region, verbose_name="Régions")
     class Meta:
         verbose_name = "'Action au niveau régional'"
         verbose_name_plural = " Actions au niveau régional"
-   
-    def save(self, *args, **kwargs):
-        #if (self.latitude != -18.933333 or self.longitude != 47.516667):
-#        if (self.latitude != 0 or self.longitude != 0):
-        # TODO ajouter contrôle grossier sur lat et lon (ici?)
-        #    self.mpoint = GEOSMultiPoint(GEOSPoint((self.latitude, self.longitude)), srid=4326)
-        #else:
-        self.mpoint = GEOSMultiPoint([reg.mpoint for reg in self.region.all()])
-        super(ActionRegionale, self).save(*args, **kwargs)  
-
 
 # ActionLocale
 class ActionLocale(Action):
-    echelle_localisation = models.CharField(max_length=10,  verbose_name="Échelle de l'action", default='locale') 
+#    echelle_localisation = models.CharField(max_length=10,  verbose_name="Échelle de l'action", default='locale') 
     commune = models.ManyToManyField(Commune, verbose_name="Communes")
     class Meta:
         verbose_name = "'Action au niveau communal'"

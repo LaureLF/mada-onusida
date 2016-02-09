@@ -6,7 +6,7 @@ from django.template import Context, loader
 from django.core import serializers
 from django.conf import settings as djangoSettings
 
-from .models import ActionRegionale
+from .models import ActionNationale, ActionTananarive, ActionRegionale, ActionLocale
 
 # !! les noms des class models devraient commencer par une Majuscule !!
 
@@ -20,9 +20,14 @@ def home(request):
 #    actionlocalisations = ActionLocalisation.objects.all()
 #    context = Context({'data' : actionlocalisations})
 #    return HttpResponse(template.render(context))
-
-    actions = serializers.serialize('geojson', ActionRegionale.objects.all(), srid='4326', use_natural_foreign_keys=True)
-    return HttpResponse(template.render(Context({'data' : actions})))
+    def to_json(echelle):
+        return serializers.serialize('geojson', echelle.objects.all(), srid='4326', use_natural_foreign_keys=True)
+        
+    return HttpResponse(template.render(Context({
+        'actionsN' : to_json(ActionNationale),
+        'actionsT' : to_json(ActionTananarive),
+        'actionsR' : to_json(ActionRegionale),
+        'actionsL' : to_json(ActionLocale)})))
 
 """
 def get_actions(request):

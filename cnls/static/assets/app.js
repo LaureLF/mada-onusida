@@ -283,7 +283,11 @@
 
 //        $.ajax(window.appConfig.testDataPath).done( buildFeatures );
 //        $.ajax('http://djangodev.ddns.net:8002/geoactions/').done( buildFeatures );
-        buildFeatures(actionloc);
+        buildFeatures(actionsNationales);
+        buildFeatures(actionsTananarive);
+        buildFeatures(actionsRegionales);
+        buildFeatures(actionsLocales);
+
         
         
         $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
