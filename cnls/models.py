@@ -223,7 +223,7 @@ class Action(models.Model):
 
     latitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.x, verbose_name="Latitude", null=True, blank=True)
     longitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.y, verbose_name="Longitude", null=True, blank=True)
-    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%d %d))'%(NATIONALE.x,NATIONALE.y))
+    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%d %d))'%(NATIONALE.y,NATIONALE.x))
 #    mpoint = models.PointField(null=True)
     objects = models.GeoManager()
  

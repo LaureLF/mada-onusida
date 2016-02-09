@@ -8,7 +8,6 @@ from .models import Organisme, Utilisateur, Action, Typeintervention, Cible, Act
 
 class ActionAdmin(admin.ModelAdmin):
     radio_fields = {"devise": admin.HORIZONTAL, "avancement": admin.HORIZONTAL}
-#    filter_horizontal = ('cible', 'typeintervention')
 #    readonly_fields= ('echelle_localisation', 'mpoint')
 
     class Meta:
@@ -76,6 +75,8 @@ class ActionAdmin(admin.ModelAdmin):
 class ActionNationaleAdmin(ActionAdmin):
     fieldsets = ActionAdmin.ordre_fieldsets("sur la capitale", None) # TODO ou un point dans la mer ? # TODO préciser couleur
     model = ActionTananarive
+    filter_horizontal = ('cible', 'typeintervention')
+        
     def save_model(self, request, obj, form, change):
         obj.save()
 
@@ -89,13 +90,13 @@ class ActionRegionaleAdmin(ActionAdmin):
     ECHELLE = 'region'
     fieldsets = ActionAdmin.ordre_fieldsets("sur la capitale de région", ECHELLE) # TODO préciser couleur
     model = ActionTananarive
-    filter_horizontal = ('cible', 'typeintervention', 'region')
+    filter_horizontal = ('cible', 'typeintervention', ECHELLE)
 
 class ActionLocaleAdmin(ActionAdmin):
     ECHELLE = 'commune'
     fieldsets = ActionAdmin.ordre_fieldsets("sur la commune", ECHELLE) # TODO préciser couleur
     model = ActionTananarive
-    filter_horizontal = ('cible', 'typeintervention', 'commune')
+    filter_horizontal = ('cible', 'typeintervention', ECHELLE)
 
 # On enregistre les classes que l'on veut pouvoir modifier depuis l'interface d'administration, suivies éventuellement des modifications de l'interface par défaut
 
