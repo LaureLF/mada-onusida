@@ -17,6 +17,23 @@ var actionsNationales = {{actionsN|safe}}; // TODO Check if OK
 var actionsTananarive = {{actionsT|safe}};
 var actionsRegionales = {{actionsR|safe}};
 var actionsLocales = {{actionsL|safe}};
+
+var toutesActions = {};
+toutesActions['type'] = 'FeatureCollection';
+toutesActions['crs'] = {'type': 'name', 'properties': {'name': 'EPSG:4326'}} // GeoJson specs recommend OGC CRS URNs such as "urn:ogc:def:crs:OGC:1.3:CRS84"
+toutesActions['features'] = [];
+for (var key in actionsNationales.features) {
+    toutesActions['features'].push(actionsNationales.features[key]);
+}
+for (var key in actionsTananarive.features) {
+    toutesActions['features'].push(actionsTananarive.features[key]);
+}
+for (var key in actionsRegionales.features) {
+    toutesActions['features'].push(actionsRegionales.features[key]);
+}
+for (var key in actionsLocales.features) {
+    toutesActions['features'].push(actionsLocales.features[key]);
+}
   </script>
 
   <script type="text/javascript" src="{% static "./assets/app.js" %}"></script>

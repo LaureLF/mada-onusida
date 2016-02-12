@@ -29,6 +29,7 @@ var markerClusters;
 
 var features = [];
 
+
 //////////
 // filterFunctions
 //////////
@@ -57,9 +58,29 @@ var filterFunctions = {
 // buildFeatures()
 //////////
 function buildFeatures(data) {
+    var icone = new L.Icon({
+                iconUrl: 'marker-gold.png',
+                imagePath : "{% static './assets/img' %}"
+//                iconSize: new L.Point( e.properties.icon_size[0], e.properties.icon_size[1] ),
+//                iconAnchor: new L.Point( e.properties.icon_anchor[0], e.properties.icon_anchor[1] ),
+            })
+/*
+    var geojsonLayer = new L.GeoJSON();
+    geojsonLayer.on("featureparse", function(e){
+    alert("ici");
+        if (e.properties.commune){
+            
+            e.layer.setIcon(icone);
+        }
+//        if (e.properties && e.properties.title){
+//            e.layer.bindPopup(e.properties.title);
+//        }
+    });
+    geojsonLayer.addTo(map);
+    geojsonLayer.addData(data);
+*/            
     L.geoJson(data, {
         onEachFeature: function (feature, layer) {
-//                printObject(feature.properties); 
             var popupData = feature.properties;
             var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: features.length }) );
             layer.bindPopup(popup);
@@ -69,10 +90,35 @@ function buildFeatures(data) {
         }
     });
 
+/*_defaultIconCreateFunction: function (cluster) {
+		var childCount = cluster.getChildCount();
+
+		var c = ' marker-cluster-';
+		if (childCount < 10) {
+			c += 'small';
+		} else if (childCount < 100) {
+			c += 'medium';
+		} else {
+			c += 'large';
+		}
+
+		return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
+	},
+*/
+
     markerClusters = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 40,
-        spiderfyDistanceMultiplier: 2
+        spiderfyDistanceMultiplier: 2,
+        singleMarkerMode: true,
+        zoomToBoundsOnClick: false
+//        iconCreateFunction: function(cluster) {
+//            return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
+//        }
+    });
+    markerClusters.on('clusterclick', function (a) {
+        map.zoomIn();
+        a.layer.spiderfy();
     });
 
     renderMarkers();
@@ -187,7 +233,7 @@ function initRegionsListEvents() {
         //shift a bit to the west to compensate space taken by right controls
         //TODO : only desktop
         latlon[1] = parseFloat(latlon[1]) + 1;
-        map.setView(latlon, 8);
+        map.setView(latlon, 7);
 
         if (regionsShapes) {
             map.removeLayer(regionsShapes);
@@ -313,10 +359,13 @@ function init() {
 
 //    $.ajax(window.appConfig.testDataPath).done( buildFeatures );
 //    $.ajax('http://djangodev.ddns.net:8002/geoactions/').done( buildFeatures );
-    buildFeatures(actionsNationales);
-    buildFeatures(actionsTananarive);
-    buildFeatures(actionsRegionales);
-    buildFeatures(actionsLocales);
+//    buildFeatures(actionsNationales);
+//    buildFeatures(actionsTananarive);
+//    buildFeatures(actionsRegionales);
+//    buildFeatures(actionsLocales);
+//    printObject(actionsLocales.features);
+//    printObject(toutesActions.features);
+    buildFeatures(toutesActions);
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;
