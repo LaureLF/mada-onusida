@@ -23,6 +23,10 @@ toutesActions['type'] = 'FeatureCollection';
 toutesActions['crs'] = {'type': 'name', 'properties': {'name': 'EPSG:4326'}} // GeoJson specs recommend OGC CRS URNs such as "urn:ogc:def:crs:OGC:1.3:CRS84"
 toutesActions['features'] = [];
 for (var key in actionsNationales.features) {
+//    for (var feature in actionsNationales.features) {
+//        feature.properties['pays'] = 'madagascar';
+        actionsNationales.features[key]['properties']['pays'] = 'madagascar';
+//    }
     toutesActions['features'].push(actionsNationales.features[key]);
 }
 for (var key in actionsTananarive.features) {

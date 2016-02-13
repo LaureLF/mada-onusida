@@ -61,24 +61,8 @@ function buildFeatures(data) {
     var icone = new L.Icon({
                 iconUrl: 'marker-gold.png',
                 imagePath : "{% static './assets/img' %}"
-//                iconSize: new L.Point( e.properties.icon_size[0], e.properties.icon_size[1] ),
-//                iconAnchor: new L.Point( e.properties.icon_anchor[0], e.properties.icon_anchor[1] ),
             })
-/*
-    var geojsonLayer = new L.GeoJSON();
-    geojsonLayer.on("featureparse", function(e){
-    alert("ici");
-        if (e.properties.commune){
-            
-            e.layer.setIcon(icone);
-        }
-//        if (e.properties && e.properties.title){
-//            e.layer.bindPopup(e.properties.title);
-//        }
-    });
-    geojsonLayer.addTo(map);
-    geojsonLayer.addData(data);
-*/            
+
     L.geoJson(data, {
         onEachFeature: function (feature, layer) {
             var popupData = feature.properties;
@@ -90,31 +74,52 @@ function buildFeatures(data) {
         }
     });
 
-/*_defaultIconCreateFunction: function (cluster) {
-		var childCount = cluster.getChildCount();
-
-		var c = ' marker-cluster-';
-		if (childCount < 10) {
-			c += 'small';
-		} else if (childCount < 100) {
-			c += 'medium';
-		} else {
-			c += 'large';
-		}
-
-		return new L.DivIcon({ html: '<div><span>' + childCount + '</span></div>', className: 'marker-cluster' + c, iconSize: new L.Point(40, 40) });
-	},
+    function colorMarkers(cluster) {
+/*        var markers = cluster.getAllChildMarkers();
+        var color = 'marker-cluster-small-';
+//        printObject(feature);
+        if (typeof markers[0].fokontany !== 'undefined') { 
+            color += 'brown';
+            nextMarker('fokontany');
+        } else if (typeof markers[0].region !== 'undefined') {
+            color += 'green';
+            nextMarker('region');
+        } else if (typeof markers[0].commune !== 'undefined') {
+            color += 'purple';
+            nextMarker('commune');
+        } else if (typeof markers[0].pays !== 'undefined') {
+            color += 'blue';
+            nextMarker('pays');
+        } else {
+            color += 'grey';
+//            alert('aucune echelle trouvée ?')
+        }
+        var html = '<div><span>' + cluster.getChildCount() + '</span></div>'
+        return new L.divIcon({ html: html, className: color, iconSize: new L.point(40, 40) });
 */
+//        printObject(cluster.getAllChildMarkers());
+        return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-small-purple', iconSize: new L.Point(40, 40) });
+
+        function nextMarker(echelle) {
+            for (var i = 1; i < markers.length; i++) {
+                if (typeof markers[i].echelle !== 'undefined') {
+                    color = 'marker-cluster-small-grey'
+                    return color
+                } else {
+                    pass
+                }
+            }
+        }
+    }
+
 
     markerClusters = new L.MarkerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 40,
         spiderfyDistanceMultiplier: 2,
         singleMarkerMode: true,
-        zoomToBoundsOnClick: false
-//        iconCreateFunction: function(cluster) {
-//            return L.divIcon({ html: '<b>' + cluster.getChildCount() + '</b>' });
-//        }
+        zoomToBoundsOnClick: false,
+        iconCreateFunction: colorMarkers,
     });
     markerClusters.on('clusterclick', function (a) {
         map.zoomIn();
@@ -129,6 +134,7 @@ function buildFeatures(data) {
 //////////
 function renderMarkers() {
     features.forEach(function(feature) {
+//    printObject(feature);
         if (feature.show) {
             markerClusters.addLayer(feature.layer);
         } else {
