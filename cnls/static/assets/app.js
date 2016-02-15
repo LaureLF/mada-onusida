@@ -58,23 +58,6 @@ var filterFunctions = {
 // buildFeatures()
 //////////
 function buildFeatures(data) {
-    var icone = new L.Icon({
-                iconUrl: 'marker-gold.png',
-                imagePath : "{% static './assets/img' %}"
-            })
-
-    // b: pas ...=geojson...
-    L.geoJson(data, {
-        onEachFeature: function (feature, layer) {
-            var popupData = feature.properties;
-            var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: features.length }) );
-            layer.bindPopup(popup);
-            feature.layer = layer;
-            feature.show = true;
-            features.push(feature);
-        }
-    });
-
     function colorMarkers(cluster) {
 /*        var markers = cluster.getAllChildMarkers();
         var color = 'marker-cluster-small-';
@@ -98,8 +81,7 @@ function buildFeatures(data) {
         var html = '<div><span>' + cluster.getChildCount() + '</span></div>'
         return new L.divIcon({ html: html, className: color, iconSize: new L.point(40, 40) });
 */
-//        printObject(cluster.getAllChildMarkers());
-        return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-small-purple', iconSize: new L.Point(40, 40) });
+        return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-small-brown', iconSize: new L.Point(40, 40) });
 
         function nextMarker(echelle) {
             for (var i = 1; i < markers.length; i++) {
@@ -113,7 +95,6 @@ function buildFeatures(data) {
         }
     }
 
-    // b: 'new L.Marker'->'L.marker'?
     markerClusters = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 40,
@@ -123,11 +104,23 @@ function buildFeatures(data) {
         iconCreateFunction: colorMarkers,
     });
     markerClusters.on('clusterclick', function (a) {
- //       map.zoomIn();
+ //       map.zoomIn(); // TODO pourquoi referme le cluster avant la fin du chargement du nouveau niveau de zoom ?
         a.layer.spiderfy();
     });
-
-    renderMarkers();
+    
+    L.geoJson(data, {
+        onEachFeature: function (feature, layer) {
+            var popupData = feature.properties;
+            var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: features.length }) );
+            layer.bindPopup(popup);
+//            feature.layer = layer;
+            feature.show = true;
+//            features.push(feature);
+            markerClusters.addLayer(layer);
+        }
+    });
+//    renderMarkers();
+    map.addLayer(markerClusters);
 }
 
 //////////
