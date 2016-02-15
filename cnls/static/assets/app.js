@@ -63,6 +63,7 @@ function buildFeatures(data) {
                 imagePath : "{% static './assets/img' %}"
             })
 
+    // b: pas ...=geojson...
     L.geoJson(data, {
         onEachFeature: function (feature, layer) {
             var popupData = feature.properties;
@@ -112,8 +113,8 @@ function buildFeatures(data) {
         }
     }
 
-
-    markerClusters = new L.MarkerClusterGroup({
+    // b: 'new L.Marker'->'L.marker'?
+    markerClusters = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 40,
         spiderfyDistanceMultiplier: 2,
@@ -122,7 +123,7 @@ function buildFeatures(data) {
         iconCreateFunction: colorMarkers,
     });
     markerClusters.on('clusterclick', function (a) {
-        map.zoomIn();
+ //       map.zoomIn();
         a.layer.spiderfy();
     });
 
@@ -135,6 +136,7 @@ function buildFeatures(data) {
 function renderMarkers() {
     features.forEach(function(feature) {
 //    printObject(feature);
+// b: note qu'il y a addLayer pour chaque datapoint
         if (feature.show) {
             markerClusters.addLayer(feature.layer);
         } else {
