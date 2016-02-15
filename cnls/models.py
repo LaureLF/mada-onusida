@@ -58,34 +58,38 @@ class Fokontany(models.Model):
 class Cible(models.Model):
 # A transformer en CharField accessible seulement par les administrateurs 
     LISTE= (
-        (u'population générale', u'Population générale'),
-        (u'adultes', u'Adultes'),
-        (u'personnes vivant avec le vih', u'Personnes vivant avec le VIH'),
-        (u'perdus de vue', u'Perdus de vue'),
-        (u'consommateurs de drogues injectables', u'Consommateurs de drogues injectables'),
-        (u'homme ayant des rapports avec d’autres hommes', u'Homme ayant des rapports avec d’autres hommes'),
-        (u'travailleuses du sexe', u'Travailleuses du sexe'),
-        (u'hommes à comportements à hauts risques', u'Hommes à comportements à hauts risques'),
-        (u'clients des tds', u'Clients des TdS'),
-        (u'populations migrantes', u'Populations migrantes'),
-        (u'population carcérale', u'Population carcérale'),
-        (u'forces armées', u'Forces armées'),
-        (u'femmes enceintes', u'Femmes enceintes'),
-        (u'femmes victimes de violences sexuelles', u'Femmes victimes de violences sexuelles'),
-        (u'leaders religieux ou traditionnels', u'Leaders religieux ou traditionnels'),
-        (u'personnels de santé', u'Personnels de santé'),
-        (u'autres (cercles associatifs, cercles religieux, etc)', u'Autres (Cercles associatifs, cercles religieux, etc)'),
-        (u'jeunes', u'Jeunes'),
-        (u'jeunes scolarisés', u'Jeunes scolarisés'),
-        (u'jeunes non-scolarisés', u'Jeunes non-scolarisés'),
-        (u'orphelins et enfants vulnérables', u'Orphelins et Enfants Vulnérables'),
+        (u'1-population générale', u'Population générale'),
+        (u'Adultes', (
+          (u'2-personnes vivant avec le vih', u'Personnes vivant avec le VIH'),
+          (u'2-perdus de vue', u'Perdus de vue'),
+          (u'2-consommateurs de drogues injectables', u'Consommateurs de drogues injectables'),
+          (u'2-homme ayant des rapports avec d’autres hommes', u'Homme ayant des rapports avec d’autres hommes'),
+          (u'2-travailleuses du sexe', u'Travailleuses du sexe'),
+          (u'2-hommes à comportements à hauts risques', u'Hommes à comportements à hauts risques'),
+          (u'2-clients des tds', u'Clients des TdS'),
+          (u'2-populations migrantes', u'Populations migrantes'),
+          (u'2-population carcérale', u'Population carcérale'),
+          (u'2-forces armées', u'Forces armées'),
+          (u'2-femmes enceintes', u'Femmes enceintes'),
+          (u'2-femmes victimes de violences sexuelles', u'Femmes victimes de violences sexuelles'),
+          (u'2-leaders religieux ou traditionnels', u'Leaders religieux ou traditionnels'),
+          (u'2-personnels de santé', u'Personnels de santé'),
+          (u'3-autres (cercles associatifs, cercles religieux, etc)', u'Autres (Cercles associatifs, cercles religieux, etc)'),
+          )),
+        (u'jeunes', (
+          (u'5-jeunes scolarisés', u'Jeunes scolarisés'),
+          (u'5-jeunes non-scolarisés', u'Jeunes non-scolarisés'),
+          (u'5-orphelins et enfants vulnérables', u'Orphelins et enfants vulnérables'),
+          )),
     )
 
     nom = models.CharField(max_length=80, choices=LISTE)
     
     class Meta:
         managed = True
+        verbose_name = "Cible"
         verbose_name_plural = "Cibles"
+        ordering = ['nom']
 
     def natural_key(self):
         return (self.get_nom_display(),)
@@ -95,24 +99,28 @@ class Cible(models.Model):
 
 
 # TYPE D'INTERVENTION
-class Typeintervention(models.Model):
+class TypeIntervention(models.Model):
     TYPE= (
         (u'plaidoyer', u'Plaidoyer'),
         (u'ccc', u'CCC'),
-        (u'promotion de préservatifs', u'Promotion de préservatifs'),
-        (u'communication de masse', u'Communication de masse'),
-        (u'prise en charge IST', u'Prise en charge IST'),
-        (u'prise en charge médicale', u'Prise en charge médicale'),
+        (u'preservatifs', u'Promotion de préservatifs'),
+        (u'communication', u'Communication de masse'),
+        (u'ist', u'Prise en charge IST'),
+        (u'medical', u'Prise en charge médicale'),
         (u'soutien', u'Soutien'),
         (u'coordination', u'Coordination'),
-        (u'renforcement de capacités', u'Renforcement de capacités'),
+        (u'renforcement', u'Renforcement de capacités'),
+        (u'depistage', u'Dépistage'), # ok?
     )
 
     nom = models.CharField(max_length=40, choices=TYPE)
     descriptif = models.TextField(blank=True, default='', verbose_name="Description du type d'intervention")
+#    picto ?
 
     class Meta:
         managed = True
+        ordering = ['nom']
+        verbose_name = "Type d'intervention"
         verbose_name_plural = "Types d'intervention"
 
     def __str__(self):
@@ -166,7 +174,7 @@ class Utilisateur(models.Model):
         managed = True
         verbose_name = "Utilisateur"
         verbose_name_plural = "Utilisateurs"
-        ordering = ['user']
+#        ordering = ['user']
 
     def __str__(self):
 #        return u"User: %s" % self.user.username
@@ -197,7 +205,7 @@ class Action(models.Model):
     
     titre = models.CharField(max_length = 250, verbose_name="Titre de l'action")
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme maître d'œuvre")
-    typeintervention = models.ManyToManyField(Typeintervention, verbose_name="Types d'interventions")
+    typeintervention = models.ManyToManyField(TypeIntervention, verbose_name="Types d'interventions")
     cible = models.ManyToManyField(Cible, verbose_name="Publics cibles")
     objectif = models.PositiveIntegerField(null=True, blank=True, verbose_name="Nombre de personnes visées")
     

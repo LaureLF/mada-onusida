@@ -2,7 +2,7 @@
 from django.contrib.gis import admin
 from django.contrib.gis.geos import MultiPoint as GEOSMultiPoint
 
-from .models import Organisme, Utilisateur, Action, Typeintervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Region, Commune, Fokontany
+from .models import Organisme, Utilisateur, Action, TypeIntervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Region, Commune, Fokontany
 
 ## SECTIONS  ##       
 
@@ -107,7 +107,7 @@ admin.site.register(ActionNationale,ActionNationaleAdmin)
 admin.site.register(ActionTananarive,ActionTananariveAdmin)
 admin.site.register(ActionRegionale,ActionRegionaleAdmin)
 admin.site.register(ActionLocale,ActionLocaleAdmin)
-admin.site.register(Typeintervention)
+admin.site.register(TypeIntervention)
 admin.site.register(Cible)
 admin.site.register(Region)
 admin.site.register(Commune)

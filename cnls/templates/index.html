@@ -23,10 +23,7 @@ toutesActions['type'] = 'FeatureCollection';
 toutesActions['crs'] = {'type': 'name', 'properties': {'name': 'EPSG:4326'}} // GeoJson specs recommend OGC CRS URNs such as "urn:ogc:def:crs:OGC:1.3:CRS84"
 toutesActions['features'] = [];
 for (var key in actionsNationales.features) {
-//    for (var feature in actionsNationales.features) {
-//        feature.properties['pays'] = 'madagascar';
-        actionsNationales.features[key]['properties']['pays'] = 'madagascar';
-//    }
+    actionsNationales.features[key]['properties']['pays'] = 'madagascar';
     toutesActions['features'].push(actionsNationales.features[key]);
 }
 for (var key in actionsTananarive.features) {
@@ -95,7 +92,7 @@ for (var key in actionsLocales.features) {
           <div class="panel-heading" role="tab" id="actionTypeHeading">
             <h4 class="panel-title">
               <a data-toggle="collapse" href="#actionType" aria-expanded="true" aria-controls="actionType"  class="panel-title-inner">
-                Actions de lutte contre le SIDA
+                Types d'actions
                 <span class="panelFilterStatus" data-countof="actionType"></span>
 
                 <span class="panelCollapsedStatus">
@@ -109,7 +106,13 @@ for (var key in actionsLocales.features) {
 
           <div id="actionType" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="actionTypeHeading">
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="type">
+              {% for type in typesinterventions %}
               <label>
+                <input type="checkbox" checked data-filter-checkbox-value={{type.nom}}>
+                <abbr title='{{type.descriptif}}'>{{type.get_nom_display}}</abbr>
+              </label>
+              {% endfor %}
+<!--              <label>
                 <input type="checkbox" checked data-filter-checkbox-value="plaidoyer">
                 <abbr title="action visant à changer les comportements et à influencer les politiques. Ce genre d'interventions consiste en des actions d'informations, de sensibilisation, renforcement des capacités, d'établissement de réseaux/partenariats et aussi de lobbying.">Plaidoyer</abbr>
               </label>
@@ -148,7 +151,7 @@ for (var key in actionsLocales.features) {
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="renforcement">
                 Renforcement des capacités
-              </label>
+              </label>-->
             </div>
           </div>
         </div><!--/actionType panel -->
@@ -170,7 +173,13 @@ for (var key in actionsLocales.features) {
           </div>
           <div id="population" class="panel-collapse collapse" role="tabpanel" aria-labelledby="populationHeading">
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="population">
-              <div class="checkboxList-sectionTitle">Adultes</div>
+            {% for cible in cibles %}
+              <label>
+                <input type="checkbox" checked data-filter-checkbox-value={{cible.nom}}>{{cible.get_nom_display}}
+              </label>  
+            {% endfor %}
+            
+<!--              <div class="checkboxList-sectionTitle">Adultes</div>
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="vih">
                 Personnes vivant avec le VIH
@@ -244,7 +253,7 @@ for (var key in actionsLocales.features) {
               <label>
                 <input type="checkbox" checked data-filter-checkbox-value="orphelins">
                 Orphelins et Enfants Vulnérables
-              </label>
+              </label>-->
             </div>
           </div>
         </div><!--/population panel -->

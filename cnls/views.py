@@ -6,15 +6,12 @@ from django.template import Context, loader
 from django.core import serializers
 #from django.conf import settings as djangoSettings
 
-from .models import ActionNationale, ActionTananarive, ActionRegionale, ActionLocale
+from .models import ActionNationale, ActionTananarive, ActionRegionale, ActionLocale, TypeIntervention, Cible
 
 # Create your views here.
 def home(request):
 #    return redirect('http://cartong.github.io/mada-front/dist/atlas/index.html', permanent=True)
     template = loader.get_template('index.html')
-#    actions = list(ActionRegionale.objects.all()) + list(ActionLocale.objects.all()) + list(ActionRegionale.objects.all()) + list(ActionLocale.objects.all())
-#    data = serializers.serialize('geojson', actions,srid='4326', use_natural_foreign_keys=True)
-#    return HttpResponse(template.render(Context({'data' : actions})))
     def to_json(echelle):
         return serializers.serialize('geojson', echelle.objects.all(), srid='4326', use_natural_foreign_keys=True)
     
@@ -22,7 +19,10 @@ def home(request):
         'actionsN' : to_json(ActionNationale),
         'actionsT' : to_json(ActionTananarive),
         'actionsR' : to_json(ActionRegionale),
-        'actionsL' : to_json(ActionLocale)})))
+        'actionsL' : to_json(ActionLocale),
+        'typesinterventions' : TypeIntervention.objects.all(),
+        'cibles' : Cible.objects.all(),        
+        })))
 
 #def get_actions_by_title(request, title):
 #    actions = Action.objects.filter(titre=title)
