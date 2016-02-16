@@ -107,10 +107,13 @@ for (var key in actionsLocales.features) {
           <div id="actionType" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="actionTypeHeading">
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="type">
               {% for type in typesinterventions %}
+              {% with "./media/picto/typeintervention-"|add:type.nom|add:".png" as pictoType %}         
               <label>
+                <span class="icon" style="background-image: url({% static pictoType %})"></span>
                 <input type="checkbox" checked data-filter-checkbox-value={{type.nom}}>
                 <abbr title='{{type.descriptif}}'>{{type.get_nom_display}}</abbr>
               </label>
+              {% endwith %}
               {% endfor %}
 <!--              <label>
                 <input type="checkbox" checked data-filter-checkbox-value="plaidoyer">
@@ -174,86 +177,13 @@ for (var key in actionsLocales.features) {
           <div id="population" class="panel-collapse collapse" role="tabpanel" aria-labelledby="populationHeading">
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="population">
             {% for cible in cibles %}
+            {% with "./media/picto/cible-"|add:cible.nom|add:".png" as pictoCible %}
               <label>
+                <span class="icon" style="background-image: url({% static pictoCible %})"></span>
                 <input type="checkbox" checked data-filter-checkbox-value={{cible.nom}}>{{cible.get_nom_display}}
-              </label>  
+              </label> 
+            {% endwith %}   
             {% endfor %}
-            
-<!--              <div class="checkboxList-sectionTitle">Adultes</div>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="vih">
-                Personnes vivant avec le VIH
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="perdus_de_vue">
-                Perdus de vue
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="consommateurs_drogue">
-                Consommateurs de Drogues injectables
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="gay">
-                Homme ayant des rapports avec d’autres hommes
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="tds">
-                Travailleuses du Sexe
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="hcr">
-                Hommes à Comportements à Hauts Risques
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="clients_tds">
-                Clients des TdS
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="migrants">
-                Populations Migrantes
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="pop_carcerale">
-                Population Carcérale
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="armee">
-                Forces Armées
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="femmes_enceinte">
-                Femmes enceintes
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="violences">
-                Femmes victimes de violences sexuelles
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="religieux">
-                Leaders religieux ou traditionnels
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="sante">
-                Personnels de santé
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="autres">
-                Autres (Cercles associatifs, cercles religieux, etc)
-              </label>
-
-              <div class="checkboxList-sectionTitle">Jeunes</div>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="scolarises">
-                Jeunes scolarisés
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="non_scolarises">
-                Jeunes non-scolarisés
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="orphelins">
-                Orphelins et Enfants Vulnérables
-              </label>-->
             </div>
           </div>
         </div><!--/population panel -->
@@ -443,11 +373,10 @@ for (var key in actionsLocales.features) {
 
 
 
-  <script type="text/javascript" src="{% static "./vendors.js" %}"></script><!-- pour JQuery : à supprimer à terme si on charge les régions par django-->
-
+  <script type="text/javascript" src="{% static "./vendors.js" %}"></script>
 
   <script type="text/javascript">
-    L.Icon.Default.imagePath = "{% static "./assets/img" %}";
+//    L.Icon.Default.imagePath = "{% static "./assets/img" %}";
     window.appConfig = {
 //      testDataPath : "{% static "assets/testData.json" %}",
       faritraGeoJsonPath : "{% static "assets/faritra.json" %}",

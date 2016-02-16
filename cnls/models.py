@@ -58,28 +58,28 @@ class Fokontany(models.Model):
 class Cible(models.Model):
 # A transformer en CharField accessible seulement par les administrateurs 
     LISTE= (
-        (u'1-population générale', u'Population générale'),
-        (u'Adultes', (
-          (u'2-personnes vivant avec le vih', u'Personnes vivant avec le VIH'),
-          (u'2-perdus de vue', u'Perdus de vue'),
-          (u'2-consommateurs de drogues injectables', u'Consommateurs de drogues injectables'),
-          (u'2-homme ayant des rapports avec d’autres hommes', u'Homme ayant des rapports avec d’autres hommes'),
-          (u'2-travailleuses du sexe', u'Travailleuses du sexe'),
-          (u'2-hommes à comportements à hauts risques', u'Hommes à comportements à hauts risques'),
-          (u'2-clients des tds', u'Clients des TdS'),
-          (u'2-populations migrantes', u'Populations migrantes'),
-          (u'2-population carcérale', u'Population carcérale'),
-          (u'2-forces armées', u'Forces armées'),
-          (u'2-femmes enceintes', u'Femmes enceintes'),
-          (u'2-femmes victimes de violences sexuelles', u'Femmes victimes de violences sexuelles'),
-          (u'2-leaders religieux ou traditionnels', u'Leaders religieux ou traditionnels'),
-          (u'2-personnels de santé', u'Personnels de santé'),
-          (u'3-autres (cercles associatifs, cercles religieux, etc)', u'Autres (Cercles associatifs, cercles religieux, etc)'),
+        ('1-pg', u'Population générale'),
+        ('Adultes', (
+          ('2-pvalv', u'Personnes vivant avec le VIH'),
+          ('2-pdv', u'Perdus de vue'),
+          ('2-cddi', u'Consommateurs de drogues injectables'),
+          ('2-hadradah', u'Homme ayant des rapports avec d’autres hommes'),
+          ('2-tds', u'Travailleuses du sexe'),
+          ('2-hacahr', u'Hommes à comportements à hauts risques'),
+          ('2-cdtds', u'Clients des travailleuses du sexe'),
+          ('2-pm', u'Populations migrantes'),
+          ('2-pc', u'Population carcérale'),
+          ('2-fa', u'Forces armées'),
+          ('2-fe', u'Femmes enceintes'),
+          ('2-fvdvs', u'Femmes victimes de violences sexuelles'),
+          ('2-lrot', u'Leaders religieux ou traditionnels'),
+          ('2-pds', u'Personnels de santé'),
+          ('3-a', u'Autres (Cercles associatifs, cercles religieux, etc)'),
           )),
-        (u'jeunes', (
-          (u'5-jeunes scolarisés', u'Jeunes scolarisés'),
-          (u'5-jeunes non-scolarisés', u'Jeunes non-scolarisés'),
-          (u'5-orphelins et enfants vulnérables', u'Orphelins et enfants vulnérables'),
+        ('Jeunes', (
+          ('5-js', u'Jeunes scolarisés'),
+          ('5-jns', u'Jeunes non-scolarisés'),
+          ('5-oeev', u'Orphelins et enfants vulnérables'),
           )),
     )
 
