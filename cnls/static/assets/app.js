@@ -25,9 +25,9 @@ var regionsGeoJson;
 var regionsShapes;
 
 var map, popupTpl, modalTpl, regionsListContainer, regionListItemTpl, datePickerItemTpl, datePickerStatusTpl, datePickerContainers;
-var markerClusters;
+var markerClusters, geojsonLayer;
 
-var features = [];
+var ilayers = [];
 
 
 //////////
@@ -37,27 +37,41 @@ var filterFunctions = {
     checkboxes: function(filter, feature) {
         var featureFiltered = feature.properties[filter.field];
         var featureFilters = filter.values;
-        // ignore filter if field is empty     filter passes when field matches filter
-        return !featureFiltered || featureFiltered.length === 0 || _.intersection(featureFiltered, featureFilters).length
+        for (var k in featureFilters) {
+            for (var l in featureFiltered) {
+                if (featureFilters[k] == featureFiltered[l]) {
+                    return true ;
+                }
+            }
+        }
+        return false ;
     },
     date: function(filter, feature) {
-        console.log(filter)
-        var featureFilteredStart = feature.properties[filter.field_start];
-        var featureFilteredEnd = feature.properties[filter.field_end];
+//        console.log(filter)
+//        var featureFilteredStart = feature.properties[filter.field_start];
+        var featureFilteredStart = feature.properties.date_debut;
+//        var featureFilteredEnd = feature.properties[filter.field_end];
+        var featureFilteredEnd = feature.properties.date_fin;
         var featureFiltersStart = filter.start;
         var featureFiltersEnd = filter.end;
-
-        var isAfterStart = !featureFilteredStart || moment(featureFilteredStart, filter.format).isAfter( moment(featureFiltersStart, filter.format) );
-        var isBeforeEnd = !featureFilteredEnd || moment(featureFilteredEnd, filter.format).isBefore( moment(featureFiltersEnd, filter.format) );
-
-        return isAfterStart && isBeforeEnd;
+        if (typeof featureFilteredStart === 'undefined' || typeof featureFilteredEnd === 'undefined') {
+            return true ;
+        }
+        // affiche toutes les actions qui se déroulent même en partie sur la période choisie
+        alert(featureFilteredStart+" "+featureFilteredEnd +" "+featureFiltersStart+" "+ featureFiltersEnd);
+        var borne1 = !moment(featureFilteredStart, filter.format).isAfter(moment(featureFiltersEnd, filter.format));
+        var borne2 = !moment(featureFiltersStart, filter.format).isAfter(moment(featureFilteredEnd, filter.format));
+        return borne1 && borne2;
+//        var isAfterStart = !featureFilteredStart || moment(featureFilteredStart, filter.format).isAfter( moment(featureFiltersStart, filter.format) );
+//        var isBeforeEnd = !featureFilteredEnd || moment(featureFilteredEnd, filter.format).isBefore( moment(featureFiltersEnd, filter.format) );
+//        return isAfterStart && isBeforeEnd;
     },
 }
 
 //////////
 // buildFeatures()
 //////////
-function buildFeatures(data) {
+//function buildFeatures(data) {
     function colorMarkers(cluster) {
 /*        var markers = cluster.getAllChildMarkers();
         var color = 'marker-cluster-small-';
@@ -82,7 +96,7 @@ function buildFeatures(data) {
         return new L.divIcon({ html: html, className: color, iconSize: new L.point(40, 40) });
 */
         return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-small-brown', iconSize: new L.Point(40, 40) });
-
+/*
         function nextMarker(echelle) {
             for (var i = 1; i < markers.length; i++) {
                 if (typeof markers[i].echelle !== 'undefined') {
@@ -92,64 +106,27 @@ function buildFeatures(data) {
                     pass
                 }
             }
-        }
+        }*/
     }
-
-    markerClusters = L.markerClusterGroup({
-        showCoverageOnHover: false,
-        maxClusterRadius: 40,
-        spiderfyDistanceMultiplier: 2,
-        singleMarkerMode: true,
-        zoomToBoundsOnClick: false,
-        iconCreateFunction: colorMarkers,
-    });
-    markerClusters.on('clusterclick', function (a) {
- //       map.zoomIn(); // TODO pourquoi referme le cluster avant la fin du chargement du nouveau niveau de zoom ?
-        a.layer.spiderfy();
-    });
-    
-    L.geoJson(data, {
-        onEachFeature: function (feature, layer) {
-            var popupData = feature.properties;
-            var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: features.length }) );
-            layer.bindPopup(popup);
-//            feature.layer = layer;
-            feature.show = true;
-//            features.push(feature);
-            markerClusters.addLayer(layer);
-        }
-    });
-//    renderMarkers();
-    map.addLayer(markerClusters);
-}
-
-//////////
-// renderMarkers()
-//////////
-function renderMarkers() {
-    features.forEach(function(feature) {
-//    printObject(feature);
-// b: note qu'il y a addLayer pour chaque datapoint
-        if (feature.show) {
-            markerClusters.addLayer(feature.layer);
-        } else {
-            markerClusters.removeLayer(feature.layer);
-        }
-    })
-    map.addLayer(markerClusters);
-}
+//}
 
 //////////
 // filterMarkers()
 //////////
 function filterMarkers(filters) {
-    features.forEach(function(feature) {
+    ilayers.forEach(function(ilayer) {
         // flag feature for show/hide in later renderMarkers
-        feature.show = filters.every(function(filter) {
-            return filterFunctions[filter.type](filter, feature);
+        ilayer.show = filters.every(function(filter) {
+            return filterFunctions[filter.type](filter, ilayer.feature);
         })
+        if (ilayer.show) {
+//        alert('ilayer.show = true');
+            markerClusters.addLayer(ilayer);
+        } else {
+//                alert('ilayer.show = false');
+            markerClusters.removeLayer(ilayer);
+        }
     })
-    renderMarkers();
 }
 
 //////////
@@ -158,7 +135,7 @@ function filterMarkers(filters) {
 function updateFilters(newDate) {
     function updateCheckboxList(name) {
         var values = _.map( $('#' + name + ' input'), function(el) {return el.checked; });
-        $('[data-countof=' + name + ']').text( _.contains(values, false) ? _.compact(values).length + '/' + values.length : 'toutes' );
+//        $('[data-countof=' + name + ']').text( _.contains(values, false) ? _.compact(values).length + '/' + values.length : 'toutes' );
     }
     updateCheckboxList('actionType');
     updateCheckboxList('population');
@@ -201,6 +178,7 @@ function getFilters() {
             }
         })
         filters.push(filter);
+        
     });
 
     var dateFormat = $('.js-filter-dates').data().filterDatesFormat;
@@ -293,6 +271,7 @@ function initDatePicker() {
 //////////
 // openModal()
 //////////
+// TODO transformer en un nouvel onglet avec url partageable
 function openModal(link) {
     var index = $(link).parents('.js-popup').data().index;
     var data = features[index].properties;
@@ -359,14 +338,34 @@ function init() {
     })
 
 //    $.ajax(window.appConfig.testDataPath).done( buildFeatures );
-//    $.ajax('http://djangodev.ddns.net:8002/geoactions/').done( buildFeatures );
-//    buildFeatures(actionsNationales);
-//    buildFeatures(actionsTananarive);
-//    buildFeatures(actionsRegionales);
-//    buildFeatures(actionsLocales);
-//    printObject(actionsLocales.features);
-//    printObject(toutesActions.features);
-    buildFeatures(toutesActions);
+//    buildFeatures(toutesActions);
+    markerClusters = L.markerClusterGroup({
+        showCoverageOnHover: false,
+        maxClusterRadius: 40,
+        spiderfyDistanceMultiplier: 2,
+        singleMarkerMode: true,
+        zoomToBoundsOnClick: false,
+        iconCreateFunction: colorMarkers,
+    });
+    markerClusters.on('clusterclick', function (a) {
+ //       map.zoomIn(); // TODO pourquoi referme le cluster avant la fin du chargement du nouveau niveau de zoom ?
+        a.layer.spiderfy();
+    });
+    
+    geojsonLayer = L.geoJson(toutesActions, {
+        onEachFeature: function (feature, layer) {
+            var popupData = feature.properties;
+            var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: ilayers.length }) );
+            layer.bindPopup(popup);
+//            feature.layer = layer;
+            layer.show = true;
+//            features.push(feature);
+            markerClusters.addLayer(layer);
+        }
+    });
+//    renderMarkers();
+    ilayers = geojsonLayer.getLayers();
+    map.addLayer(markerClusters);
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;

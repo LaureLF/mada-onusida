@@ -4,7 +4,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Centre National de lutte contre le SIDA à Madagascar</title>
+  <title>Centre National de Lutte contre le SIDA à Madagascar</title>
 
   <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -51,13 +51,13 @@ for (var key in actionsLocales.features) {
           <span class="icon-bar"></span>
           <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="#">Centre National de lutte contre le SIDA à Madagascar</a>
+        <a class="navbar-brand" href="#">Centre National de Lutte contre le SIDA à Madagascar</a>
       </div>
       <div id="navbar" class="navbar-collapse collapse navbar-right" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav">
           <li class="active"><a href="#">Carte</a></li>
           <li><a href="#">À propos</a></li>
-          <li><a href="#about">Connexion</a></li>
+          <li><a href="admin">Connexion</a></li>
           <li><a href="index.html"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
           <li><a href="index.mg-MG.html"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>
         </ul>
@@ -93,7 +93,7 @@ for (var key in actionsLocales.features) {
             <h4 class="panel-title">
               <a data-toggle="collapse" href="#actionType" aria-expanded="true" aria-controls="actionType"  class="panel-title-inner">
                 Types d'actions
-                <span class="panelFilterStatus" data-countof="actionType"></span>
+                <!--<span class="panelFilterStatus" data-countof="actionType"></span>-->
 
                 <span class="panelCollapsedStatus">
                   <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
@@ -105,13 +105,13 @@ for (var key in actionsLocales.features) {
           </div>
 
           <div id="actionType" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="actionTypeHeading">
-            <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="type">
+            <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="typeintervention">
               {% for type in typesinterventions %}
               {% with "./media/picto/typeintervention-"|add:type.nom|add:".png" as pictoType %}         
               <label>
                 <span class="icon" style="background-image: url({% static pictoType %})"></span>
-                <input type="checkbox" checked data-filter-checkbox-value={{type.nom}}>
-                <abbr title='{{type.descriptif}}'>{{type.get_nom_display}}</abbr>
+                <input type="checkbox" checked data-filter-checkbox-value="{{type.get_nom_display}}">
+                <abbr title="{{type.descriptif}}">{{type.get_nom_display}}</abbr>
               </label>
               {% endwith %}
               {% endfor %}
@@ -166,7 +166,7 @@ for (var key in actionsLocales.features) {
             <h4 class="panel-title">
               <a class="collapsed panel-title-inner" data-toggle="collapse"  href="#population" aria-expanded="false" aria-controls="population" >
                 Populations
-                <span class="panelFilterStatus" data-countof="population"></span>
+                <!--<span class="panelFilterStatus" data-countof="population"></span>-->
                 <span class="panelCollapsedStatus">
                   <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
                   <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
@@ -175,12 +175,12 @@ for (var key in actionsLocales.features) {
             </h4>
           </div>
           <div id="population" class="panel-collapse collapse" role="tabpanel" aria-labelledby="populationHeading">
-            <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="population">
+            <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="cible">
             {% for cible in cibles %}
             {% with "./media/picto/cible-"|add:cible.nom|add:".png" as pictoCible %}
               <label>
                 <span class="icon" style="background-image: url({% static pictoCible %})"></span>
-                <input type="checkbox" checked data-filter-checkbox-value={{cible.nom}}>{{cible.get_nom_display}}
+                <input type="checkbox" checked data-filter-checkbox-value="{{cible.get_nom_display}}">{{cible.get_nom_display}}
               </label> 
             {% endwith %}   
             {% endfor %}
@@ -327,7 +327,7 @@ for (var key in actionsLocales.features) {
           </td>
         </tr>
         <tr>
-          <td>Catégorie</td>
+          <td>Type(s) d&#39;actions</td>
           <td><%= data.typeintervention %></td>
         </tr>
         <tr>
