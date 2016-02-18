@@ -58,9 +58,9 @@ var filterFunctions = {
             return true ;
         }
         // affiche toutes les actions qui se déroulent même en partie sur la période choisie
-        alert(featureFilteredStart+" "+featureFilteredEnd +" "+featureFiltersStart+" "+ featureFiltersEnd);
-        var borne1 = !moment(featureFilteredStart, filter.format).isAfter(moment(featureFiltersEnd, filter.format));
-        var borne2 = !moment(featureFiltersStart, filter.format).isAfter(moment(featureFilteredEnd, filter.format));
+        // TODO granularité au mois
+        var borne1 = !moment(featureFilteredStart, filter.format).isAfter(moment(featureFiltersEnd, filter.format), 'month');
+        var borne2 = !moment(featureFiltersStart, filter.format).isAfter(moment(featureFilteredEnd, filter.format), 'month');
         return borne1 && borne2;
 //        var isAfterStart = !featureFilteredStart || moment(featureFilteredStart, filter.format).isAfter( moment(featureFiltersStart, filter.format) );
 //        var isBeforeEnd = !featureFilteredEnd || moment(featureFilteredEnd, filter.format).isBefore( moment(featureFiltersEnd, filter.format) );
