@@ -349,18 +349,44 @@ for (var key in actionsLocales.features) {
       </div>
 
       <table class="popup-table table table-striped">
+        <% if (data.pays) { %>
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>nationale</td>
+        </tr>
+        <% } else if (data.region) { %>
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>r&eacute;gionale</td>
+        </tr>
+        <tr>
+          <td>R&eacute;gion(s)</td>
+          <td><%= data.region %></td>
+        </tr>
+        <% } else if (data.commune) { %>
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>locale</td>
+        </tr>
+        <tr>
+          <td>Commune(s)</td>
+          <td><%= data.commune %></td>
+        </tr>
+        
+        <% } else if (data.fokontany) { %>
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>Tananarive</td>
+        </tr>
+        <tr>
+          <td>Fokontany(s)</td>
+          <td><%= data.fokontany %></td>
+        </tr>
+        <% } %>  
+        
         <tr>
           <td>ONG</td>
           <td><%= data.organisme %></td>
-        </tr>
-        <tr>
-          <td>Localisation</td>
-          <td><% if (data.region) print(data.region)
-                 else if (data.commune) print(data.commune)
-                 else if (data.fokontany) print(data.fokontany)
-                 else print("&Eacute;chelle nationale")
-              %>
-          </td>
         </tr>
         <tr>
           <td>Type(s) d&#39;actions</td>
