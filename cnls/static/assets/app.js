@@ -35,12 +35,23 @@ var ilayers = [];
 //////////
 var filterFunctions = {
     checkboxes: function(filter, feature) {
-        var featureFiltered = feature.properties[filter.field];
         var featureFilters = filter.values;
-        for (var k in featureFilters) {
-            for (var l in featureFiltered) {
-                if (featureFilters[k] == featureFiltered[l]) {
+        
+        if (filter.field == 'echelle') {
+            for (var k in featureFilters) {
+                echelle = featureFilters[k]; // toStr?
+                if (typeof feature.properties[echelle] !== 'undefined') {
                     return true ;
+                }
+            }
+            return false;
+        } else {
+            var featureFiltered = feature.properties[filter.field];
+            for (var k in featureFilters) {
+                for (var l in featureFiltered) {
+                    if (featureFilters[k] == featureFiltered[l]) {
+                        return true ;
+                    }
                 }
             }
         }
@@ -58,7 +69,6 @@ var filterFunctions = {
             return true ;
         }
         // affiche toutes les actions qui se déroulent même en partie sur la période choisie
-        // TODO granularité au mois
         var borne1 = !moment(featureFilteredStart, filter.format).isAfter(moment(featureFiltersEnd, filter.format), 'month');
         var borne2 = !moment(featureFiltersStart, filter.format).isAfter(moment(featureFilteredEnd, filter.format), 'month');
         return borne1 && borne2;
@@ -139,6 +149,7 @@ function updateFilters(newDate) {
     }
     updateCheckboxList('actionType');
     updateCheckboxList('population');
+    updateCheckboxList('echelle');
 
     if (newDate) {
         newDate.parents('.dropdown-menu').data('date', newDate.data().date);
