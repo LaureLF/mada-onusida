@@ -295,7 +295,8 @@ class Action(models.Model):
 
 #    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.x, verbose_name="Latitude", null=True, blank=True)
 #    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.y, verbose_name="Longitude", null=True, blank=True)
-    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%f %f))'%(TANANARIVE.y,TANANARIVE.x), geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
+#    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%f %f))'%(TANANARIVE.y,TANANARIVE.x), geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
+    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT EMPTY', geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
     objects = models.GeoManager()
  
     # TODO revoir la différence entre ces 3 champs
