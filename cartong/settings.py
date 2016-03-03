@@ -110,3 +110,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Leaflet config for admin site
+# https://github.com/makinacorpus/django-leaflet
+
+LEAFLET_CONFIG = {
+#    'SPATIAL_EXTENT': (42.0, -26.0, 52.0, -11.0),
+    'DEFAULT_CENTER': (49.0, -18.5),
+    'DEFAULT_ZOOM': 5,
+    'MIN_ZOOM': 5,
+    'MAX_ZOOM': 18,
+    'TILES': [('OpenStreetMap', 'http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {'attribution': "Tiles courtesy of <a href='http://www.mapquest.com/'>MapQuest</a>, &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://www.opendatacommons.org/licenses/odbl'>ODbL</a>"})],
+    'RESET_VIEW': False,
+#    'MINIMAP': True # constructeur non reconnu
+}

@@ -1,23 +1,27 @@
 # Register your models here.
 from django.contrib.gis import admin
-from django.contrib.gis.geos import MultiPoint as GEOSMultiPoint
-
-from .models import Organisme, Utilisateur, Action, TypeIntervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Region, Commune, Fokontany
+from leaflet.admin import LeafletGeoAdmin
+from cnls.models import Organisme, Utilisateur, Action, TypeIntervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Faritra, Kaominina, Fokontany
 
 ## SECTIONS  ##       
 
-class ActionAdmin(admin.ModelAdmin):
+#class ActionAdmin(admin.ModelAdmin):
+class ActionAdmin(LeafletGeoAdmin):
+    map_width = '80%'
+    map_height = '500px'
+    display_raw = False
+
     radio_fields = {"devise": admin.HORIZONTAL, "avancement": admin.HORIZONTAL}
 #    readonly_fields= ('echelle_localisation', 'mpoint')
 
     class Meta:
         abstract = True
     
-    def save_model(self, request, obj, form, change):
-        obj.save()
-        form.save_m2m()
-        obj.mpoint = GEOSMultiPoint([reg.mpoint for reg in getattr(obj, self.ECHELLE).all()])
-        super(ActionAdmin, self).save_model(request, obj, form, change)
+#    def save_model(self, request, obj, form, change):
+#        obj.save()
+#        form.save_m2m()
+#        obj.mpoint = GEOSMultiPoint([reg.mpoint for reg in getattr(obj, self.ECHELLE).all()])
+#        super(ActionAdmin, self).save_model(request, obj, form, change)
 
     def ordre_fieldsets(description, nom_localisation):
         fieldsets = []
@@ -32,7 +36,7 @@ class ActionAdmin(admin.ModelAdmin):
             fieldsets.append(
             (u'Localisation', {
 #            'fields': ('echelle_localisation', ('latitude', 'longitude',), nom_localisation), # latitudes et longitudes multiples pour l'instant non gérés
-                'fields': (nom_localisation,),
+                'fields': ('mpoint', nom_localisation),
                 'classes': ('wide',),
             })
         )
@@ -78,7 +82,8 @@ class ActionNationaleAdmin(ActionAdmin):
     filter_horizontal = ('cible', 'typeintervention')
         
     def save_model(self, request, obj, form, change):
-        obj.save()
+        obj.mpoint = GEOSPoint(-18.933333, 47.516667, srid=4326)
+        super(ActionNationaleAdmin, self).save_model(request, obj, form, change)
 
 class ActionTananariveAdmin(ActionAdmin):
     ECHELLE = 'fokontany'
@@ -100,7 +105,6 @@ class ActionLocaleAdmin(ActionAdmin):
 
 # On enregistre les classes que l'on veut pouvoir modifier depuis l'interface d'administration, suivies éventuellement des modifications de l'interface par défaut
 
-#admin.site.register(mdgRegion, admin.OSMGeoAdmin)
 admin.site.register(Organisme)
 admin.site.register(Utilisateur)
 admin.site.register(ActionNationale,ActionNationaleAdmin)
@@ -109,6 +113,6 @@ admin.site.register(ActionRegionale,ActionRegionaleAdmin)
 admin.site.register(ActionLocale,ActionLocaleAdmin)
 admin.site.register(TypeIntervention)
 admin.site.register(Cible)
-admin.site.register(Region)
-admin.site.register(Commune)
+admin.site.register(Faritra)
+admin.site.register(Kaominina)
 admin.site.register(Fokontany)

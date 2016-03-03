@@ -9,51 +9,114 @@ from django.utils.timezone import now
 # Les "Primary Key" de chaque classe sont générées automatiquement (champs id)
 """
 
-# REGION
-class Region(models.Model):
-    nom = models.CharField(max_length=50, verbose_name=u"Nom de la région", default='')
-    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la capitale de région")
-#    mpoint = models.PointField(null=True, verbose_name=u"Coordonnées de la capitale de région")
-    objects = models.GeoManager()
+# FARITRA
+class Faritra(models.Model):
+    # Décret n°2015 – 593 du 1er avril 2015 on www.mid.gov.mg
+    FARITRA = (
+    ('Antananarivo', (
+#      ("anta-pref", "Préfecture de Police d'Antananarivo"),      
+      ("anta-anal", "Analamanga"),
+      ("anta-tsir", "Tsiroanomandidy"),
+      ("anta-miar", "Miarinarivo"),
+      ("anta-ants", "Antsirabe"),
+    )),
+    ('TOAMASINA', (
+      ("toam-toam", "Toamasina"),
+      ("toam-amba", "Ambatondrazaka"),
+      ("toam-fene", "Fénérive Est"),
+      ("toma-pref", "Préfecture de police de Sainte Marie"),
+    )),
+    ('ANTSIRANANA', (
+      ("ants-ants", "Antsiranana"),
+      ("ants-samb", "Sambava"),
+      ("ants-nosy", "Préfecture de police de Nosy Be"),
+    )),
+    ('FIANARANTSOA', (
+      ("fian-fian", "Fianarantsoa"),
+      ("fian-ambo", "Ambositra"),
+      ("fian-mana", "Manakara"),
+      ("fian-fara", "Farafangana"),
+      ("fian-ihos", "Ihosy"),      
+    )),
+    ('MAHAJANGA', (
+      ("maha-maha", "Mahajanga"),
+      ("maha-maev", "Maevatanana"),
+      ("maha-ants", "Antsohihy"),
+      ("maha-main", "Maintirano"),    
+    )),
+    ('TOLIARY', (
+      ("toli-toli", "Toliary"),
+      ("toli-ambo", "Ambovombe"),
+      ("toli-taol", "Taolagnaro"),
+      ("toli-moro", "Morondava"),     
+    )),
+    )
+    nom = models.CharField(max_length=50, choices=FARITRA)
+#    nom = models.CharField(max_length=50, verbose_name=u"Nom de la région", default='')
+#    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la capitale de région")
+#    objects = models.GeoManager()
    
     class Meta:
-        verbose_name = "Région"
-        verbose_name_plural = "Régions"
+        verbose_name = "Préfecture - Faritra"
+        verbose_name_plural = "Préfectures - Faritra"
 
     def __str__(self):
-        return self.nom
+        return self.get_nom_display()
 
     def natural_key(self):
 #        return (self.mpoint.coords,)
-        return (self.nom,)
+        return (self.get_nom_display(),)
 
-
-# COMMUNE
-class Commune(models.Model):
-    nom = models.CharField(max_length=50, verbose_name=u"Nom de la commune", default='') 
-    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la commmune")
-    objects = models.GeoManager()
-    class Meta:
-        verbose_name = "Commune"
-        verbose_name_plural = "Communes"
-    def __str__(self):
-        return self.nom
-    def natural_key(self):
-        return (self.nom,)
 
 
 # FOKONTANY
 class Fokontany(models.Model):
-    nom = models.CharField(max_length=50, verbose_name=u"Nom du fokontany", default='') 
-    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées du fokontany")
-    objects = models.GeoManager()
+    FOKONTANY = (
+    ('tana1', 'Tana I - Analakely'),
+    ('tana2', 'Tana II - Ambanidia'),
+    ('tana3', 'Tana III - Antaninandro'),
+    ('tana4', 'Tana IV - Mahamasina'),
+    ('tana5', 'Tana V - Ambatomainty'),
+    ('tana6', 'Tana VI - Ambohimanarina'),
+    )
+    nom = models.CharField(max_length=50, choices=FOKONTANY)
+#    nom = models.CharField(max_length=50, verbose_name=u"Nom du fokontany", default='') 
+#    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées du fokontany")
+#    objects = models.GeoManager()
     class Meta:
-        verbose_name = "Fokontany"
-        verbose_name_plural = "Fokontany(s)"
+        verbose_name = "Arrondissement - Fokontany"
+        verbose_name_plural = "Arrondissements - Fokontany"
+
     def __str__(self):
-        return self.nom
+        return self.get_nom_display()
+
+    def natural_key(self):
+        return (self.get_nom_display(),)
 
 
+# KAOMININA
+class Kaominina(models.Model):
+    KAOMININA = (
+    # from external file??
+    ('commune1', 'Commune1'),
+    ('commune2', 'Commune2'),
+    ('commune3', 'Commune3'),
+    ('commune4', 'Commune4'),
+    )
+    nom = models.CharField(max_length=50, choices=KAOMININA)
+#    nom = models.CharField(max_length=50, verbose_name=u"Nom de la commune", default='') 
+#    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la commmune")
+#    objects = models.GeoManager()
+    class Meta:
+        verbose_name = "Commune - Kaominina"
+        verbose_name_plural = "Communes - Kaominina"
+    def __str__(self):
+        return self.get_nom_display()
+    def natural_key(self):
+        return (self.get_nom_display(),)
+        
+        
+#########################################
 # CIBLE
 class Cible(models.Model):
 # A transformer en CharField accessible seulement par les administrateurs 
@@ -130,7 +193,7 @@ class TypeIntervention(models.Model):
     def natural_key(self):
         return (self.get_nom_display(),)
 
-
+#################################
 # ORGANISME
 class Organisme(models.Model):
     nom = models.CharField(max_length=100, unique=True)
@@ -187,6 +250,7 @@ class Utilisateur(models.Model):
 #    affiliation = property(appartenance)
 
 
+#####################################
 # ACTION
 class Action(models.Model):
 # TODO add help_text option to each field
@@ -203,7 +267,7 @@ class Action(models.Model):
     TANANARIVE = GEOSPoint(-18.933333, 47.516667, srid=4326)
     NATIONALE = GEOSPoint(-19.647189, 43.881133, srid=4326)
     
-    titre = models.CharField(max_length = 250, verbose_name="Titre de l'action")
+    titre = models.CharField(max_length = 250, verbose_name="Titre de l'action", help_text="Donnez un titre court et explicite. Pour plus d'informations, utilisez le champ suivant (description).")
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme maître d'œuvre")
     typeintervention = models.ManyToManyField(TypeIntervention, verbose_name="Types d'interventions")
     cible = models.ManyToManyField(Cible, verbose_name="Publics cibles")
@@ -229,10 +293,9 @@ class Action(models.Model):
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
     priorite_psn = models.CharField(max_length = 100, blank=True, verbose_name="Priorité du PSN que l'activité appuie", default='')
 
-    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.x, verbose_name="Latitude", null=True, blank=True)
-    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.y, verbose_name="Longitude", null=True, blank=True)
-    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%d %d))'%(NATIONALE.y,NATIONALE.x))
-#    mpoint = models.PointField(null=True)
+#    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.x, verbose_name="Latitude", null=True, blank=True)
+#    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.y, verbose_name="Longitude", null=True, blank=True)
+    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%f %f))'%(TANANARIVE.y,TANANARIVE.x), geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
     objects = models.GeoManager()
  
     # TODO revoir la différence entre ces 3 champs
@@ -294,43 +357,16 @@ class ActionTananarive(Action):
 # ActionRegionale
 class ActionRegionale(Action):
 #    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='régionale') 
-    region = models.ManyToManyField(Region, verbose_name="Régions")
+    region = models.ManyToManyField(Faritra, verbose_name="Régions")
     class Meta:
-        verbose_name = "'Action au niveau régional'"
-        verbose_name_plural = " Actions au niveau régional"
+        verbose_name = "'Action au niveau de la préfecture (faritra)'"
+        verbose_name_plural = " Actions au niveau de la préfecture (faritra)"
 
 # ActionLocale
 class ActionLocale(Action):
 #    echelle_localisation = models.CharField(max_length=10,  verbose_name="Échelle de l'action", default='locale') 
-    commune = models.ManyToManyField(Commune, verbose_name="Communes")
+    commune = models.ManyToManyField(Kaominina, verbose_name="Communes")
     class Meta:
         verbose_name = "'Action au niveau communal'"
         verbose_name_plural = "Actions au niveau communal"
-
-"""
-# Actionlocalisation
-class ActionLocalisation(models.Model):
-    ECHELLE_LOCALISATION = (
-        (u'tananarive', u'Tananarive'),
-        (u'régionale', u'Régionale'),
-        (u'locale', u'Locale'),
-    )
-#    action = models.ForeignKey(Action)
-    region_status =  models.CharField(max_length = 50, choices=ECHELLE_LOCALISATION, default='tananarive', verbose_name="Définir la localisation de l'action ?")
-    choix_status = models.CharField(max_length = 50, blank=True, verbose_name="limite choisie", default='')
-#L#    mpoly = models.MultiPolygonField(null=True)
-#    geom = models.PointField(srid=3857,default='SRID=3857;POINT(0.0 0.0)')
-    geo = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name=u"Cliquez sur la localisation")
-    objects = models.GeoManager()
-    
-    def natural_key(self):
-        return self.action.natural_key()
-#    natural_key.dependencies = ['cnls.Action']
-
-    class Meta:
-        managed = True
-        verbose_name_plural = "Localisation"
-
-    def __str__(self):
-        return self.region_status
-"""
+        
