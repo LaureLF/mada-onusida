@@ -1,7 +1,8 @@
 #-*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView
-from . import views
+from django.contrib import admin
+from cnls import views
 
 urlpatterns = patterns('',
     url(r'^$', views.home, name='home'),
@@ -9,3 +10,7 @@ urlpatterns = patterns('',
     url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
     #url(r'^faritra/$', views.get_faritra, name='faritra'),
 )
+
+admin.site.site_header = 'Administration' # Text to put in each page's <h1>.
+admin.site.site_title = 'Atlas CNLS' # Text to put at the end of each page's <title>.
+admin.site.index_title = 'Gestion des actions de lutte contre le SIDA' # Text to put at the top of the admin index page.

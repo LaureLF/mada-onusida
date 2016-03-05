@@ -16,7 +16,7 @@ class ActionAdmin(LeafletGeoAdmin):
 
     class Meta:
         abstract = True
-    
+
 #    def save_model(self, request, obj, form, change):
 #        obj.save()
 #        form.save_m2m()
@@ -83,6 +83,7 @@ class ActionNationaleAdmin(ActionAdmin):
         
     def save_model(self, request, obj, form, change):
         obj.mpoint = GEOSPoint(-18.933333, 47.516667, srid=4326)
+# tester obj.mpoint = obj.TANANARIVE
         super(ActionNationaleAdmin, self).save_model(request, obj, form, change)
 
 class ActionTananariveAdmin(ActionAdmin):
