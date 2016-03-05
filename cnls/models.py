@@ -64,7 +64,6 @@ class Faritra(models.Model):
         return self.get_nom_display()
 
     def natural_key(self):
-#        return (self.mpoint.coords,)
         return (self.get_nom_display(),)
 
 
@@ -119,7 +118,6 @@ class Kaominina(models.Model):
 #########################################
 # CIBLE
 class Cible(models.Model):
-# A transformer en CharField accessible seulement par les administrateurs 
     LISTE= (
         ('1-pg', u'Population générale'),
         ('Adultes', (
@@ -173,7 +171,7 @@ class TypeIntervention(models.Model):
         (u'soutien', u'Soutien'),
         (u'coordination', u'Coordination'),
         (u'renforcement', u'Renforcement de capacités'),
-        (u'depistage', u'Dépistage'), # ok?
+        (u'depistage', u'Dépistage'),
     )
 
     nom = models.CharField(max_length=40, choices=TYPE)
@@ -200,9 +198,7 @@ class Organisme(models.Model):
     description = models.TextField(blank=True, default='')
 #    logo = models.ImageField(upload_to="static/media/logo/%Y/%m", blank=True)
     logo = models.ImageField(upload_to="static/media/logo/", blank=True, default="static/media/logo/defaultLogo.png")
-#    status = models.ForeignKey('Status', verbose_name="Status", to_field='nom') # Un "Status" peut qualifier plrs "Organisme" et un "Organisme" ne peut avoir qu'un statut"  => Pas OneToOneField ni "OneToManyField" qui n'existe pas en Django mais ForeignKey## la class Status n'est pas encore défini, j'utilise donc le nom du modeleÃ  la place de l'objet model lui-mÃme
     referent = models.ForeignKey('self', blank=True, null=True)
-    # TODO: is 'self' the right key?  Not clear to the user...
     
     def natural_key(self):
         return (self.nom,)
@@ -213,22 +209,14 @@ class Organisme(models.Model):
         verbose_name_plural = "Organismes"
         ordering = ['nom']
 
-    # Retourne la chaîne de caractère définissant le modèle.
     def __str__(self):
         return self.nom
-
-    # Retourne un court descriptif
-    def short(self):
-        return u"%s - %s" % (self.Status, self.nom)
-    short.allow_tags = True
-
 
 # UTILISATEUR   
 class Utilisateur(models.Model):
     user = models.OneToOneField(User) # La liaison OneToOne vers le modèle User (mail-nom-prenom-password)
     photo = models.ImageField(blank=True, upload_to="static/media/photos/", default="static/media/photos/defaultPicture.png")
-#    organisme = models.ForeignKey('Organisme') # Va servir plus tard de groupe pour inclure les "users"
-    is_responsable = models.BooleanField("Responsable autorisé à éditer la fiche", default=False)
+    is_responsable = models.BooleanField("Responsable autorisé à éditer la fiche", default=True)
  
     def natural_key(self):
         return (self.user.username, self.user.first_name, self.user.last_name,)
@@ -293,9 +281,6 @@ class Action(models.Model):
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
     priorite_psn = models.CharField(max_length = 100, blank=True, verbose_name="Priorité du PSN que l'activité appuie", default='')
 
-#    latitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.x, verbose_name="Latitude", null=True, blank=True)
-#    longitude = models.DecimalField(max_digits=10, decimal_places=6, default=TANANARIVE.y, verbose_name="Longitude", null=True, blank=True)
-#    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT((%f %f))'%(TANANARIVE.y,TANANARIVE.x), geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
     mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT EMPTY', geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
     objects = models.GeoManager()
  
@@ -304,10 +289,6 @@ class Action(models.Model):
     maj = models.DateTimeField("Date de la dernière mise à jour fiche", auto_now_add=True)
     # utilisateur  à la place de login_maj 
     login_maj = models.DateTimeField("Date de la dernière connection à la fiche action", auto_now_add=True)
-
-    # Obtenir le détail des actions lors d'une requête sur les localisations
-#    def natural_key(self): 
-#        return (self.titre, self.avancement,) + self.organisme.natural_key() + (self.date_debut, self.date_fin, self.duree,) + self.createur.natural_key() +(self.description, self.commentaire, self.montant_prevu, self.montant_disponible, self.devise, self.bailleurfond, self.origine, self.contact, self.operateur, self.resultat_cf_annee_ant, self.priorite_psn,)
 
     class Meta:
         abstract = True
@@ -339,25 +320,19 @@ class Action(models.Model):
 
 # ActionNationale
 class ActionNationale(Action):
-#    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='nationale')
-#    mpoint = models.PointField(verbose_name=u"Coordonnées de Tananarive") # TODO ou un point dans la mer?
     class Meta:
         verbose_name = "'Action au niveau national'"
         verbose_name_plural = "   Actions au niveau national"
 
 # ActionTananarive
 class ActionTananarive(Action):
-#    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='Tananarive') 
     fokontany = models.ManyToManyField(Fokontany, verbose_name="Fokontany(s)")
     class Meta:
         verbose_name = "'Action dans la capitale'"
         verbose_name_plural = "  Actions dans la capitale"
 
-# TODO: remove latitude and longitude columns from database
-
 # ActionRegionale
 class ActionRegionale(Action):
-#    echelle_localisation = models.CharField(max_length=10, verbose_name="Échelle de l'action", default='régionale') 
     region = models.ManyToManyField(Faritra, verbose_name="Régions")
     class Meta:
         verbose_name = "'Action au niveau de la préfecture (faritra)'"
@@ -365,9 +340,7 @@ class ActionRegionale(Action):
 
 # ActionLocale
 class ActionLocale(Action):
-#    echelle_localisation = models.CharField(max_length=10,  verbose_name="Échelle de l'action", default='locale') 
     commune = models.ManyToManyField(Kaominina, verbose_name="Communes")
     class Meta:
         verbose_name = "'Action au niveau communal'"
         verbose_name_plural = "Actions au niveau communal"
-        
