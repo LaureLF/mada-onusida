@@ -226,7 +226,7 @@ for (var key in actionsLocales.features) {
 
 
         <!--province panel -->
-        <div class="panel panel--inner">
+<!--        <div class="panel panel--inner">
           <div class="panel-heading" role="tab" id="provinceHeading">
             <h4 class="panel-title">
               <a class="collapsed panel-title-inner" data-toggle="collapse" href="#province" aria-expanded="false" aria-controls="province" class="panel-title-inner">
@@ -241,17 +241,13 @@ for (var key in actionsLocales.features) {
 
           <div id="province" class="panel-collapse collapse" role="tabpanel" aria-labelledby="provinceHeading">
             <div class="panel-body">
-                <select name="faritra" class="js-regions">
+                <select name="faritra" class="js-regions" onChange="javascript:initRegionsListEvents2(this);">
                 <!-- filled by app.js -->
-                </select>
-<!--              <ul class="js-regions">-->
-                <!-- filled by app.js -->
-<!--              </ul>-->
+<!--                </select>
             </div>
 
           </div>
-        </div><!--/province panel -->
-
+        </div>--><!--/province panel -->
 
         <!-- date panel -->
         <div class="panel panel--inner">

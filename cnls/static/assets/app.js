@@ -235,12 +235,24 @@ function initRegionsListEvents() {
             }.bind(this)
         }).addTo(map);
     });
-    
-    regionsListContainer.find('a').on('clickout', function (e) {
-        if (regionsShapes) {
-            map.removeLayer(regionsShapes);
-        }
-    });
+}
+
+function initRegionsListEvents2(selection) {
+    var latlonStr = selection.value;
+    var latlon = latlonStr.split(',');
+    latlon[1] = parseFloat(latlon[1]) + 1;
+    map.setView(latlon, 7);
+
+    if (regionsShapes) {
+        map.removeLayer(regionsShapes);
+    }
+
+    regionsShapes = L.geoJson(regionsGeoJson, {
+        filter: function(feature) {
+            return feature.properties.NAME_2 === selection.text;
+        }.bind(this)
+    }).addTo(map);
+
 }
 
 //////////
@@ -318,7 +330,7 @@ function init() {
 
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');
-    regionListItemTpl = _.template('<option><%= name %></option>');
+    regionListItemTpl = _.template('<option value="<%= center %>"><%= name %></option>');
     datePickerItemTpl = _.template('<li><a href="#" data-date="<%= date %>"><%= dateFormatted %></a></li>');
     datePickerStatusTpl = _.template('<%= startMonth %> <%= startYear %> → <%= endMonth %> <%= endYear %>');
 
@@ -363,7 +375,7 @@ function init() {
         spiderfyDistanceMultiplier: 2,
         singleMarkerMode: true,
         zoomToBoundsOnClick: false,
-        iconCreateFunction: colorMarkers,
+//        iconCreateFunction: colorMarkers,
     });
     markerClusters.on('clusterclick', function (a) {
  //       map.zoomIn(); // TODO pourquoi referme le cluster avant la fin du chargement du nouveau niveau de zoom ?
@@ -387,6 +399,7 @@ function init() {
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;
+        // regionsShapes défini deux fois ??
         regionsShapes = L.geoJson(geojson, {
             onEachFeature: function(feature, layer) {
                 var center = layer.getBounds().getCenter();
@@ -398,7 +411,7 @@ function init() {
             }
         });
 
-        initRegionsListEvents();
+//        initRegionsListEvents(); besoin de l'appeler ici ??
     } );
 
     $('#map').on('click', '.js-openContentModal', function(e) {
