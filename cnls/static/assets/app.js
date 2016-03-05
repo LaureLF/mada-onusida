@@ -235,6 +235,12 @@ function initRegionsListEvents() {
             }.bind(this)
         }).addTo(map);
     });
+    
+    regionsListContainer.find('a').on('clickout', function (e) {
+        if (regionsShapes) {
+            map.removeLayer(regionsShapes);
+        }
+    });
 }
 
 //////////
@@ -311,7 +317,8 @@ function init() {
     modalTpl = _.template( $('.js-tpl-modal').html() );
 
     regionsListContainer = $('.js-regions');
-    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');
+//    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');
+    regionListItemTpl = _.template('<option><%= name %></option>');
     datePickerItemTpl = _.template('<li><a href="#" data-date="<%= date %>"><%= dateFormatted %></a></li>');
     datePickerStatusTpl = _.template('<%= startMonth %> <%= startYear %> → <%= endMonth %> <%= endYear %>');
 
