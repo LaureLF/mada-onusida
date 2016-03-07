@@ -3,6 +3,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import MultiPoint as GEOSMultiPoint, Point as GEOSPoint
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+#from django.db.models.signals import post_save
 
 """
 # Create your models here.
@@ -212,19 +213,21 @@ class Organisme(models.Model):
     def __str__(self):
         return self.nom
 
-# UTILISATEUR   
-class Utilisateur(models.Model):
-    user = models.OneToOneField(User) # La liaison OneToOne vers le modèle User (mail-nom-prenom-password)
+# PROFIL
+class Profil(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE) # La liaison OneToOne vers le modèle User (mail-nom-prenom-password)
+    organisme = models.ForeignKey(Organisme, verbose_name="Organisme / Structure", null = True)
+    poste = models.CharField(max_length = 250, verbose_name="Poste ou responsabilité occupé(e)", null=True, blank = True)
     photo = models.ImageField(blank=True, upload_to="static/media/photos/", default="static/media/photos/defaultPicture.png")
-    is_responsable = models.BooleanField("Responsable autorisé à éditer la fiche", default=True)
+#    is_responsable = models.BooleanField("Responsable autorisé à éditer la fiche", default=True)
  
     def natural_key(self):
         return (self.user.username, self.user.first_name, self.user.last_name,)
 
     class Meta:
         managed = True
-        verbose_name = "Utilisateur"
-        verbose_name_plural = "Utilisateurs"
+        verbose_name = "Profil"
+        verbose_name_plural = "Profils"
 #        ordering = ['user']
 
     def __str__(self):
@@ -236,7 +239,6 @@ class Utilisateur(models.Model):
 #        return u"%s %s : %s" % (self.first_name, self.last_name, self.Organisme)
 #    appartenance.allow_tags = True
 #    affiliation = property(appartenance)
-
 
 #####################################
 # ACTION
@@ -266,7 +268,7 @@ class Action(models.Model):
     duree = models.CharField(max_length=40, blank=True, default='', verbose_name="Durée de l'action") 
     avancement = models.CharField( max_length=10,choices=AVANCEMENT, default='en cours',verbose_name="État d'avancement") 
 
-    createur = models.ForeignKey(Utilisateur, verbose_name="Nom du responsable de la fiche")
+    createur = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_related", verbose_name="Nom du responsable de la fiche")
     description = models.TextField(blank=True, default='', verbose_name="Description de l'action")
     commentaire = models.TextField(blank=True, default='', verbose_name="Observations sur l'action")
 
@@ -275,7 +277,7 @@ class Action(models.Model):
     devise = models.CharField(max_length=10,choices=DEVISE, default='EUR')
     bailleurfond = models.CharField(max_length = 100, blank=True, verbose_name="Bailleurs de fond", default='')
     origine = models.CharField(max_length = 100,verbose_name="Origine de la donnée", blank=True, default='')
-    contact = models.EmailField(max_length = 100,verbose_name="Mail du contact à l'origine de la donnée")
+    contact = models.EmailField(max_length = 100, verbose_name="Adresse email de contact")
     
     operateur = models.CharField(max_length = 100, blank=True, verbose_name="Opérateur en lien avec l'action", default='')
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
@@ -285,10 +287,9 @@ class Action(models.Model):
     objects = models.GeoManager()
  
     # TODO revoir la différence entre ces 3 champs
-    creation = models.DateTimeField("Date de création fiche", auto_now_add=True)
-    maj = models.DateTimeField("Date de la dernière mise à jour fiche", auto_now_add=True)
-    # utilisateur  à la place de login_maj 
-    login_maj = models.DateTimeField("Date de la dernière connection à la fiche action", auto_now_add=True)
+    creation = models.DateTimeField("Date de création fiche")
+    maj = models.DateTimeField("Date de la dernière mise à jour fiche")
+    login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Utilisateur responsable de la dernière mise à jour")
 
     class Meta:
         abstract = True
@@ -307,12 +308,6 @@ class Action(models.Model):
     short.allow_tags = True
 
 # TODO
-#    def save(self, *args, **kwargs):
-#        if not self.id:
-#            self.creation = now()
-#        self.maj = now()
-#        super(Action, self).save(*args, **kwargs)
-
     # Controle de l'ancienneté de la fiche
     #def control_obsolescence(self):atlas
     #    "Returns Action's obsolescence record Status."
