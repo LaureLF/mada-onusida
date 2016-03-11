@@ -1,6 +1,6 @@
 ﻿#-*- coding: utf-8 -*-
 from django.contrib.gis.db import models
-from django.contrib.gis.geos import MultiPoint as GEOSMultiPoint, Point as GEOSPoint
+from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.utils.timezone import now
 #from django.db.models.signals import post_save
@@ -186,7 +186,6 @@ class TypeIntervention(models.Model):
         verbose_name_plural = "Types d'intervention"
 
     def __str__(self):
-#        return self.nom
         return self.get_nom_display()
 
     def natural_key(self):
@@ -197,7 +196,6 @@ class TypeIntervention(models.Model):
 class Organisme(models.Model):
     nom = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, default='')
-#    logo = models.ImageField(upload_to="static/media/logo/%Y/%m", blank=True)
     logo = models.ImageField(upload_to="static/media/logo/", blank=True, default="static/media/logo/defaultLogo.png")
     referent = models.ForeignKey('self', blank=True, null=True)
     
@@ -215,11 +213,10 @@ class Organisme(models.Model):
 
 # PROFIL
 class Profil(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE) # La liaison OneToOne vers le modèle User (mail-nom-prenom-password)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme / Structure", null = True)
     poste = models.CharField(max_length = 250, verbose_name="Poste ou responsabilité occupé(e)", null=True, blank = True)
     photo = models.ImageField(blank=True, upload_to="static/media/photos/", default="static/media/photos/defaultPicture.png")
-#    is_responsable = models.BooleanField("Responsable autorisé à éditer la fiche", default=True)
  
     def natural_key(self):
         return (self.user.username, self.user.first_name, self.user.last_name,)
@@ -254,8 +251,8 @@ class Action(models.Model):
     (u'EUR', u'EUR'),
     (u'USD', u'USD'),
     )
-    TANANARIVE = GEOSPoint(-18.933333, 47.516667, srid=4326)
-    NATIONALE = GEOSPoint(-19.647189, 43.881133, srid=4326)
+    TANANARIVE = Point(-18.933333, 47.516667, srid=4326)
+    NATIONALE = Point(-19.647189, 43.881133, srid=4326)
     
     titre = models.CharField(max_length = 250, verbose_name="Titre de l'action", help_text="Donnez un titre court et explicite. Pour plus d'informations, utilisez le champ suivant (description).")
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme maître d'œuvre")
@@ -270,7 +267,7 @@ class Action(models.Model):
 
     createur = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_related", verbose_name="Nom du responsable de la fiche")
     description = models.TextField(blank=True, default='', verbose_name="Description de l'action")
-    commentaire = models.TextField(blank=True, default='', verbose_name="Observations sur l'action")
+    commentaire = models.TextField(blank=True, default='', verbose_name="Observations ou commentaires")
 
     montant_prevu = models.PositiveIntegerField(null=True, blank=True, verbose_name="Montant prévu")
     montant_disponible = models.PositiveIntegerField(null=True, blank=True, verbose_name="Montant disponible")
@@ -283,10 +280,9 @@ class Action(models.Model):
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
     priorite_psn = models.CharField(max_length = 100, blank=True, verbose_name="Priorité du PSN que l'activité appuie", default='')
 
-    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT EMPTY', geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.")
+    mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT EMPTY', geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.", blank=True)
     objects = models.GeoManager()
  
-    # TODO revoir la différence entre ces 3 champs
     creation = models.DateTimeField("Date de création fiche")
     maj = models.DateTimeField("Date de la dernière mise à jour fiche")
     login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Utilisateur responsable de la dernière mise à jour")
