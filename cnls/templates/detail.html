@@ -1,0 +1,42 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Centre National de Lutte contre le SIDA à Madagascar</title>
+
+  <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+
+  <link rel="stylesheet" type="text/css" href="{% static "./vendors.css" %}">
+  <link rel="stylesheet" type="text/css" href="{% static "./assets/main.css" %}"> 
+</head>
+
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Centre National de Lutte contre le SIDA à Madagascar</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse navbar-right" aria-expanded="false" style="height: 1px;">
+        <ul class="nav navbar-nav">
+          <li class="active"><a href="{% url 'home' %}">Carte</a></li>
+          <li><a href="#">À propos</a></li>
+          <li><a href="admin">Connexion</a></li>
+          <li><a href="index.html"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
+          <li><a href="index.mg-MG.html"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav><!--/top nav -->
+
+  <div><br/><br/><br/><br/><h3>Titre : {{action.titre}}</h3>
+  </div>
+</body>
