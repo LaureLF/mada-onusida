@@ -76,14 +76,44 @@
           <td>Publics cibles</td>
           <td>{% for field in action.cible.all %}{{field}}, {% endfor %}</td>
         </tr>
+        {% if action.region %}
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>r&eacute;gionale</td>
+        </tr>
+        <tr>
+          <td>Localisation</td>
+          <td>{% for field in action.region.all %}{{field}}, {% endfor %}</td>
+        </tr>
+        {% elif action.fokontany %}
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>pr&eacute;fectorale</td>
+        </tr>
+        <tr>
+          <td>Localisation</td>
+          <td>{% for field in action.fokontany.all %}{{field}}, {% endfor %}</td>
+        </tr>
+        {% elif action.commune %}
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>communale</td>
+        </tr>
+        <tr>
+          <td>Localisation</td>
+          <td>{% for field in action.commune.all %}{{field}}, {% endfor %}</td>
+        </tr>
+        {% else %}
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>nationale</td>
+        </tr>
+        {% endif %}
         <tr>
           <td>Coordonnées géographiques</td>
           <td>{% leaflet_map "localisation" callback="window.map_init_basic" %}</td>
         </tr>
-        <tr> <!-- TODO if fokontany etc.-->
-          <td>Localisation</td>
-          <td></td>
-        </tr>
+
         <tr>
           <td>Date de d&eacute;marrage</td>
           <td>{{action.date_debut}}</td>
@@ -180,7 +210,7 @@
       </table>
         {% endcomment%}
 
-      <a class="btn btn-default btn-sm" href="{% url 'home' %}{{action.get_admin_url}}" target="_blank" role="button">Modifier l'action (espace administration)</a><!-- TODO pourquoi en haut? --><!-- TODO corriger lien-->
+      <a class="btn btn-default btn-sm" href="{% url 'home' %}{{action.get_admin_url}}" target="_blank" role="button">Modifier l'action (espace administration)</a><!-- TODO pourquoi en haut? -->
 
   </div>
 </body>
