@@ -38,7 +38,8 @@ class CustomAdminForm(forms.ModelForm):
    
     def clean(self):
         #run the standard clean method first
-        cleaned_data = super(CustomAdminForm, self).clean()       
+        cleaned_data = super(CustomAdminForm, self).clean()  
+        # validations sur la géométrie   
         mpoint_text = cleaned_data.get("mpoint_text")
         mpoint = cleaned_data.get("mpoint")
 
@@ -54,7 +55,14 @@ class CustomAdminForm(forms.ModelForm):
                 lon = float(match.group(2).replace(" ",""))
                 points.append(Point(lon, lat, srid=4326))
             # on envoie le MultiPoint créé sur le champ mpoint
-            cleaned_data['mpoint'] = MultiPoint(points)
+            cleaned_data['mpoint'] = MultiPoint(points)           
+
+        # validation sur la devise si on rentre un montant
+        montant_prevu = cleaned_data.get("montant_prevu")
+        montant_disponible = cleaned_data.get("montant_disponible")
+        devise = cleaned_data.get("devise")
+        if (montant_prevu or montant_disponible) and not devise:
+            self.add_error('devise', ValidationError("Veuillez préciser la devise des fonds.", code='invalid'))
         return cleaned_data
         
     class Meta:

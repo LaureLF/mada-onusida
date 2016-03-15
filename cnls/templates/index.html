@@ -13,7 +13,7 @@
   <link rel="stylesheet" type="text/css" href="{% static "./assets/main.css" %}">
  
   <script type="text/javascript">
-var actionsNationales = {{actionsN|safe}}; // TODO Check if OK   
+var actionsNationales = {{actionsN|safe}}; // TODO Check if safe OK   
 var actionsTananarive = {{actionsT|safe}};
 var actionsRegionales = {{actionsR|safe}};
 var actionsLocales = {{actionsL|safe}};
@@ -23,7 +23,6 @@ toutesActions['type'] = 'FeatureCollection';
 toutesActions['crs'] = {'type': 'name', 'properties': {'name': 'EPSG:4326'}} // GeoJson specs recommend OGC CRS URNs such as "urn:ogc:def:crs:OGC:1.3:CRS84"
 toutesActions['features'] = [];
 for (var key in actionsNationales.features) {
-    actionsNationales.features[key]['properties']['pays'] = 'madagascar';
     toutesActions['features'].push(actionsNationales.features[key]);
 }
 for (var key in actionsTananarive.features) {
@@ -57,9 +56,9 @@ for (var key in actionsLocales.features) {
         <ul class="nav navbar-nav">
           <li class="active"><a href="{% url 'home' %}">Carte</a></li>
           <li><a href="#">À propos</a></li>
-          <li><a href="admin">Connexion</a></li>
-          <li><a href="index.html"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
-          <li><a href="index.mg-MG.html"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>
+          <li><a href="{% url 'admin:index' %}">Connexion</a></li>
+          <li><a href="{% url 'home' %}"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
+          <li><a href="#"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
@@ -348,15 +347,10 @@ for (var key in actionsLocales.features) {
       </div>
 
       <table class="popup-table table table-striped">
-        <% if (data.pays) { %>
+        <% if (data.region) { %>
         <tr>
           <td>&Eacute;chelle</td>
-          <td>nationale</td>
-        </tr>
-        <% } else if (data.region) { %>
-        <tr>
-          <td>&Eacute;chelle</td>
-          <td>r&eacute;gionale</td>
+          <td>pr&eacute;fectorale</td>
         </tr>
         <tr>
           <td>R&eacute;gion(s)</td>
@@ -365,13 +359,12 @@ for (var key in actionsLocales.features) {
         <% } else if (data.commune) { %>
         <tr>
           <td>&Eacute;chelle</td>
-          <td>locale</td>
+          <td>communale</td>
         </tr>
         <tr>
           <td>Commune(s)</td>
           <td><%= data.commune %></td>
         </tr>
-        
         <% } else if (data.fokontany) { %>
         <tr>
           <td>&Eacute;chelle</td>
@@ -380,6 +373,11 @@ for (var key in actionsLocales.features) {
         <tr>
           <td>Fokontany(s)</td>
           <td><%= data.fokontany %></td>
+        </tr>
+        <% } else { %>
+        <tr>
+          <td>&Eacute;chelle</td>
+          <td>Madagascar</td>
         </tr>
         <% } %>  
         
@@ -407,12 +405,12 @@ for (var key in actionsLocales.features) {
       </table>
       
       <div class="popup-link">
-        <a class="underline js-openContentModal"  href="#">Détails</a>
+        <a href="<%= data.class %>/<%= data.id %>/<%= data.slug %>" target="_blank">D&eacute;tails</a>
       </div>
     </div>
   </script>
-<!--
-  <script type="text/template" class="js-tpl-modal">
+
+<!--  <script type="text/template" class="js-tpl-modal">
     <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
       <div class="modal-dialog" role="document">
         <div class="modal-content">

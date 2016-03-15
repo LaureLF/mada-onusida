@@ -286,29 +286,63 @@ label {
     background-color: rgba(135, 220, 110, 0.2);
 }
 .marker-cluster-small-green div {
-	background-color: rgba(135, 220, 110, 0.6);
+    background-color: rgba(135, 220, 110, 0.6);
 }
 .marker-cluster-small-blue {
     background-color: rgba(110, 190, 220, 0.2);
 }
 .marker-cluster-small-blue div {
-	background-color: rgba(110, 190, 220, 0.6);
+    background-color: rgba(110, 190, 220, 0.6);
 }
 .marker-cluster-small-purple {
     background-color: rgba(195, 110, 220, 0.2);
 }
 .marker-cluster-small-purple div {
-	background-color: rgba(195, 110, 220, 0.6);
+    background-color: rgba(195, 110, 220, 0.6);
 }
 .marker-cluster-small-brown {
     background-color: rgba(220, 140, 110, 0.2);
 }
 .marker-cluster-small-brown div {
-	background-color: rgba(220, 140, 110, 0.6);
+    background-color: rgba(220, 140, 110, 0.6);
 }
 .marker-cluster-small-grey {
     background-color: rgba(180, 180, 180, 0.2);
 }
 .marker-cluster-small-grey div {
-	background-color: rgba(180, 180, 180, 0.6);
+    background-color: rgba(180, 180, 180, 0.6);
 }
+
+.details {
+/*    padding-top: 50px;*/
+    width    : 100%;
+    position : absolute; 
+    top      : 50px;
+    bottom   : 0; 
+    overflow : auto;
+    padding  : 10px;
+}
+.details .btn-default {
+    float            : right;
+    border-radius    : 15px;
+    background-image : linear-gradient(to bottom, #eee 0px, #bbb 100%);
+}
+.details table tr {
+    border-top : 1px solid #ddd;
+    padding    : 5px;
+}
+.details table tr:first-child {
+    border-top : 0px;
+}
+.details table tr td {
+    border-top : 0px;
+}
+.details table tr td:first-child {
+    font-weight : bold;
+    width       : 30%;
+    text-align  : right;
+}
+.details h3 {
+    text-align: center;
+}
+

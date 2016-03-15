@@ -301,13 +301,13 @@ function initDatePicker() {
 // openModal()
 //////////
 // TODO transformer en un nouvel onglet avec url partageable
-function openModal(link) {
-    var index = $(link).parents('.js-popup').data().index;
-    var data = features[index].properties;
-    var modalDom = modalTpl({data: data});
-
-    $(modalDom).modal();
-}
+//function openModal(link) {
+//    var index = $(link).parents('.js-popup').data().index;
+//    var data = features[index].properties;
+//    var modalDom = modalTpl({data: data});
+//
+//    $(modalDom).modal();
+//}
 
 /////////////////////////////////////////////////////////////
 
@@ -326,7 +326,7 @@ function init() {
 
 
     popupTpl = _.template( $('.js-tpl-popup').html() );
-    modalTpl = _.template( $('.js-tpl-modal').html() );
+//    modalTpl = _.template( $('.js-tpl-modal').html() );
 
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');
@@ -393,8 +393,8 @@ function init() {
             markerClusters.addLayer(layer);
         }
     });
-//    renderMarkers();
     ilayers = geojsonLayer.getLayers();
+//    alert(actionsTananarive);
     map.addLayer(markerClusters);
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {

@@ -1,4 +1,6 @@
 {% load staticfiles %}
+{% load admin_urls %}
+{% load leaflet_tags %}
 
 <!DOCTYPE html>
 <html>
@@ -11,6 +13,22 @@
 
   <link rel="stylesheet" type="text/css" href="{% static "./vendors.css" %}">
   <link rel="stylesheet" type="text/css" href="{% static "./assets/main.css" %}"> 
+    {% leaflet_js %}
+    {% leaflet_css %}
+    
+  <script type="text/javascript">
+//  TODO utiliser MarkerCluster
+    function map_init_basic (map, options) {
+//        var clusters = L.markerClusterGroup();
+        {% for coord in action.mpoint %}
+        var y = parseFloat('{{coord.y}}'.replace(',', '.'));
+        var x = parseFloat('{{coord.x}}'.replace(',', '.'));
+//        L.marker([y,x]).addTo(clusters);
+        L.marker([y,x]).addTo(map);
+        {% endfor %}
+//        map.addLayer(clusters);
+    }
+  </script>
 </head>
 
 <body>
@@ -27,16 +45,142 @@
       </div>
       <div id="navbar" class="navbar-collapse collapse navbar-right" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav">
-          <li class="active"><a href="{% url 'home' %}">Carte</a></li>
+          <li><a href="{% url 'home' %}">Carte</a></li>
           <li><a href="#">À propos</a></li>
-          <li><a href="admin">Connexion</a></li>
-          <li><a href="index.html"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
-          <li><a href="index.mg-MG.html"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>
+          <li><a href="{% url 'admin:index' %}">Connexion</a></li>
+          <li><a href="{% url 'home' %}"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
+          <li><a href="#"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>
         </ul>
       </div><!--/.nav-collapse -->
     </div>
   </nav><!--/top nav -->
 
-  <div><br/><br/><br/><br/><h3>Titre : {{action.titre}}</h3>
+  <div class="details">
+  <p> Détail de la fiche action pour :</p>
+    <h3><u>{{action.titre}}</u></h3> 
+         
+      <table class="table table-striped">
+        <tr>
+          <td>Description</td>
+          <td>{{action.description}}</td>
+        </tr>
+        <tr>
+          <td>Organisme ma&icirc;tre d'&oelig;uvre</td>
+          <td>{{action.organisme}}</td>
+        </tr>
+        <tr>
+          <td>Types d'interventions</td>
+          <td>{% for field in action.typeintervention.all %}{{field}}, {% endfor %}</td>
+        </tr>
+        <tr>
+          <td>Publics cibles</td>
+          <td>{% for field in action.cible.all %}{{field}}, {% endfor %}</td>
+        </tr>
+        <tr>
+          <td>Coordonnées géographiques</td>
+          <td>{% leaflet_map "localisation" callback="window.map_init_basic" %}</td>
+        </tr>
+        <tr> <!-- TODO if fokontany etc.-->
+          <td>Localisation</td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>Date de d&eacute;marrage</td>
+          <td>{{action.date_debut}}</td>
+        </tr>
+        <tr>
+          <td>Date de fin</td>
+          <td>{{action.date_fin}}</td>
+        </tr>
+        <tr>
+          <td>Durée de l'action</td>
+          <td>{{action.duree}}</td>
+        </tr>
+        <tr>
+          <td>&Eacute;tat d'avancement</td>
+          <td>{{action.avancement}}</td>
+        </tr>
+        <tr>
+          <td>Nombre de personnes vis&eacute;es</td>
+          <td>{% if action.objectif != None %}{{action.objectif}}{% endif %}</td>
+        </tr>
+        <tr>
+          <td>Opérateur en lien avec l'action</td>
+          <td>{{action.operateur}}</td>
+        </tr>
+        <tr>
+          <td>Priorit&eacute; du PSN que l'activit&eacute; appuie</td>
+          <td>{{action.priorite_psn}}</td>
+        </tr>
+        <tr>
+          <td>R&eacute;sultat par rapport &agrave; l'ann&eacute;e pr&eacute;c&eacute;dente</td>
+          <td>{{action.resultat_cf_annee_ant}}</td>
+        </tr>
+        <tr>
+          <td>Montant pr&eacute;vu</td>
+          <td>{% if action.montant_prevu != None %}{{action.montant_prevu}}{% endif %}</td>
+        </tr>
+        <tr>
+          <td>Montant disponible</td>
+          <td>{% if action.montant_disponible != None %}{{action.montant_disponible}}{% endif %}</td>
+        </tr>
+        <tr>
+          <td>Devise</td>
+          <td>{{action.devise}}</td>
+        </tr>
+        <tr>
+          <td>Bailleur de fond</td>
+          <td>{{action.bailleurfond}}</td>
+        </tr>
+        <tr>
+          <td>Origine de la donn&eacute;e</td>
+          <td>{{action.origine}}</td>
+        </tr>
+        <tr>
+          <td>Commentaires</td>
+          <td>{{action.commentaire}}</td>
+        </tr>
+        <tr>
+          <td>Nom du responsable de la fiche</td>
+          <td>{{action.createur}}</td>
+        </tr>
+        <tr>
+          <td>Adresse email de contact</td><!-- filtrer si utilisateur connecté-->
+          <td></td>
+        </tr>
+        <tr>
+          <td>Fiche cr&eacute;&eacute;e le</td>
+          <td>{{action.creation}}</td>
+        </tr>
+        <tr>
+          <td>Derni&egrave;re modification par</td>
+          <td>{{action.login_maj}}</td>
+        </tr>
+        <tr>
+          <td>Derni&egrave;re modification le</td>
+          <td>{{action.maj}}</td>
+        </tr>
+     
+      
+ {%comment%}       {% for field in action %}
+        {% if field.label ==  "Adresse email de contact" and user.is_staff %} <!-- ne fonctionne pas pour l'instant -->
+        <tr>
+          <td>{{field.label}}</td>
+          <td><i>(Veuillez vous identifier ou contacter un administrateur pour accéder à l'adresse email du contact.)</i></td>
+        </tr>
+        {% endif %}
+        
+        {% if field.data and field.label != "Slug" %}
+        <tr>
+          <td>{{field.label}}</td>
+          <td>{{field.data}}</td>
+        </tr>
+        {% endif%}
+        {% endfor%}
+      </table>
+        {% endcomment%}
+
+      <a class="btn btn-default btn-sm" href="{% url 'home' %}{{action.get_admin_url}}" target="_blank" role="button">Modifier l'action (espace administration)</a><!-- TODO pourquoi en haut? --><!-- TODO corriger lien-->
+
   </div>
 </body>

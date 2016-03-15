@@ -3,6 +3,8 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from django.core import urlresolvers
+from django.contrib.contenttypes.models import ContentType
 #from django.db.models.signals import post_save
 
 """
@@ -271,7 +273,7 @@ class Action(models.Model):
 
     montant_prevu = models.PositiveIntegerField(null=True, blank=True, verbose_name="Montant prévu")
     montant_disponible = models.PositiveIntegerField(null=True, blank=True, verbose_name="Montant disponible")
-    devise = models.CharField(max_length=10,choices=DEVISE, default='EUR')
+    devise = models.CharField(max_length=10,choices=DEVISE, null=True, blank=True)
     bailleurfond = models.CharField(max_length = 100, blank=True, verbose_name="Bailleurs de fond", default='')
     origine = models.CharField(max_length = 100,verbose_name="Origine de la donnée", blank=True, default='')
     contact = models.EmailField(max_length = 100, verbose_name="Adresse email de contact")
@@ -283,9 +285,10 @@ class Action(models.Model):
     mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT EMPTY', geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.", blank=True)
     objects = models.GeoManager()
  
-    creation = models.DateTimeField("Date de création fiche")
-    maj = models.DateTimeField("Date de la dernière mise à jour fiche")
-    login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Utilisateur responsable de la dernière mise à jour")
+    creation = models.DateTimeField("Date de la création de la fiche")
+    maj = models.DateTimeField("Date de la dernière mise à jour")
+    login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Auteur de la dernière mise à jour")
+    slug = models.SlugField(max_length=20, unique=True, null=True) # à terme transformer null=False mais va poser pb pour l'insertion de données existantes
 
     class Meta:
         abstract = True
@@ -298,11 +301,16 @@ class Action(models.Model):
     def __str__(self):
         return self.titre
 
-    # Retourne un rapide descriptif
-    def short(self):
-        return u"%s - %s\n%s - %s" % (self.titre, self.date.strftime("%b %d, %I:%M %p"), self.Avancement)
-    short.allow_tags = True
-
+    def get_admin_url(self):
+#        content_type = ContentType.objects.get_for_model(self.__class__)
+        return "admin/cnls/%s/%s" % (self.__class__.__name__.lower(), self.id)
+        
+#    def get_absolute_url(self):
+#        return reverse('action', (), {
+#            'slug': self.slug,
+#            'id': self.id,
+#        })
+        
 # TODO
     # Controle de l'ancienneté de la fiche
     #def control_obsolescence(self):atlas

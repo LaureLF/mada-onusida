@@ -2,6 +2,7 @@ from django.contrib.gis import admin
 from django.contrib.auth.models import User
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
+from django.template.defaultfilters import slugify
 from datetime import datetime
 from leaflet.admin import LeafletGeoAdmin
 from cnls.forms import CustomUserCreationForm, CustomUserChangeForm, CustomAdminForm
@@ -28,9 +29,11 @@ class ActionAdmin(LeafletGeoAdmin):
         return ['createur']
 
     def save_model(self, request, obj, form, change):
-#        if not hasattr(self, 'id'):
         if not obj.id:
             obj.creation = datetime.now()
+            obj.slug = slugify(obj.titre)
+        if not obj.slug: # TODO supprimer en production
+            obj.slug = slugify(obj.titre)
         if not request.user.is_superuser:
             obj.createur = request.user
         obj.maj = datetime.now()
@@ -41,7 +44,7 @@ class ActionAdmin(LeafletGeoAdmin):
         fieldsets = []
         fieldsets.append(        
             (u'Informations générales', {
-                'fields': ('titre', 'description', 'organisme', 'typeintervention', 'cible', 'objectif', 'operateur',),
+                'fields': ('titre', 'description', 'organisme', 'typeintervention', 'cible',),
                 'classes': ('wide',),
                 'description': "<i><p>L'action sera symbolisée par un marqueur de couleur " + description + ".</p><p>NB. Pour enregistrer des actions à d'autres échelles, veuillez retourner à la page d'accueil.</i>", 
                 })     
@@ -63,7 +66,7 @@ class ActionAdmin(LeafletGeoAdmin):
         )
         fieldsets.append(
             (u'Objectifs et moyens', {
-                'fields': ('objectif', 'priorite_psn', 'resultat_cf_annee_ant', ('montant_prevu', 'montant_disponible',), 'devise', 'bailleurfond'),
+                'fields': ('objectif', 'operateur', 'priorite_psn', 'resultat_cf_annee_ant', ('montant_prevu', 'montant_disponible',), 'devise', 'bailleurfond'),
                 'classes': ('wide',),
 #                'description': '<i>texte</i>',
             })
