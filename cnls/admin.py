@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from datetime import datetime
 from leaflet.admin import LeafletGeoAdmin
 from cnls.forms import CustomUserCreationForm, CustomUserChangeForm, CustomAdminForm
-from cnls.models import Organisme, Action, TypeIntervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Faritra, Kaominina, Fokontany, Profil
+from cnls.models import Organisme, Bailleur, Action, TypeIntervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Faritra, Kaominina, Fokontany, Profil
      
 
 class ActionAdmin(LeafletGeoAdmin):
@@ -31,8 +31,6 @@ class ActionAdmin(LeafletGeoAdmin):
     def save_model(self, request, obj, form, change):
         if not obj.id:
             obj.creation = datetime.now()
-            obj.slug = slugify(obj.titre)
-        if not obj.slug: # TODO supprimer en production
             obj.slug = slugify(obj.titre)
         if not request.user.is_superuser:
             obj.createur = request.user
@@ -66,7 +64,7 @@ class ActionAdmin(LeafletGeoAdmin):
         )
         fieldsets.append(
             (u'Objectifs et moyens', {
-                'fields': ('objectif', 'operateur', 'priorite_psn', 'resultat_cf_annee_ant', ('montant_prevu', 'montant_disponible',), 'devise', 'bailleurfond'),
+                'fields': ('objectif', 'operateur', 'priorite_psn', 'resultat_cf_annee_ant', ('montant_prevu', 'montant_disponible',), 'devise', 'bailleur'),
                 'classes': ('wide',),
 #                'description': '<i>texte</i>',
             })
@@ -117,6 +115,7 @@ class ActionLocaleAdmin(ActionAdmin):
 # On enregistre les classes que l'on veut pouvoir modifier depuis l'interface d'administration, suivies éventuellement des modifications de l'interface par défaut
 
 admin.site.register(Organisme)
+admin.site.register(Bailleur)
 #admin.site.register(Profil)
 admin.site.register(ActionNationale,ActionNationaleAdmin)
 admin.site.register(ActionTananarive,ActionTananariveAdmin)

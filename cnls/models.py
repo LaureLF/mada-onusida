@@ -3,8 +3,6 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 from django.contrib.auth.models import User
 from django.utils.timezone import now
-from django.core import urlresolvers
-from django.contrib.contenttypes.models import ContentType
 #from django.db.models.signals import post_save
 
 """
@@ -54,8 +52,8 @@ class Faritra(models.Model):
       ("toli-moro", "Morondava"),     
     )),
     )
-    nom = models.CharField(max_length=50, choices=FARITRA)
-#    nom = models.CharField(max_length=50, verbose_name=u"Nom de la région", default='')
+#    nom = models.CharField(max_length=50, choices=FARITRA)
+    nom = models.CharField(max_length=50, verbose_name=u"Nom de la région")
 #    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la capitale de région")
 #    objects = models.GeoManager()
    
@@ -64,10 +62,12 @@ class Faritra(models.Model):
         verbose_name_plural = "Préfectures - Faritra"
 
     def __str__(self):
-        return self.get_nom_display()
+#        return self.get_nom_display()
+        return self.nom
 
     def natural_key(self):
-        return (self.get_nom_display(),)
+#        return (self.get_nom_display(),)
+        return self.nom
 
 
 
@@ -81,8 +81,8 @@ class Fokontany(models.Model):
     ('tana5', 'Tana V - Ambatomainty'),
     ('tana6', 'Tana VI - Ambohimanarina'),
     )
-    nom = models.CharField(max_length=50, choices=FOKONTANY)
-#    nom = models.CharField(max_length=50, verbose_name=u"Nom du fokontany", default='') 
+#    nom = models.CharField(max_length=50, choices=FOKONTANY)
+    nom = models.CharField(max_length=50, verbose_name=u"Nom du fokontany") 
 #    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées du fokontany")
 #    objects = models.GeoManager()
     class Meta:
@@ -90,10 +90,12 @@ class Fokontany(models.Model):
         verbose_name_plural = "Arrondissements - Fokontany"
 
     def __str__(self):
-        return self.get_nom_display()
+#        return self.get_nom_display()
+        return self.nom
 
     def natural_key(self):
-        return (self.get_nom_display(),)
+#        return (self.get_nom_display(),)
+        return self.nom
 
 
 # KAOMININA
@@ -105,45 +107,50 @@ class Kaominina(models.Model):
     ('commune3', 'Commune3'),
     ('commune4', 'Commune4'),
     )
-    nom = models.CharField(max_length=50, choices=KAOMININA)
-#    nom = models.CharField(max_length=50, verbose_name=u"Nom de la commune", default='') 
+#    nom = models.CharField(max_length=50, choices=KAOMININA)
+    nom = models.CharField(max_length=50, verbose_name=u"Nom de la commune")
+    region =  models.ForeignKey('Faritra', null=True)
 #    mpoint = models.PointField(default='SRID=4326;POINT(0.0 0.0)', verbose_name="Coordonnées de la commmune")
 #    objects = models.GeoManager()
     class Meta:
         verbose_name = "Commune - Kaominina"
         verbose_name_plural = "Communes - Kaominina"
+
     def __str__(self):
-        return self.get_nom_display()
+#        return self.get_nom_display()
+        return self.nom
+
     def natural_key(self):
-        return (self.get_nom_display(),)
+#        return (self.get_nom_display(),)
+        return self.nom
         
         
 #########################################
 # CIBLE
 class Cible(models.Model):
     LISTE= (
-        ('1-pg', u'Population générale'),
+        ('1-population-generale', u'Population générale'),
         ('Adultes', (
-          ('2-pvalv', u'Personnes vivant avec le VIH'),
-          ('2-pdv', u'Perdus de vue'),
-          ('2-cddi', u'Consommateurs de drogues injectables'),
-          ('2-hadradah', u'Homme ayant des rapports avec d’autres hommes'),
-          ('2-tds', u'Travailleuses du sexe'),
-          ('2-hacahr', u'Hommes à comportements à hauts risques'),
-          ('2-cdtds', u'Clients des travailleuses du sexe'),
-          ('2-pm', u'Populations migrantes'),
-          ('2-pc', u'Population carcérale'),
-          ('2-fa', u'Forces armées'),
-          ('2-fe', u'Femmes enceintes'),
-          ('2-fvdvs', u'Femmes victimes de violences sexuelles'),
-          ('2-lrot', u'Leaders religieux ou traditionnels'),
-          ('2-pds', u'Personnels de santé'),
-          ('3-a', u'Autres (Cercles associatifs, cercles religieux, etc)'),
+          ('2-personne-vivant-avec-le-vih', u'Personnes vivant avec le VIH'),
+          ('2-perdus-de-vue', u'Perdus de vue'),
+          ('2-consommateurs-de-drogues-injectables', u'Consommateurs de drogues injectables'),
+          ('2-hommes-ayant-des-rapports-avec-d-autres-hommes', u'Homme ayant des rapports avec d’autres hommes'),
+          ('2-travailleuses-du-sexe', u'Travailleuses du sexe'),
+          ('2-hommes-a-comportements-a-hauts-risques', u'Hommes à comportements à hauts risques'),
+          ('2-clients-des-travailleuses-du-sexe', u'Clients des travailleuses du sexe'),
+          ('2-populations-migrantes', u'Populations migrantes'),
+          ('2-population-carcerale', u'Population carcérale'),
+          ('2-forces-armees', u'Forces armées'),
+          ('2-femmes-enceintes', u'Femmes enceintes'),
+          ('2-femmes-victimes-de-violences-sexuelles', u'Femmes victimes de violences sexuelles'),
+          ('2-leaders-religieux-ou-traditionnels', u'Leaders religieux ou traditionnels'),
+          ('2-personnels-de-sante', u'Personnels de santé'),
+          ('3-autres', u'Autres (Cercles associatifs, cercles religieux, etc)'),
           )),
         ('Jeunes', (
-          ('5-js', u'Jeunes scolarisés'),
-          ('5-jns', u'Jeunes non-scolarisés'),
-          ('5-oeev', u'Orphelins et enfants vulnérables'),
+          ('5-jeunes-scolarises', u'Jeunes scolarisés'),
+          ('5-jeunes-non-scolarises', u'Jeunes non-scolarisés'),
+          ('5-orphelins-et-enfants-vulnerables', u'Orphelins et enfants vulnérables'),
           )),
     )
 
@@ -197,8 +204,8 @@ class TypeIntervention(models.Model):
 # ORGANISME
 class Organisme(models.Model):
     nom = models.CharField(max_length=100, unique=True)
-    description = models.TextField(blank=True, default='')
-    logo = models.ImageField(upload_to="static/media/logo/", blank=True, default="static/media/logo/defaultLogo.png")
+    description = models.TextField(blank=True, null=True)
+    logo = models.ImageField(upload_to="static/media/logo/", blank=True, null = True)
     referent = models.ForeignKey('self', blank=True, null=True)
     
     def natural_key(self):
@@ -208,7 +215,22 @@ class Organisme(models.Model):
         managed = True
         verbose_name = 'Organisme'
         verbose_name_plural = "Organismes"
-        ordering = ['nom']
+#        ordering = ['nom']
+
+    def __str__(self):
+        return self.nom
+
+# BAILLEUR
+class Bailleur(models.Model):
+    nom = models.CharField(max_length=100, unique=True)
+    
+    def natural_key(self):
+        return (self.nom,)
+
+    class Meta:
+        managed = True
+        verbose_name = 'Bailleur de fonds'
+        verbose_name_plural = "Bailleurs de fonds"
 
     def __str__(self):
         return self.nom
@@ -218,7 +240,7 @@ class Profil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme / Structure", null = True)
     poste = models.CharField(max_length = 250, verbose_name="Poste ou responsabilité occupé(e)", null=True, blank = True)
-    photo = models.ImageField(blank=True, upload_to="static/media/photos/", default="static/media/photos/defaultPicture.png")
+    photo = models.ImageField(blank=True, upload_to="static/media/photos/", null=True)
  
     def natural_key(self):
         return (self.user.username, self.user.first_name, self.user.last_name,)
@@ -264,7 +286,7 @@ class Action(models.Model):
     
     date_debut = models.DateField("Date de démarrage", auto_now_add=False, auto_now=False)
     date_fin = models.DateField("Date de fin", auto_now_add=False, auto_now=False)
-    duree = models.CharField(max_length=40, blank=True, default='', verbose_name="Durée de l'action") 
+    duree = models.CharField(max_length=40, blank=True, null=True, verbose_name="Durée de l'action") 
     avancement = models.CharField( max_length=10,choices=AVANCEMENT, default='en cours',verbose_name="État d'avancement") 
 
     createur = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_related", verbose_name="Nom du responsable de la fiche")
@@ -274,13 +296,13 @@ class Action(models.Model):
     montant_prevu = models.PositiveIntegerField(null=True, blank=True, verbose_name="Montant prévu")
     montant_disponible = models.PositiveIntegerField(null=True, blank=True, verbose_name="Montant disponible")
     devise = models.CharField(max_length=10,choices=DEVISE, null=True, blank=True)
-    bailleurfond = models.CharField(max_length = 100, blank=True, verbose_name="Bailleurs de fond", default='')
-    origine = models.CharField(max_length = 100,verbose_name="Origine de la donnée", blank=True, default='')
+    bailleur = models.ForeignKey(Bailleur, verbose_name="Bailleurs de fond", blank=True, null=True)
+    origine = models.CharField(max_length = 100,verbose_name="Origine de la donnée", blank=True, null=True)
     contact = models.EmailField(max_length = 100, verbose_name="Adresse email de contact")
     
-    operateur = models.CharField(max_length = 100, blank=True, verbose_name="Opérateur en lien avec l'action", default='')
-    resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", default='')
-    priorite_psn = models.CharField(max_length = 100, blank=True, verbose_name="Priorité du PSN que l'activité appuie", default='')
+    operateur = models.CharField(max_length = 100, blank=True, verbose_name="Opérateur en lien avec l'action", null=True)
+    resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", null=True)
+    priorite_psn = models.CharField(max_length = 100, blank=True, verbose_name="Priorité du PSN que l'activité appuie", null=True)
 
     mpoint = models.MultiPointField(default='SRID=4326;MULTIPOINT EMPTY', geography=True, srid=4326, verbose_name="Coordonnées géographiques", help_text="Détermine la position de l'action sur la carte.", blank=True)
     objects = models.GeoManager()
@@ -288,7 +310,7 @@ class Action(models.Model):
     creation = models.DateTimeField("Date de la création de la fiche")
     maj = models.DateTimeField("Date de la dernière mise à jour")
     login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Auteur de la dernière mise à jour")
-    slug = models.SlugField(max_length=20, unique=True, null=True) # à terme transformer null=False mais va poser pb pour l'insertion de données existantes
+    slug = models.SlugField(max_length=50, unique=True, null=True) # à terme transformer null=False mais va poser pb pour l'insertion de données existantes
 
     class Meta:
         abstract = True
@@ -302,7 +324,6 @@ class Action(models.Model):
         return self.titre
 
     def get_admin_url(self):
-#        content_type = ContentType.objects.get_for_model(self.__class__)
         return "admin/cnls/%s/%s" % (self.__class__.__name__.lower(), self.id)
         
 #    def get_absolute_url(self):
