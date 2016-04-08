@@ -322,7 +322,7 @@ function init() {
         maxZoom: 10
     });
     // TODO check tile server's terms of use
-    L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {attribution: "Tiles courtesy of <a href='http://www.mapquest.com/'>MapQuest</a>, &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://www.opendatacommons.org/licenses/odbl'>ODbL</a>"} ).addTo(map);
+    L.tileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Cartography by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='http://creativecommons.org/licenses/by-sa/2.0/ target='_blank''>CC BY-SA</a>)."} ).addTo(map);
 
 
     popupTpl = _.template( $('.js-tpl-popup').html() );
