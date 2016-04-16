@@ -116,19 +116,19 @@
 
         <tr>
           <td>Date de d&eacute;marrage</td>
-          <td>{{action.date_debut}}</td>
+          <td>{% if action.date_debut != None %}{{action.date_debut}}{% endif %}</td>
         </tr>
         <tr>
           <td>Date de fin</td>
-          <td>{{action.date_fin}}</td>
+          <td>{% if action.date_fin != None %}{{action.date_fin}}{% endif %}</td>
         </tr>
         <tr>
           <td>Durée de l'action</td>
-          <td>{{action.duree}}</td>
+          <td>{% if action.duree != None %}{{action.duree}}{% endif %}</td>
         </tr>
         <tr>
           <td>&Eacute;tat d'avancement</td>
-          <td>{{action.avancement}}</td>
+          <td>{% if action.avancement != None %}{{action.avancement}}{% endif %}</td>
         </tr>
         <tr>
           <td>Nombre de personnes vis&eacute;es</td>
@@ -136,15 +136,15 @@
         </tr>
         <tr>
           <td>Opérateur en lien avec l'action</td>
-          <td>{{action.operateur}}</td>
+          <td>{% if action.operateur != None %}{{action.operateur}}{% endif %}</td>
         </tr>
         <tr>
           <td>Priorit&eacute; du PSN que l'activit&eacute; appuie</td>
-          <td>{{action.priorite_psn}}</td>
+          <td>{% if action.priorite_psn != None %}{{action.priorite_psn}}{% endif %}</td>
         </tr>
         <tr>
           <td>R&eacute;sultat par rapport &agrave; l'ann&eacute;e pr&eacute;c&eacute;dente</td>
-          <td>{{action.resultat_cf_annee_ant}}</td>
+          <td>{% if action.resultat_cf_annee_ant != None %}{{action.resultat_cf_annee_ant}}{% endif %}</td>
         </tr>
         <tr>
           <td>Montant pr&eacute;vu</td>
@@ -156,15 +156,15 @@
         </tr>
         <tr>
           <td>Devise</td>
-          <td>{{action.devise}}</td>
+          <td>{% if action.devise != None %}{{action.devise}}{% endif %}</td>
         </tr>
         <tr>
           <td>Bailleur de fond</td>
-          <td>{{action.bailleurfond}}</td>
+          <td>{% if action.bailleur != None %}{{action.bailleur}}{% endif %}</td>
         </tr>
         <tr>
           <td>Origine de la donn&eacute;e</td>
-          <td>{{action.origine}}</td>
+          <td>{% if action.origine != None %}{{action.origine}}{% endif %}</td>
         </tr>
         <tr>
           <td>Commentaires</td>
@@ -175,7 +175,7 @@
           <td>{{action.createur}}</td>
         </tr>
         <tr>
-          <td>Adresse email de contact</td><!-- filtrer si utilisateur connecté-->
+          <td>Adresse email de contact</td><!-- TODO filtrer si utilisateur connecté-->
           <td></td>
         </tr>
         <tr>
@@ -184,11 +184,11 @@
         </tr>
         <tr>
           <td>Derni&egrave;re modification par</td>
-          <td>{{action.login_maj}}</td>
+          <td>{% if action.login_maj %}{{action.login_maj}}{% else %}(sans objet){% endif %}</td>
         </tr>
         <tr>
           <td>Derni&egrave;re modification le</td>
-          <td>{{action.maj}}</td>
+          <td>{% if action.maj %}{{action.maj}}{% else %}(sans objet){% endif %}</td>
         </tr>
      
       

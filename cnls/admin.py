@@ -32,10 +32,11 @@ class ActionAdmin(LeafletGeoAdmin):
         if not obj.id:
             obj.creation = datetime.now()
             obj.slug = slugify(obj.titre)
+        else:
+            obj.maj = datetime.now()
+            obj.login_maj = request.user
         if not request.user.is_superuser:
-            obj.createur = request.user
-        obj.maj = datetime.now()
-        obj.login_maj = request.user
+            obj.createur = request.user    
         super(ActionAdmin, self).save_model(request, obj, form, change)
 
     def ordre_fieldsets(description, nom_localisation):

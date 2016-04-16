@@ -131,7 +131,7 @@ class Cible(models.Model):
     LISTE= (
         ('1-population-generale', u'Population générale'),
         ('Adultes', (
-          ('2-personne-vivant-avec-le-vih', u'Personnes vivant avec le VIH'),
+          ('2-personnes-vivant-avec-le-vih', u'Personnes vivant avec le VIH'),
           ('2-perdus-de-vue', u'Perdus de vue'),
           ('2-consommateurs-de-drogues-injectables', u'Consommateurs de drogues injectables'),
           ('2-hommes-ayant-des-rapports-avec-d-autres-hommes', u'Homme ayant des rapports avec d’autres hommes'),
@@ -284,8 +284,8 @@ class Action(models.Model):
     cible = models.ManyToManyField(Cible, verbose_name="Publics cibles")
     objectif = models.PositiveIntegerField(null=True, blank=True, verbose_name="Nombre de personnes visées")
     
-    date_debut = models.DateField("Date de démarrage", auto_now_add=False, auto_now=False)
-    date_fin = models.DateField("Date de fin", auto_now_add=False, auto_now=False)
+    date_debut = models.DateField("Date de démarrage", auto_now_add=False, auto_now=False, null=True)
+    date_fin = models.DateField("Date de fin", auto_now_add=False, auto_now=False, null=True)
     duree = models.CharField(max_length=40, blank=True, null=True, verbose_name="Durée de l'action") 
     avancement = models.CharField( max_length=10,choices=AVANCEMENT, default='en cours',verbose_name="État d'avancement") 
 
@@ -298,7 +298,7 @@ class Action(models.Model):
     devise = models.CharField(max_length=10,choices=DEVISE, null=True, blank=True)
     bailleur = models.ForeignKey(Bailleur, verbose_name="Bailleurs de fond", blank=True, null=True)
     origine = models.CharField(max_length = 100,verbose_name="Origine de la donnée", blank=True, null=True)
-    contact = models.EmailField(max_length = 100, verbose_name="Adresse email de contact")
+    contact = models.EmailField(max_length = 100, verbose_name="Adresse email de contact", null=True)
     
     operateur = models.CharField(max_length = 100, blank=True, verbose_name="Opérateur en lien avec l'action", null=True)
     resultat_cf_annee_ant = models.CharField(max_length = 250, blank=True, verbose_name="Résultat par rapport à l'année précédente", null=True)
@@ -308,9 +308,9 @@ class Action(models.Model):
     objects = models.GeoManager()
  
     creation = models.DateTimeField("Date de la création de la fiche")
-    maj = models.DateTimeField("Date de la dernière mise à jour")
-    login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Auteur de la dernière mise à jour")
-    slug = models.SlugField(max_length=50, unique=True, null=True) # à terme transformer null=False mais va poser pb pour l'insertion de données existantes
+    maj = models.DateTimeField("Date de la dernière mise à jour", null=True)
+    login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Auteur de la dernière mise à jour", null=True)
+    slug = models.SlugField(max_length=50, default='')
 
     class Meta:
         abstract = True

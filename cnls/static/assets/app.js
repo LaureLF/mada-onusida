@@ -130,10 +130,10 @@ function filterMarkers(filters) {
             return filterFunctions[filter.type](filter, ilayer.feature);
         })
         if (ilayer.show) {
-//        alert('ilayer.show = true');
             markerClusters.addLayer(ilayer);
         } else {
-//                alert('ilayer.show = false');
+//            markerClusters.refreshClusters(ilayer);
+//            markerClusters.getVisibleParent(ilayer).unspiderfy();
             markerClusters.removeLayer(ilayer);
         }
     })
@@ -297,18 +297,6 @@ function initDatePicker() {
     }
 }
 
-//////////
-// openModal()
-//////////
-// TODO transformer en un nouvel onglet avec url partageable
-//function openModal(link) {
-//    var index = $(link).parents('.js-popup').data().index;
-//    var data = features[index].properties;
-//    var modalDom = modalTpl({data: data});
-//
-//    $(modalDom).modal();
-//}
-
 /////////////////////////////////////////////////////////////
 
 //////////
@@ -325,9 +313,6 @@ function init() {
     L.tileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Cartography by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='http://creativecommons.org/licenses/by-sa/2.0/ target='_blank''>CC BY-SA</a>)."} ).addTo(map);
 
 
-    popupTpl = _.template( $('.js-tpl-popup').html() );
-//    modalTpl = _.template( $('.js-tpl-modal').html() );
-
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');
     regionListItemTpl = _.template('<option value="<%= center %>"><%= name %></option>');
@@ -340,15 +325,6 @@ function init() {
     // initialize filters count without actually filtering (geoJSON no there yet)
     updateFilters();
 
-    //move that to a sass loop later :)
-//    _.each($('#actionType .checkboxList input'), function(el, index) {
-//        $('<span class="icon"></span>').insertBefore(el).css('background-position', '-' + index * 30 + 'px' + ' 0');
-//    });
-
-//    _.each($('#population .checkboxList input'), function(el, index) {
-//          $('<span class="icon"></span>').insertBefore(el).css('background-position', '-' + index * 30 + 'px' + ' 0');
-//    });
-
     $('.js-showfilters').on('click', function () {
         $('.js-filters').addClass('opened');
     });
@@ -358,6 +334,7 @@ function init() {
     });
 
     $('.js-filter-checkboxes input').on('change', function () {
+    // TODO unspiderify all -ici?
         updateFilters();
         filterMarkers(getFilters());
     });
@@ -367,34 +344,56 @@ function init() {
         filterMarkers(getFilters());
     })
 
-//    $.ajax(window.appConfig.testDataPath).done( buildFeatures );
-//    buildFeatures(toutesActions);
     markerClusters = L.markerClusterGroup({
         showCoverageOnHover: false,
         maxClusterRadius: 40,
         spiderfyDistanceMultiplier: 2,
         singleMarkerMode: true,
-        zoomToBoundsOnClick: false,
 //        iconCreateFunction: colorMarkers,
-    });
-    markerClusters.on('clusterclick', function (a) {
- //       map.zoomIn(); // TODO pourquoi referme le cluster avant la fin du chargement du nouveau niveau de zoom ?
-        a.layer.spiderfy();
     });
     
     geojsonLayer = L.geoJson(toutesActions, {
         onEachFeature: function (feature, layer) {
-            var popupData = feature.properties;
-            var popup = L.popup().setContent( popupTpl( {data: popupData, internalIndex: ilayers.length }) );
-            layer.bindPopup(popup);
-//            feature.layer = layer;
+            var data = feature.properties;
+            var html = '<div class="js-popup">';
+            html += '<div class="popup-title">'+ data.titre ;
+            if (typeof data.avancement !== 'undefined') {
+                html += '<span class="label label-default">'+ data.avancement + '</span>'; 
+            }
+            html += '</div>' ;
+            if (data.description !== data.titre) {
+                html += '<div class="popup-description">'+ data.description +'</div>';
+            }
+            html += '<table class="popup-table">';
+            html += '<tr><td>ONG sur le terrain</td><td>'+ data.organisme +'</td></tr>';
+            if (data.bailleur !== null) {
+                html += '<tr><td>Bailleur de fonds</td><td>'+ data.bailleur +'</td></tr>';
+            }
+            if (typeof data.region !== 'undefined') {
+                html += '<tr><td>&Eacute;chelle</td><td>pr&eacute;fectorale</td></tr>';                
+                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region +'</td></tr>';
+            } else if (typeof data.fokontany !== 'undefined') {
+                html += '<tr><td>&Eacute;chelle</td><td>Tananarive</td></tr>';                
+                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany +'</td></tr>';
+            } else if (typeof data.kaominina !== 'undefined') {
+                html += '<tr><td>&Eacute;chelle</td><td>communale</td></tr>';                
+                html += '<tr><td>Commune(s)</td><td>'+ data.kaominina +'</td></tr>';
+            } else {
+                html += '<tr><td>&Eacute;chelle</td><td>Madagascar</td></tr>';
+            }
+            html += '<tr><td>Type(s) d\'actions</td><td>'+ data.typeintervention +'</td></tr>';
+            html += '<tr><td>Population(s)</td><td>'+ data.cible +'</td></tr>';
+            html += '</table>';
+            html += '<div class="popup-link">';
+            html += '<a href=\"'+ data.classe +'/'+ data.id +'/'+ data.slug +'\" target="_blank">Ouvrir la fen&ecirc;tre d&eacute;taill&eacute;e (nouvel onglet)</a>';
+            html += '</div>';
+            html += '</div>';
+            layer.bindPopup(L.popup().setContent(html), {offset: [0, 0]});
             layer.show = true;
-//            features.push(feature);
             markerClusters.addLayer(layer);
         }
     });
     ilayers = geojsonLayer.getLayers();
-//    alert(actionsTananarive);
     map.addLayer(markerClusters);
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {

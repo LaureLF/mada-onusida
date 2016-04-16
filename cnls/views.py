@@ -28,7 +28,7 @@ def home(request):
         })))
 
 #def detail(request, action_echelle, action_id):
-def detail(request, classe, id, slug):
+def detail(request, classe, id):
     template = loader.get_template('detail.html')
     model = get_model('cnls', classe)
 #    return HttpResponse("%s , '%s' n° %s." % (classe, slug, id))
