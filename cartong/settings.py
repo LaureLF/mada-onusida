@@ -120,7 +120,7 @@ LEAFLET_CONFIG = {
     'DEFAULT_ZOOM': 5,
     'MIN_ZOOM': 5,
     'MAX_ZOOM': 18,
-    'TILES': [('OpenStreetMap', 'http://otile1.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png', {'attribution': "Tiles courtesy of <a href='http://www.mapquest.com/'>MapQuest</a>, &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='http://www.opendatacommons.org/licenses/odbl'>ODbL</a>"})],
+    'TILES': [('OpenStreetMap', 'http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {'attribution': "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Cartography by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='http://creativecommons.org/licenses/by-sa/2.0/ target='_blank''>CC BY-SA</a>)."})],
     'RESET_VIEW': False,
 #    'MINIMAP': True # constructeur non reconnu
 }
