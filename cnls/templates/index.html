@@ -111,16 +111,19 @@ for (var key in actionsLocales.features) {
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="echelle">
               
               <label>
-                <input type="checkbox" checked data-filter-checkbox-value="pays">Actions nationales
+                <input type="checkbox" checked onClick="toggle(this, 'echelle')"><i>Tout dé-/sélectionner</i>
               </label>
               <label>
-                <input type="checkbox" checked data-filter-checkbox-value="fokontany">Actions &agrave; Tananarive
+                <input type="checkbox" name='echelle' checked data-filter-checkbox-value="pays">Actions nationales
               </label>
               <label>
-                <input type="checkbox" checked data-filter-checkbox-value="region">Actions r&eacute;gionales
+                <input type="checkbox" name='echelle' checked data-filter-checkbox-value="fokontany">Actions &agrave; Tananarive
               </label>
               <label>
-                <input type="checkbox" checked data-filter-checkbox-value="commune">Actions locales
+                <input type="checkbox" name='echelle' checked data-filter-checkbox-value="region">Actions r&eacute;gionales
+              </label>
+              <label>
+                <input type="checkbox" name='echelle' checked data-filter-checkbox-value="commune">Actions locales
               </label>
             </div>
           </div>
@@ -146,11 +149,15 @@ for (var key in actionsLocales.features) {
 
           <div id="actionType" class="panel-collapse collapse" role="tabpanel" aria-labelledby="actionTypeHeading">
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="typeintervention">
+              <label>
+                <span class="icon" style="background-image: url({% static "./media/picto/blank.png" %})"></span>
+                <input type="checkbox" checked onClick="toggle(this, 'type')"><i>Tout dé-/sélectionner</i>
+              </label>
               {% for type in typesinterventions %}
               {% with "./media/picto/typeintervention-"|add:type.nom|add:".png" as pictoType %}         
               <label>
                 <span class="icon" style="background-image: url({% static pictoType %})"></span>
-                <input type="checkbox" checked data-filter-checkbox-value="{{type.get_nom_display}}">
+                <input type="checkbox" name="type" checked data-filter-checkbox-value="{{type.get_nom_display}}">
                 <abbr title="{{type.descriptif}}">{{type.get_nom_display}}</abbr>
               </label>
               {% endwith %}
@@ -176,11 +183,15 @@ for (var key in actionsLocales.features) {
           </div>
           <div id="population" class="panel-collapse collapse" role="tabpanel" aria-labelledby="populationHeading">
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="cible">
-            {% for cible in cibles %}
-            {% with "./media/picto/cible-"|add:cible.nom|add:".png" as pictoCible %}
+              <label>
+                <span class="icon" style="background-image: url({% static "./media/picto/blank.png" %})"></span>
+                <input type="checkbox" checked onClick="toggle(this, 'cible')"><i>Tout dé-/sélectionner</i>
+              </label>
+              {% for cible in cibles %}
+              {% with "./media/picto/cible-"|add:cible.nom|add:".png" as pictoCible %}
               <label>
                 <span class="icon" style="background-image: url({% static pictoCible %})"></span>
-                <input type="checkbox" checked data-filter-checkbox-value="{{cible.get_nom_display}}">{{cible.get_nom_display}}
+                <input type="checkbox" name="cible" checked data-filter-checkbox-value="{{cible.get_nom_display}}">{{cible.get_nom_display}}
               </label> 
             {% endwith %}   
             {% endfor %}

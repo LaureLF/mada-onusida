@@ -79,6 +79,17 @@ var filterFunctions = {
 }
 
 //////////
+// toggle()
+//////////
+function toggle(source, filterName) {
+    var checkboxes = document.getElementsByName(filterName);
+  
+    for(var i=0, n=checkboxes.length;i<n;i++) {
+      checkboxes[i].checked = source.checked;
+    }
+}
+
+//////////
 // buildFeatures()
 //////////
 //function buildFeatures(data) {
