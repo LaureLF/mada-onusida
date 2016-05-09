@@ -37,6 +37,11 @@ for (var key in actionsLocales.features) {
   </script>
 
   <script type="text/javascript" src="{% static "./assets/app.js" %}"></script>
+    
+  <script type="text/javascript" src="{% static "./vendors.js" %}"></script>
+  <script type="text/javascript" src="{% static "./assets/leaflet.js" %}"></script>
+  <script type="text/javascript" src="{% static "./assets/leaflet.markercluster.js" %}"></script>
+
   
 </head>
 
@@ -150,46 +155,6 @@ for (var key in actionsLocales.features) {
               </label>
               {% endwith %}
               {% endfor %}
-<!--              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="plaidoyer">
-                <abbr title="action visant à changer les comportements et à influencer les politiques. Ce genre d'interventions consiste en des actions d'informations, de sensibilisation, renforcement des capacités, d'établissement de réseaux/partenariats et aussi de lobbying.">Plaidoyer</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="ccc">
-                <abbr title="communication pour le changement de comportement ou communication de proximité">CCC</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="preservatifs">
-                <abbr title="promotion et distribution de préservatifs (masculins, féminins, gels lubrifiants).">Promotion de préservatifs</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="communication">
-                <abbr title="Sensibilisation lors de manifestations ou événements culturels, Unité Mobile Vidéo, programme radiophonique, programme télévisé, etc...">Communication de masse</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="ist">
-                Prise en charge IST
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="depistage">
-                <abbr title="action de dépistage du virus et conseils">Dépistage</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="prise_en_charge">
-                <abbr title="Prise en charge IST et prise en charge médicale des PVVIH (suivi biologique, traitement ARV, traitement des infections opportunistes). ">Prise en charge médicale</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="soutien">
-                <abbr title="soutien des personnes infectées et affectées par le VIH (prise en charge psychosociale, appuis nutritionnels, appuis économiques, éducation thérapeutique, conseil, etc)">Soutien</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="coordination">
-                <abbr title="Coordination et suivi, évaluation">Coordination</abbr>
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="renforcement">
-                Renforcement des capacités
-              </label>-->
             </div>
           </div>
         </div><!--/actionType panel -->
@@ -315,6 +280,21 @@ for (var key in actionsLocales.features) {
         </div><!--/date panel -->
 
 
+        <!--export panel -->
+        <div class="panel  panel--inner">
+          <div class="panel-heading" role="tab" id="populationHeading">
+            <h4 class="panel-title">
+              <a class="collapsed panel-title-inner largeButton" >
+                  <button type="button" onclick="location.href='./actions/'">Exporter la sélection au format .csv</button> 
+              </a>
+            </h4>
+          </div>
+          <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">
+            
+          </div>
+        </div><!--/export panel -->
+
+
       </div>  <!--/.panel-group -->
     </div>
   </div><!--/#filters -->
@@ -328,111 +308,6 @@ for (var key in actionsLocales.features) {
     <img src="{% static "./assets/img/CartONG_logo.png" %}" alt="CartONG">
   </a>
 
-
-
-
-<!-- popupTpl -TODO à déplacer dans un fichier html propre ? -->
-  <script type="text/template" class="js-tpl-popup">
-    <div class="js-popup" data-index="<%= internalIndex %>">
-      <div class="popup-title">
-        <%= data.titre %>
-        <% if (data.avancement === 'en cours') { %>
-          <span class="label label-default">en cours</span>
-        <% } else if (data.avancement === 'en attente') { %>
-          <span class="label label-default">en attente</span>
-        <% } else { %> 
-          <span class="label label-default">terminé</span>
-        <% } %>  
-
-      </div>
-
-      <table class="popup-table table table-striped">
-        <% if (data.region) { %>
-        <tr>
-          <td>&Eacute;chelle</td>
-          <td>pr&eacute;fectorale</td>
-        </tr>
-        <tr>
-          <td>R&eacute;gion(s)</td>
-          <td><%= data.region %></td>
-        </tr>
-        <% } else if (data.commune) { %>
-        <tr>
-          <td>&Eacute;chelle</td>
-          <td>communale</td>
-        </tr>
-        <tr>
-          <td>Commune(s)</td>
-          <td><%= data.commune %></td>
-        </tr>
-        <% } else if (data.fokontany) { %>
-        <tr>
-          <td>&Eacute;chelle</td>
-          <td>Tananarive</td>
-        </tr>
-        <tr>
-          <td>Fokontany(s)</td>
-          <td><%= data.fokontany %></td>
-        </tr>
-        <% } else { %>
-        <tr>
-          <td>&Eacute;chelle</td>
-          <td>Madagascar</td>
-        </tr>
-        <% } %>  
-        
-        <tr>
-          <td>ONG</td>
-          <td><%= data.organisme %></td>
-        </tr>
-        <tr>
-          <td>Type(s) d&#39;actions</td>
-          <td><%= data.typeintervention %></td>
-        </tr>
-        <tr>
-          <td>Population</td>
-          <td><%= data.cible %></td>
-        </tr>
-        <tr>
-          <td>Date début</td>
-          <td><% if (data.date_debut) print(moment(data.date_debut, 'YYYY-MM-DD').format('ll')) %></td>
-        </tr>
-        <tr>
-          <td>Date fin</td>
-          <td><% if (data.date_fin) print(moment(data.date_fin, 'YYYY-MM-DD').format('ll')) %></td>
-        </tr>
-
-      </table>
-      
-      <div class="popup-link">
-        <a href="<%= data.class %>/<%= data.id %>/<%= data.slug %>" target="_blank">D&eacute;tails</a>
-      </div>
-    </div>
-  </script>
-
-<!--  <script type="text/template" class="js-tpl-modal">
-    <div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title" id="myModalLabel"><%= data.titre %></h4>
-          </div>
-          <div class="modal-body">
-          <% if (data.description == "") print("(pas de description enregistr&eacute;e)")
-             else print(data.description) %>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </script>-->
-
-
-
-  <script type="text/javascript" src="{% static "./vendors.js" %}"></script>
 
   <script type="text/javascript">
 //    L.Icon.Default.imagePath = "{% static "./assets/img" %}";

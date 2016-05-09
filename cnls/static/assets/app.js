@@ -132,8 +132,6 @@ function filterMarkers(filters) {
         if (ilayer.show) {
             markerClusters.addLayer(ilayer);
         } else {
-//            markerClusters.refreshClusters(ilayer);
-//            markerClusters.getVisibleParent(ilayer).unspiderfy();
             markerClusters.removeLayer(ilayer);
         }
     })
@@ -310,7 +308,7 @@ function init() {
         maxZoom: 10
     });
     // TODO check tile server's terms of use
-    L.tileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Cartography by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='http://creativecommons.org/licenses/by-sa/2.0/ target='_blank''>CC BY-SA</a>)."} ).addTo(map);
+    L.tileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Tiles by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='http://creativecommons.org/licenses/by-sa/2.0/ target='_blank''>CC BY-SA</a>)."} ).addTo(map);
 
 
     regionsListContainer = $('.js-regions');
@@ -355,7 +353,7 @@ function init() {
     geojsonLayer = L.geoJson(toutesActions, {
         onEachFeature: function (feature, layer) {
             var data = feature.properties;
-            var html = '<div class="js-popup">';
+            var html = '';
             html += '<div class="popup-title">'+ data.titre ;
             if (typeof data.avancement !== 'undefined') {
                 html += '<span class="label label-default">'+ data.avancement + '</span>'; 
@@ -365,36 +363,63 @@ function init() {
                 html += '<div class="popup-description">'+ data.description +'</div>';
             }
             html += '<table class="popup-table">';
-            html += '<tr><td>ONG sur le terrain</td><td>'+ data.organisme +'</td></tr>';
+            html += '<tr><td>ONG sur le terrain</td><td>'+ data.organisme[0];
+            if (typeof data.organisme[1] !== 'undefined') {
+                html += '<img src='+ data.organisme[1] +' height="50">';
+            }
+            html += '</td></tr>';
             if (data.bailleur !== null) {
                 html += '<tr><td>Bailleur de fonds</td><td>'+ data.bailleur +'</td></tr>';
             }
             if (typeof data.region !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>pr&eacute;fectorale</td></tr>';                
-                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region +'</td></tr>';
+                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region[0] ;
+                for (var i=1; i < data.region.length; i++) {
+                    html += ", "+ data.region[i] +""; 
+                }                
+                html += '</td></tr>';
             } else if (typeof data.fokontany !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>Tananarive</td></tr>';                
-                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany +'</td></tr>';
-            } else if (typeof data.kaominina !== 'undefined') {
-                html += '<tr><td>&Eacute;chelle</td><td>communale</td></tr>';                
-                html += '<tr><td>Commune(s)</td><td>'+ data.kaominina +'</td></tr>';
+                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany[0];
+                for (var i=1; i < data.fokontany.length; i++) {
+                    html += ", "+ data.fokontany[i] +""; 
+                }               
+                html += '</td></tr>';
+            } else if (typeof data.commune !== 'undefined') {
+                html += '<tr><td>&Eacute;chelle</td><td>communale</td></tr>';
+                html += '<tr><td>Commune(s)</td><td>'+ data.commune[0];
+                for (var i=1; i < data.commune.length; i++) {
+                    html += ", "+ data.commune[i] +""; 
+                }                
+                html += '</td></tr>';
             } else {
                 html += '<tr><td>&Eacute;chelle</td><td>Madagascar</td></tr>';
             }
-            html += '<tr><td>Type(s) d\'actions</td><td>'+ data.typeintervention +'</td></tr>';
-            html += '<tr><td>Population(s)</td><td>'+ data.cible +'</td></tr>';
+            html += '<tr><td>Type(s) d\'actions</td><td>'+ data.typeintervention[0];
+            for (var i=1; i < data.typeintervention.length; i++) {
+                    html += ", "+ data.typeintervention[i] +""; 
+                }
+            html +='</td></tr>';
+            html += '<tr><td>Population(s)</td><td>' + data.cible[0];
+            for (var i=1; i < data.cible.length; i++) {
+                    html += ", "+ data.cible[i] +""; 
+                }
+            html += '</td></tr>';
             html += '</table>';
             html += '<div class="popup-link">';
             html += '<a href=\"'+ data.classe +'/'+ data.id +'/'+ data.slug +'\" target="_blank">Ouvrir la fen&ecirc;tre d&eacute;taill&eacute;e (nouvel onglet)</a>';
             html += '</div>';
-            html += '</div>';
-            layer.bindPopup(L.popup().setContent(html), {offset: [0, 0]});
+
             layer.show = true;
+            layer.on('click', function (e) {
+                e.layer.bindPopup(L.popup({maxWidth: Math.min(400, map.getSize().x - 20), maxHeight: map.getSize().y - 20}).setContent(html), {offset: [0, 0]}).openPopup();
+            });
             markerClusters.addLayer(layer);
         }
     });
     ilayers = geojsonLayer.getLayers();
     map.addLayer(markerClusters);
+
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;

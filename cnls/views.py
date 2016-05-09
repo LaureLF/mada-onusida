@@ -6,6 +6,7 @@ from cnls.geojson_serializer_with_id import GeojsonWithIdSerializer
 from django.shortcuts import get_object_or_404 #, render, redirect
 from django.db.models import get_model
 #from django.forms.models import model_to_dict
+import csv
 
 from cnls.forms import CustomAdminForm
 from cnls.models import ActionNationale, ActionTananarive, ActionRegionale, ActionLocale, TypeIntervention, Cible
@@ -31,10 +32,8 @@ def home(request):
 def detail(request, classe, id):
     template = loader.get_template('detail.html')
     model = get_model('cnls', classe)
-#    return HttpResponse("%s , '%s' n° %s." % (classe, slug, id))
     return HttpResponse(template.render(Context({'action' : get_object_or_404(model.objects.prefetch_related(), pk=id)})))
-#    action = CustomAdminForm(data=model_to_dict(model.objects.get(pk=id)))
-#    return HttpResponse(template.render(Context({'action' : action, 'classe' : model.__name__})))
+
     
 def get_geoactions(request):
     def to_json(echelle):
@@ -54,3 +53,21 @@ def get_geoactions(request):
 #    faritra = open(djangoSettings.STATIC_ROOT + 'json/faritra.json', 'r')
 #    #faritra = serializers.serialize('json', data)
 #    return HttpResponse(faritra)
+
+
+def export_csv(request, ids=None):  
+    params = request.GET.getlist('id', default=None)
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="CNLS_selection.csv"'
+
+    writer = csv.writer(response)
+#    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
+    writer.writerow(['Cette fonctionnalité est encore en développement.'])
+    for pk in params :
+#    aaaahhhhhhhhh il faut encore le nom du modèle :-(
+#        action = 
+        # vérifier si action publique
+        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+
+    return response

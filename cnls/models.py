@@ -205,11 +205,14 @@ class TypeIntervention(models.Model):
 class Organisme(models.Model):
     nom = models.CharField(max_length=100, unique=True)
     description = models.TextField(blank=True, null=True)
-    logo = models.ImageField(upload_to="static/media/logo/", blank=True, null = True)
+    logo = models.ImageField(upload_to="./cnls/static/media/logo/", blank=True, null = True)
     referent = models.ForeignKey('self', blank=True, null=True)
     
     def natural_key(self):
-        return (self.nom,)
+        if self.logo.name is not None:
+            return (self.nom, self.logo.name)
+        else:
+            return (self.nom,)
 
     class Meta:
         managed = True
@@ -240,7 +243,7 @@ class Profil(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     organisme = models.ForeignKey(Organisme, verbose_name="Organisme / Structure", null = True)
     poste = models.CharField(max_length = 250, verbose_name="Poste ou responsabilité occupé(e)", null=True, blank = True)
-    photo = models.ImageField(blank=True, upload_to="static/media/photos/", null=True)
+    photo = models.ImageField(blank=True, upload_to="./cnls/static/media/photos/", null=True)
  
     def natural_key(self):
         return (self.user.username, self.user.first_name, self.user.last_name,)

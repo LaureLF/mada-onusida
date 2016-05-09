@@ -29,14 +29,21 @@ body
     width:100%;
 }
 
+.navbar-nav > li > a, .navbar-brand {
+    padding:10px 5px 0 5px !important; 
+    height: 40px;
+}
+.navbar {
+  min-height:40px !important;
+}
 .navbar-nav img {
     width: 30px;
 }
 
 #map {
     width: 100%;
-    height: calc(100% - 50px);
-    top: 50px;
+    height: calc(100% - 40px);
+    top: 40px;
     position: absolute;
 }
 
@@ -175,7 +182,6 @@ a.underline {
     padding: 6px 15px;
 }
 
-
 .panel-title a:not(.collapsed) .glyphicon-triangle-right {
     display: none;
 }
@@ -190,6 +196,17 @@ a.underline {
     top: 35%;
     font-size: 1rem;
 }
+
+.panel-title .largeButton {
+  padding: 0;
+}
+.panel-title .largeButton button {
+  width: 100%;
+  border-radius: 0;
+  padding: 5px 15px;
+  text-align: left;
+}
+
 .checkboxList input[type="checkbox"] {
     margin: 4px 4px 0 0;
 }
@@ -272,12 +289,15 @@ label {
 .popup-table tr td:first-child {
   font-weight: bold;
 }
+.popup-table img {
+  float: right;
+}
 
 .popup-description {
   padding: 10px;
 }
 
-.js-popup .popup-title .label-default {
+.popup-title .label-default {
   float:right;
 }
 
@@ -351,4 +371,5 @@ label {
 /*.details h3 {
     text-align: center;
 }*/
+
 
