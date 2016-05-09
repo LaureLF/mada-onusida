@@ -122,11 +122,11 @@ admin.site.register(ActionNationale,ActionNationaleAdmin)
 admin.site.register(ActionTananarive,ActionTananariveAdmin)
 admin.site.register(ActionRegionale,ActionRegionaleAdmin)
 admin.site.register(ActionLocale,ActionLocaleAdmin)
-admin.site.register(TypeIntervention)
-admin.site.register(Cible)
-admin.site.register(Faritra)
-admin.site.register(Kaominina)
-admin.site.register(Fokontany)
+#admin.site.register(TypeIntervention)
+#admin.site.register(Cible)
+#admin.site.register(Faritra)
+#admin.site.register(Kaominina)
+#admin.site.register(Fokontany)
 
 ###########################
 class ProfilInline(admin.StackedInline):
