@@ -16,7 +16,7 @@ def home(request):
 #    return redirect('http://cartong.github.io/mada-front/dist/atlas/index.html', permanent=True)
     template = loader.get_template('index.html')
     def to_json(echelle):
-        return GeojsonWithIdSerializer().serialize(echelle.objects.all(), srid='4326', use_natural_foreign_keys=True)
+        return GeojsonWithIdSerializer().serialize(echelle.objects.filter(validation='valide'), srid='4326', use_natural_foreign_keys=True)
 # NB GeojsonWithIdSerializer a été configuré pour ne renvoyer que les champs qui sont utilisés dans le popup - comportement à modifier si besoin dans geojson_serializer_with_id.py
     
     return HttpResponse(template.render(Context({

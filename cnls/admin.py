@@ -15,7 +15,7 @@ class ActionAdmin(LeafletGeoAdmin):
     display_raw = False
 
     form = CustomAdminForm
-    radio_fields = {"devise": admin.HORIZONTAL, "avancement": admin.HORIZONTAL}
+    radio_fields = {"devise": admin.HORIZONTAL, "avancement": admin.HORIZONTAL, "validation": admin.HORIZONTAL}
 
     class Meta:
         abstract = True
@@ -26,7 +26,7 @@ class ActionAdmin(LeafletGeoAdmin):
     def get_readonly_fields(self, request, obj=None):
         if request.user.is_superuser:
             return []
-        return ['createur']
+        return ['createur', 'validation']
 
     def save_model(self, request, obj, form, change):
         if not obj.id:
@@ -43,7 +43,7 @@ class ActionAdmin(LeafletGeoAdmin):
         fieldsets = []
         fieldsets.append(        
             (u'Informations générales', {
-                'fields': ('titre', 'description', 'organisme', 'typeintervention', 'cible',),
+                'fields': ('titre', 'description', 'validation', 'organisme', 'typeintervention', 'cible',),
                 'classes': ('wide',),
                 'description': "<i><p>L'action sera symbolisée par un marqueur de couleur " + description + ".</p><p>NB. Pour enregistrer des actions à d'autres échelles, veuillez retourner à la page d'accueil.</i>", 
                 })     

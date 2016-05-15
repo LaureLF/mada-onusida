@@ -163,7 +163,7 @@ class Cible(models.Model):
         ordering = ['nom']
 
     def natural_key(self):
-        return (self.get_nom_display(),)
+        return (self.nom, self.get_nom_display(),)
    
     def __str__(self):
         return self.get_nom_display()
@@ -198,7 +198,7 @@ class TypeIntervention(models.Model):
         return self.get_nom_display()
 
     def natural_key(self):
-        return (self.get_nom_display(),)
+        return (self.nom, self.get_nom_display(),)
 
 #################################
 # ORGANISME
@@ -269,9 +269,14 @@ class Profil(models.Model):
 class Action(models.Model):
 # TODO add help_text option to each field
     AVANCEMENT = (
-   (u'en attente', u'En attente'),
-   (u'en cours', u'En cours'),
-   (u'termine', u'Terminé'),
+    (u'en attente', u'En attente'),
+    (u'en cours', u'En cours'),
+    (u'termine', u'Terminé'),
+    )
+    VALIDATION = (
+    (u'valide', u'Validée'),
+    (u'pasencore', u'Pas encore validé'),
+    (u'refuse', u'Refusée'),
     )
     DEVISE = (
     (u'MGA', u'MGA'),
@@ -314,6 +319,7 @@ class Action(models.Model):
     maj = models.DateTimeField("Date de la dernière mise à jour", null=True)
     login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Auteur de la dernière mise à jour", null=True)
     slug = models.SlugField(max_length=50, default='')
+    validation = models.CharField(max_length=20, choices=VALIDATION, default='pasencore',verbose_name="Mise en ligne validée par le CNLS ?") 
 
     class Meta:
         abstract = True
