@@ -9,7 +9,7 @@ urlpatterns = patterns('',
     url(r'^geoactions/$', views.get_geoactions, name='geoactions'),
     url(r'^robots\.txt$', TemplateView.as_view(template_name='robots.txt', content_type='text/plain')),
 #    url(r'(?i)^(?P<action_echelle>[a-zA-Z]+)\/(?P<action_id>[0-9]+)/$', views.detail, name='detail'),
-    url(r'^actions/$', views.export_csv, name='export_csv'),
+    url(r'^actions$', views.export_csv, name='export_csv'),
     url(r'^(?P<classe>[a-zA-Z]+)\/(?P<id>\d+)\/.*$', views.detail, name='detail'),
     #url(r'^faritra/$', views.get_faritra, name='faritra'),
 )

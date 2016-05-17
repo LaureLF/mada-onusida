@@ -5,6 +5,32 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 #from django.db.models.signals import post_save
 
+
+# Dictionnaire pour utiliser les différents termes concernant les échelles
+# NB n'est pas encore utilisé partout où il faudrait...
+DICT_ECHELLES = {
+    'ActionNationale' : {
+        'champ': '',
+        'nom_fr': 'Madagascar',
+        'adj_fr': 'nationale'
+    },
+    'ActionTananarive' : {
+        'champ': 'fokontany',
+        'nom_fr': 'arrondissement',
+        'adj_fr': 'Tananarive'
+    },
+    'ActionRegionale' : {
+        'champ': 'region',
+        'nom_fr': 'région',
+        'adj_fr': 'préfectorale' #'régionale'
+    },
+    'ActionLocale' : {
+        'champ': 'commune',
+        'nom_fr': 'commune',
+        'adj_fr': 'communale'
+    },
+}
+
 """
 # Create your models here.
 # Les "Primary Key" de chaque classe sont générées automatiquement (champs id)

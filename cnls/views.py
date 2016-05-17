@@ -9,7 +9,7 @@ from django.db.models import get_model
 import csv
 
 from cnls.forms import CustomAdminForm
-from cnls.models import ActionNationale, ActionTananarive, ActionRegionale, ActionLocale, TypeIntervention, Cible
+from cnls.models import DICT_ECHELLES, ActionNationale, ActionTananarive, ActionRegionale, ActionLocale, TypeIntervention, Cible
 
 # Create your views here.
 def home(request):
@@ -62,12 +62,58 @@ def export_csv(request, ids=None):
     response['Content-Disposition'] = 'attachment; filename="CNLS_selection.csv"'
 
     writer = csv.writer(response)
-#    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-    writer.writerow(['Cette fonctionnalité est encore en développement.'])
-    for pk in params :
-#    aaaahhhhhhhhh il faut encore le nom du modèle :-(
-#        action = 
-        # vérifier si action publique
-        writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
+    writer.writerow(["Titre", "Description", "Organisme maître d'œuvre", "Types d'interventions", "Publics cibles", "Echelle", "Localisation", "Coordonnées géographiques", "Date de démarrage", "Date de fin", "Durée de l'action", "Etat d'avancement", "Nombre de personnes visées", "Opérateur en lien avec l'action", "Priorité du PSN que l'activité appuie", "Résultat par rapport à l'année précédente", "Montant prévu", "Montant disponible", "Devise", "Bailleur de fond", "Origine de la donnée", "Commentaires", "Nom du responsable de la fiche", "Fiche créée le", "Dernière modification le"])
+    echelles = request.GET.getlist('e', '')
+    if echelles:
+        #try:
+        cibles = Cible.objects.all().filter(nom__in = request.GET.getlist('c', ''))
+        #except Cible.empty:
+        #pass
+        types = TypeIntervention.objects.all().filter(nom__in = request.GET.getlist('t', ''))
+        for echelle in echelles:
+            model = get_model('cnls', echelle)
+            champ_localisation = DICT_ECHELLES[model.__name__]['champ']
+            queryset = model.objects.all().filter(validation='valide').filter(typeintervention__in = types).distinct()#.filter(date_debut__lte=request.GET.get('fin')).filter(date_fin__gte=request.GET.get('debut'))
+            
+
+            for action in queryset:
+                test = getattr(action, champ_localisation).all()
+                writer.writerow([
+                    action.titre, 
+                    action.description, 
+                    action.organisme, 
+                    ', '.join([str(t) for t in action.typeintervention.all()]), 
+                    ', '.join([str(c) for c in action.cible.all()]), 
+                    DICT_ECHELLES[model.__name__]['adj_fr'], 
+                    ', '.join([str(l) for l in getattr(action, champ_localisation).all()]), 
+                    action.mpoint, 
+                    action.date_debut, 
+                    action.date_fin, 
+                    action.duree, 
+                    action.avancement, 
+                    action.objectif, 
+                    action.operateur, 
+                    action.priorite_psn, 
+                    action.resultat_cf_annee_ant, 
+                    action.montant_prevu, 
+                    action.montant_disponible, 
+                    action.devise, 
+                    action.bailleur, 
+                    action.origine, 
+                    action.commentaire, 
+                    action.createur, 
+                    action.creation, 
+                    action.maj
+                ])
+
+#            for cible in cibles:
+#                queryset = queryset.filter(cible = cible)
+#            for typeintervention in types:
+#                queryset = queryset.filter(typeintervention = typeintervention)
+            
+    # normalement ce cas n'est pas rencontré car filtré par le JavaScript mais au cas où une URL serait écrite à la main:
+    else:
+        return
+
 
     return response

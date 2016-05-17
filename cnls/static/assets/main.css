@@ -142,7 +142,35 @@ a.underline {
     background-color: rgba(255,255,255,.9);
     padding: 5px 15px;
 }
+.panel-body input[type="checkbox"] {
+    margin: 4px 4px 0 0;
+}
+#population .panel-body input[type="checkbox"] {
+    margin: 4px 10px 0 0;
+}
 
+.panel-body label {
+    display: block;
+/*    line-height: 1.8rem;*/
+    line-height: 1.5rem;
+    margin-bottom: 0;
+}
+.panel-body .icon {
+    display: inline-block;
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+}
+
+
+.checkboxAll {
+    padding: 0 15px;
+}
+.checkboxAll label {
+    display: block;
+    line-height: 1.5rem;
+    margin-bottom: 4px 0;
+}
 .panel--outer {
     box-shadow: 3px 3px 10px rgba(0,0,0,.15);
     -webkit-box-shadow: 3px 3px 10px rgba(0,0,0,.15);
@@ -197,40 +225,10 @@ a.underline {
     font-size: 1rem;
 }
 
-.panel-title .largeButton {
-  padding: 0;
-}
-.panel-title .largeButton button {
-  width: 100%;
-  border-radius: 0;
-  padding: 5px 15px;
-  text-align: left;
-}
-
-.checkboxList input[type="checkbox"] {
-    margin: 4px 4px 0 0;
-}
-#population .checkboxList input[type="checkbox"] {
-    margin: 4px 10px 0 0;
-}
-
-.checkboxList label {
-    display: block;
-/*    line-height: 1.8rem;*/
-    line-height: 1.5rem;
-    margin-bottom: 0;
-}
-
 label {
     font-weight: normal;
 }
 
-.checkboxList .icon {
-    display: inline-block;
-    background-repeat: no-repeat;
-    width: 20px;
-    height: 20px;
-}
 /*
 #actionType .checkboxList .icon {
     background-image: url('./img/actionType-sprites.svg');

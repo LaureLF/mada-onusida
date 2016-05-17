@@ -39,14 +39,13 @@ var filterFunctions = {
         
         if (filter.field == 'echelle') {
             for (var k in featureFilters) {
-                echelle = featureFilters[k]; // toStr?
-                if (typeof feature.properties[echelle] !== 'undefined') {
+                if (feature.properties.classe == featureFilters[k]) {
                     return true ;
                 }
             }
             return false;
         } else {
-            var featureFiltered = feature.properties[filter.field];
+            var featureFiltered = feature.properties[filter.field][0];
             for (var k in featureFilters) {
                 for (var l in featureFiltered) {
                     if (featureFilters[k] == featureFiltered[l]) {
@@ -58,10 +57,7 @@ var filterFunctions = {
         return false ;
     },
     date: function(filter, feature) {
-//        console.log(filter)
-//        var featureFilteredStart = feature.properties[filter.field_start];
         var featureFilteredStart = feature.properties.date_debut;
-//        var featureFilteredEnd = feature.properties[filter.field_end];
         var featureFilteredEnd = feature.properties.date_fin;
         var featureFiltersStart = filter.start;
         var featureFiltersEnd = filter.end;
@@ -81,13 +77,65 @@ var filterFunctions = {
 //////////
 // toggle()
 //////////
-function toggle(source, filterName) {
-    var checkboxes = document.getElementsByName(filterName);
-  
-    for(var i=0, n=checkboxes.length;i<n;i++) {
-      checkboxes[i].checked = source.checked;
-    }
+function toggleAll(source, filterName) {
+    var filterCheckboxes = $('.js-filter-checkboxes');
+    filterCheckboxes.each(function(index, el) {
+//    alert($(el).data().filterCheckboxesField +" - "+ filterName);
+        if ($(el).data().filterCheckboxesField == filterName) {
+            $(el).find('input').each(function(inputIndex, inputEl) {
+                $(inputEl).prop('checked', source.checked)
+            })
+        }
+            
+    })
+ 
+//    var checkboxes = document.getElementsByName(filterName);
+//    for(var i=0 ; i < checkboxes.length; i++) {
+//      checkboxes[i].checked = source.checked;
+//    }
+    updateFilters();
+    filterMarkers(getFilters());
 }
+
+//////////
+// countMarkers()
+//////////
+function countMarkers() {
+    var count = 0;
+    markerClusters.eachLayer(function() {
+        count++;
+    });
+    return count;
+}
+
+//////////
+// exportCSV()
+//////////
+function exportCSV() {
+    if (countMarkers() !== 0) {
+        var lien = './actions?' ;
+        var checkedFilters = getFilters();
+        for (var i in checkedFilters[0].values) {
+            lien += 'e=' + checkedFilters[0].values[i] + "&"; 
+        }
+        for (var i in checkedFilters[1].values) {
+            lien += 't=' + checkedFilters[1].values[i] + "&";
+        }
+        for (var i in checkedFilters[2].values) {
+            lien += 'c=' + checkedFilters[2].values[i] + "&";
+        }
+        var checkedDebut = checkedFilters[3].start.toString();
+        lien += 'd=' + checkedDebut + "&";
+        var checkedFin = checkedFilters[3].end.toString();
+        lien += 'f=' + checkedFin ;
+// TODO test        location.href = encodeURIComponent(lien);
+        location.href = lien;
+    } else {
+        alert("Il n'y a pas d'actions à exporter");
+    }
+
+}
+
 
 //////////
 // buildFeatures()
@@ -194,6 +242,7 @@ function getFilters() {
         }
         $(el).find('input').each(function(inputIndex, inputEl) {
             if ($(inputEl).is(':checked')) {
+//              alert($(inputEl).next().text());
                 filter.values.push($(inputEl).data().filterCheckboxValue);
             }
         })
@@ -217,7 +266,6 @@ function getFilters() {
         }).format(dateFormat)
     }
     filters.push(dateFilter);
-
     return filters;
 }
 
@@ -343,7 +391,6 @@ function init() {
     });
 
     $('.js-filter-checkboxes input').on('change', function () {
-    // TODO unspiderify all -ici?
         updateFilters();
         filterMarkers(getFilters());
     });
@@ -384,38 +431,30 @@ function init() {
             }
             if (typeof data.region !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>pr&eacute;fectorale</td></tr>';                
-                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region[0] ;
-                for (var i=1; i < data.region.length; i++) {
-                    html += ", "+ data.region[i] +""; 
-                }                
-                html += '</td></tr>';
+                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region.join(', ') + '</td></tr>';
             } else if (typeof data.fokontany !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>Tananarive</td></tr>';                
-                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany[0];
-                for (var i=1; i < data.fokontany.length; i++) {
-                    html += ", "+ data.fokontany[i] +""; 
-                }               
-                html += '</td></tr>';
+                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany.join(', ') + '</td></tr>';
             } else if (typeof data.commune !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>communale</td></tr>';
-                html += '<tr><td>Commune(s)</td><td>'+ data.commune[0];
-                for (var i=1; i < data.commune.length; i++) {
-                    html += ", "+ data.commune[i] +""; 
-                }                
-                html += '</td></tr>';
+                html += '<tr><td>Commune(s)</td><td>'+ data.commune.join(', ') + '</td></tr>';
             } else {
                 html += '<tr><td>&Eacute;chelle</td><td>Madagascar</td></tr>';
             }
-            html += '<tr><td>Type(s) d\'actions</td><td>'+ data.typeintervention[0];
-            for (var i=1; i < data.typeintervention.length; i++) {
-                    html += ", "+ data.typeintervention[i] +""; 
-                }
-            html +='</td></tr>';
-            html += '<tr><td>Population(s)</td><td>' + data.cible[0];
-            for (var i=1; i < data.cible.length; i++) {
-                    html += ", "+ data.cible[i] +""; 
-                }
-            html += '</td></tr>';
+            if (typeof data.typeintervention[0] !== 'undefined') {
+                html += '<tr><td>Type(s) d\'actions</td><td>' + data.typeintervention[0][1];
+                for (var i=1; i < data.typeintervention.length; i++) {
+                        html += ", "+ data.typeintervention[i][1]; 
+                    }
+                html += '</td></tr>';
+            }
+            if (typeof data.cible[0] !== 'undefined') {
+                html += '<tr><td>Population(s)</td><td>' + data.cible[0][1];
+                for (var i=1; i < data.cible.length; i++) {
+                        html += ", "+ data.cible[i][1]; 
+                    }
+                html += '</td></tr>';
+            }
             html += '</table>';
             html += '<div class="popup-link">';
             html += '<a href=\"'+ data.classe +'/'+ data.id +'/'+ data.slug +'\" target="_blank">Ouvrir la fen&ecirc;tre d&eacute;taill&eacute;e (nouvel onglet)</a>';
@@ -430,11 +469,16 @@ function init() {
     });
     ilayers = geojsonLayer.getLayers();
     map.addLayer(markerClusters);
+  
+  // mise à jour des markers dès le chargement du geoJson si des checkboxes sont déjà décochées  
+    updateFilters();
+    filterMarkers(getFilters());
+
 
        
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;
-        // regionsShapes défini deux fois ??
+        // regionsShapes défini deux fois ?
         regionsShapes = L.geoJson(geojson, {
             onEachFeature: function(feature, layer) {
                 var center = layer.getBounds().getCenter();
