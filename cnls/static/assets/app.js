@@ -142,6 +142,8 @@ function exportCSV() {
 //////////
 //function buildFeatures(data) {
     function colorMarkers(cluster) {
+        return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-small-green', iconSize: new L.Point(40, 40) });
+
 /*        var markers = cluster.getAllChildMarkers();
         var color = 'marker-cluster-small-';
 //        printObject(feature);
@@ -164,7 +166,7 @@ function exportCSV() {
         var html = '<div><span>' + cluster.getChildCount() + '</span></div>'
         return new L.divIcon({ html: html, className: color, iconSize: new L.point(40, 40) });
 */
-        return new L.DivIcon({ html: '<div><span>' + cluster.getChildCount() + '</span></div>', className: 'marker-cluster marker-cluster-small-brown', iconSize: new L.Point(40, 40) });
+
 /*
         function nextMarker(echelle) {
             for (var i = 1; i < markers.length; i++) {
@@ -395,7 +397,7 @@ function init() {
         filterMarkers(getFilters());
     });
 
-    $('.js-filter-dates li').on('click', function(e) {
+    $('.js-filter-dates').on('click', function(e) {
         updateFilters($(e.target));
         filterMarkers(getFilters());
     })

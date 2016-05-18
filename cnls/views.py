@@ -106,12 +106,7 @@ def export_csv(request, ids=None):
                     action.creation, 
                     action.maj
                 ])
-
-#            for cible in cibles:
-#                queryset = queryset.filter(cible = cible)
-#            for typeintervention in types:
-#                queryset = queryset.filter(typeintervention = typeintervention)
-            
+           
     # normalement ce cas n'est pas rencontré car filtré par le JavaScript mais au cas où une URL serait écrite à la main:
     else:
         return
