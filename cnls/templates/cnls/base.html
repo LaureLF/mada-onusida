@@ -31,7 +31,7 @@
       <div id="navbar" class="navbar-collapse collapse navbar-right" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav">
           <li {% block onglet_carte %}{% endblock %}><a href="{% url 'home' %}">Carte</a></li>
-          <li {% block onglet_apropos %}{% endblock %}><a href="#">À propos</a></li>
+          <li {% block onglet_apropos %}{% endblock %}><a href="{% url 'apropos' %}">À propos</a></li>
           <li><a href="{% url 'admin:index' %}">Connexion</a></li>
           <li><a href="{% url 'home' %}"><img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}"></a></li>
           <li><a href="#"><img alt="Malagasy" src="{% static "./assets/img/locale_mg-MG.png" %}"></a></li>

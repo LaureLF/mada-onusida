@@ -5,7 +5,9 @@ from django.core import serializers
 from cnls.geojson_serializer_with_id import GeojsonWithIdSerializer
 from django.shortcuts import get_object_or_404 #, render, redirect
 from django.db.models import get_model
+from django.db.models import Q
 #from django.forms.models import model_to_dict
+from datetime import datetime
 import csv
 
 from cnls.forms import CustomAdminForm
@@ -28,7 +30,6 @@ def home(request):
         'cibles' : Cible.objects.all(),        
         })))
 
-#def detail(request, action_echelle, action_id):
 def detail(request, classe, id):
     template = loader.get_template('detail.html')
     model = get_model('cnls', classe)
@@ -73,7 +74,7 @@ def export_csv(request, ids=None):
         for echelle in echelles:
             model = get_model('cnls', echelle)
             champ_localisation = DICT_ECHELLES[model.__name__]['champ']
-            queryset = model.objects.all().filter(validation='valide').filter(typeintervention__in = types).distinct()#.filter(date_debut__lte=request.GET.get('fin')).filter(date_fin__gte=request.GET.get('debut'))
+            queryset = model.objects.all().filter(validation='valide').filter(typeintervention__in = types).filter(Q(date_debut__lte = datetime.strptime(request.GET.get('f'), '%Y-%m-%d').date()) | Q(date_debut__isnull=True)).filter(Q(date_fin__gte = datetime.strptime(request.GET.get('d'), '%Y-%m-%d').date()) | Q(date_fin__isnull=True))
             
 
             for action in queryset:
@@ -114,6 +115,9 @@ def export_csv(request, ids=None):
     # normalement ce cas n'est pas rencontré car filtré par le JavaScript mais au cas où une URL serait écrite à la main:
     else:
         return
-
-
     return response
+    
+def apropos(request):
+    template = loader.get_template('apropos.html')
+    return HttpResponse(template.render())
+
