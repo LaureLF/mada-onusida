@@ -6,7 +6,7 @@ from django.template.defaultfilters import slugify
 from datetime import datetime
 from leaflet.admin import LeafletGeoAdmin
 from cnls.forms import CustomUserCreationForm, CustomUserChangeForm, CustomAdminForm
-from cnls.models import Organisme, Bailleur, Action, TypeIntervention, Cible, ActionTananarive, ActionNationale, ActionRegionale, ActionLocale, Faritra, Kaominina, Fokontany, Profil
+from cnls.models import Organisme, Bailleur, Action,  ActionTananarive, ActionNationale, ActionRegionale, ActionLocale,  Profil, ActionNationaleAValider, ActionTananariveAValider, ActionRegionaleAValider, ActionLocaleAValider #, TypeIntervention, Cible, Faritra, Kaominina, Fokontany
      
 
 class ActionAdmin(LeafletGeoAdmin):
@@ -112,6 +112,30 @@ class ActionLocaleAdmin(ActionAdmin):
     fieldsets = ActionAdmin.ordre_fieldsets("sur la commune", ECHELLE) # TODO préciser couleur
     model = ActionTananarive
     filter_horizontal = ('cible', 'typeintervention', ECHELLE)
+    
+class ActionNationaleAValiderAdmin(ActionNationaleAdmin):
+    def get_queryset(self, request):
+        qs = super(ActionNationaleAdmin, self).get_queryset(request)
+        qs = qs.filter(validation='pasencore')
+        return qs
+
+class ActionTananariveAValiderAdmin(ActionTananariveAdmin):
+    def get_queryset(self, request):
+        qs = super(ActionTananariveAdmin, self).get_queryset(request)
+        qs = qs.filter(validation='pasencore')
+        return qs
+
+class ActionRegionaleAValiderAdmin(ActionRegionaleAdmin):
+    def get_queryset(self, request):
+        qs = super(ActionRegionaleAdmin, self).get_queryset(request)
+        qs = qs.filter(validation='pasencore')
+        return qs
+
+class ActionLocaleAValiderAdmin(ActionLocaleAdmin):
+    def get_queryset(self, request):
+        qs = super(ActionLocaleAdmin, self).get_queryset(request)
+        qs = qs.filter(validation='pasencore')
+        return qs
 
 # On enregistre les classes que l'on veut pouvoir modifier depuis l'interface d'administration, suivies éventuellement des modifications de l'interface par défaut
 
@@ -127,6 +151,11 @@ admin.site.register(ActionLocale,ActionLocaleAdmin)
 #admin.site.register(Faritra)
 #admin.site.register(Kaominina)
 #admin.site.register(Fokontany)
+admin.site.register(ActionNationaleAValider, ActionNationaleAValiderAdmin)
+admin.site.register(ActionTananariveAValider, ActionTananariveAValiderAdmin)
+admin.site.register(ActionRegionaleAValider, ActionRegionaleAValiderAdmin)
+admin.site.register(ActionLocaleAValider, ActionLocaleAValiderAdmin)
+
 
 ###########################
 class ProfilInline(admin.StackedInline):

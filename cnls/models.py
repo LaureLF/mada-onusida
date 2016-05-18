@@ -345,7 +345,7 @@ class Action(models.Model):
     maj = models.DateTimeField("Date de la dernière mise à jour", null=True)
     login_maj = models.ForeignKey(User, related_name="%(app_label)s_%(class)s_maj_related", verbose_name="Auteur de la dernière mise à jour", null=True)
     slug = models.SlugField(max_length=50, default='')
-    validation = models.CharField(max_length=20, choices=VALIDATION, default='pasencore',verbose_name="Mise en ligne validée par le CNLS ?") 
+    validation = models.CharField(max_length=20, choices=VALIDATION, default='pasencore', verbose_name="Mise en ligne validée par le CNLS ?") 
 
     class Meta:
         abstract = True
@@ -376,26 +376,55 @@ class Action(models.Model):
 # ActionNationale
 class ActionNationale(Action):
     class Meta:
+        # les guillemets intérieurs servent à clarifier l'interface d'administration (Modifier l'objet 'Action au niveau national')
         verbose_name = "'Action au niveau national'"
-        verbose_name_plural = "   Actions au niveau national"
+        # les espaces en début de chaîne servent à trier les modèles dans l'ordre des échelles dans l'interface administration
+        verbose_name_plural = ' '*3 + "Actions au niveau national"
 
 # ActionTananarive
 class ActionTananarive(Action):
     fokontany = models.ManyToManyField(Fokontany, verbose_name="Fokontany(s)")
     class Meta:
         verbose_name = "'Action dans la capitale'"
-        verbose_name_plural = "  Actions dans la capitale"
+        verbose_name_plural = ' '*2 + "Actions dans la capitale"
 
 # ActionRegionale
 class ActionRegionale(Action):
     region = models.ManyToManyField(Faritra, verbose_name="Régions")
     class Meta:
         verbose_name = "'Action au niveau de la préfecture (faritra)'"
-        verbose_name_plural = " Actions au niveau de la préfecture (faritra)"
+        verbose_name_plural = ' '*1 + "Actions au niveau de la préfecture (faritra)"
 
 # ActionLocale
 class ActionLocale(Action):
     commune = models.ManyToManyField(Kaominina, verbose_name="Communes")
     class Meta:
         verbose_name = "'Action au niveau communal'"
-        verbose_name_plural = "Actions au niveau communal"
+        verbose_name_plural = ' '*0 + "Actions au niveau communal"
+
+###############
+# Modèles virtuels (proxy) pour personnaliser l'interface d'administration
+###############
+class ActionNationaleAValider(ActionNationale):
+    class Meta:
+        proxy = True
+        verbose_name = "'Action au niveau national - à valider'"
+        verbose_name_plural = ' '*7 + 'À valider - Actions au niveau national'
+        
+class ActionTananariveAValider(ActionTananarive):
+    class Meta:
+        proxy = True
+        verbose_name = "'Action dans la capitale - à valider'"
+        verbose_name_plural = ' '*6 + 'À valider - Actions dans la capitale'
+        
+class ActionRegionaleAValider(ActionRegionale):
+    class Meta:
+        proxy = True
+        verbose_name = "'Action au niveau de la préfecture - à valider'"
+        verbose_name_plural = ' '*5 + 'À valider - Actions au niveau de la préfecture'
+
+class ActionLocaleAValider(ActionLocale):
+    class Meta:
+        proxy = True
+        verbose_name = "'Action au niveau communal - à valider'"
+        verbose_name_plural = ' '*4 + 'À valider - Actions au niveau communal'
