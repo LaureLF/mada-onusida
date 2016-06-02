@@ -151,10 +151,14 @@ admin.site.register(ActionLocale,ActionLocaleAdmin)
 #admin.site.register(Faritra)
 #admin.site.register(Kaominina)
 #admin.site.register(Fokontany)
-admin.site.register(ActionNationaleAValider, ActionNationaleAValiderAdmin)
-admin.site.register(ActionTananariveAValider, ActionTananariveAValiderAdmin)
-admin.site.register(ActionRegionaleAValider, ActionRegionaleAValiderAdmin)
-admin.site.register(ActionLocaleAValider, ActionLocaleAValiderAdmin)
+if ActionNationale.objects.all().filter(validation='pasencore').exists():
+    admin.site.register(ActionNationaleAValider, ActionNationaleAValiderAdmin)
+if ActionTananarive.objects.all().filter(validation='pasencore').exists():
+    admin.site.register(ActionTananariveAValider, ActionTananariveAValiderAdmin)
+if ActionRegionale.objects.all().filter(validation='pasencore').exists():
+    admin.site.register(ActionRegionaleAValider, ActionRegionaleAValiderAdmin)
+if ActionLocale.objects.all().filter(validation='pasencore').exists():
+    admin.site.register(ActionLocaleAValider, ActionLocaleAValiderAdmin)
 
 
 ###########################
