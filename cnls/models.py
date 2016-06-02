@@ -86,6 +86,7 @@ class Faritra(models.Model):
     class Meta:
         verbose_name = "Préfecture - Faritra"
         verbose_name_plural = "Préfectures - Faritra"
+        ordering = ['nom']
 
     def __str__(self):
 #        return self.get_nom_display()
@@ -114,6 +115,7 @@ class Fokontany(models.Model):
     class Meta:
         verbose_name = "Arrondissement - Fokontany"
         verbose_name_plural = "Arrondissements - Fokontany"
+        ordering = ['nom']
 
     def __str__(self):
 #        return self.get_nom_display()
@@ -141,6 +143,7 @@ class Kaominina(models.Model):
     class Meta:
         verbose_name = "Commune - Kaominina"
         verbose_name_plural = "Communes - Kaominina"
+        ordering = ['nom']
 
     def __str__(self):
 #        return self.get_nom_display()
@@ -244,7 +247,7 @@ class Organisme(models.Model):
         managed = True
         verbose_name = 'Organisme'
         verbose_name_plural = "Organismes"
-#        ordering = ['nom']
+        ordering = ['nom']
 
     def __str__(self):
         return self.nom
@@ -260,6 +263,7 @@ class Bailleur(models.Model):
         managed = True
         verbose_name = 'Bailleur de fonds'
         verbose_name_plural = "Bailleurs de fonds"
+        ordering = ['nom']
 
     def __str__(self):
         return self.nom
