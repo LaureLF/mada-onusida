@@ -135,5 +135,3 @@ def export_csv(request, ids=None):
 def apropos(request):
     template = loader.get_template('apropos.html')
     return HttpResponse(template.render())
-
-A
