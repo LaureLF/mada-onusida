@@ -29,6 +29,26 @@ var markerClusters, geojsonLayer;
 
 var ilayers = [];
 
+/////////
+//objet js contenant les actions
+/////////
+var toutesActions = {};
+toutesActions['type'] = 'FeatureCollection';
+toutesActions['crs'] = {'type': 'name', 'properties': {'name': 'EPSG:4326'}} // GeoJson specs recommend OGC CRS URNs such as "urn:ogc:def:crs:$
+toutesActions['features'] = [];
+for (var key in actionsNationales.features) {
+    toutesActions['features'].push(actionsNationales.features[key]);
+}
+for (var key in actionsTananarive.features) {
+    toutesActions['features'].push(actionsTananarive.features[key]);
+}
+for (var key in actionsRegionales.features) {
+    toutesActions['features'].push(actionsRegionales.features[key]);
+}
+for (var key in actionsLocales.features) {
+    toutesActions['features'].push(actionsLocales.features[key]);
+}
+
 
 //////////
 // filterFunctions

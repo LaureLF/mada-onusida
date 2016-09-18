@@ -2,37 +2,18 @@
 
 {% load staticfiles %}
 
-{% block custom_js %} 
+{% block custom_head %} 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css" /> <!-- à passer à 1.0.0 pour coller avec le js-->
+  <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/Leaflet/Leaflet.markercluster/v1.0.0-beta.2.0/dist/MarkerCluster.Default.css">
+  <link rel="stylesheet" type="text/css" href="http://cdn.rawgit.com/Leaflet/Leaflet.markercluster/v1.0.0-beta.2.0/dist/MarkerCluster.css">
+
   <script type="text/javascript">
 var actionsNationales = {{actionsN|safe}};
 var actionsTananarive = {{actionsT|safe}};
 var actionsRegionales = {{actionsR|safe}};
 var actionsLocales = {{actionsL|safe}};
-
-var toutesActions = {};
-toutesActions['type'] = 'FeatureCollection';
-toutesActions['crs'] = {'type': 'name', 'properties': {'name': 'EPSG:4326'}} // GeoJson specs recommend OGC CRS URNs such as "urn:ogc:def:crs:OGC:1.3:CRS84"
-toutesActions['features'] = [];
-for (var key in actionsNationales.features) {
-    toutesActions['features'].push(actionsNationales.features[key]);
-}
-for (var key in actionsTananarive.features) {
-    toutesActions['features'].push(actionsTananarive.features[key]);
-}
-for (var key in actionsRegionales.features) {
-    toutesActions['features'].push(actionsRegionales.features[key]);
-}
-for (var key in actionsLocales.features) {
-    toutesActions['features'].push(actionsLocales.features[key]);
-}
   </script>
-
-  <script type="text/javascript" src="{% static "./assets/app.js" %}"></script>
-    
-  <script type="text/javascript" src="{% static "./vendors.js" %}"></script>
-  <script type="text/javascript" src="{% static "./assets/leaflet.js" %}"></script>
-  <script type="text/javascript" src="{% static "./assets/leaflet.markercluster.js" %}"></script>
-{% endblock custom_js %}
+{% endblock custom_head %}
 
 {% block open_body %}<body onload="init();">{% endblock %}  
 
@@ -305,3 +286,11 @@ for (var key in actionsLocales.features) {
   </script>
 
 {% endblock content%}
+
+{% block load_js %}
+  <script type="text/javascript" src="{% static "./assets/app.js" %}"></script>
+  <script type="text/javascript" src="{% static "./assets/underscore-min.js" %}"></script>
+  <script type="text/javascript" src="{% static "./assets/moment.js" %}"></script>
+  <script src="https://unpkg.com/leaflet@1.0.0-rc.3/dist/leaflet.js"></script>
+  <script type="text/javascript" src="{% static "./assets/leaflet.markercluster.js" %}"></script>
+{% endblock load_js %}
