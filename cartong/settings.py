@@ -37,6 +37,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
 ##    'bootstrap_admin',
     'cnls', # à déclarer avant django.contrib.admin pour appliquer les templates personnalisés
+    'feedback',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

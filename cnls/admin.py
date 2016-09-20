@@ -7,7 +7,8 @@ from datetime import datetime
 from leaflet.admin import LeafletGeoAdmin
 from cnls.forms import CustomUserCreationForm, CustomUserChangeForm, CustomAdminForm
 from cnls.models import Organisme, Bailleur, Action,  ActionTananarive, ActionNationale, ActionRegionale, ActionLocale,  Profil, ActionNationaleAValider, ActionTananariveAValider, ActionRegionaleAValider, ActionLocaleAValider #, TypeIntervention, Cible, Faritra, Kaominina, Fokontany
-     
+from feedback.models import Feedback
+
 ###################
 # Pages d'administration pour les modèles Action (abstraite + 4 échelles)
 ###################
@@ -24,11 +25,11 @@ class ActionAdmin(LeafletGeoAdmin):
     # ActionAdmin est une classe abstraite réunissant les paramètres communs des 4 modèles d'actions par échelles
     class Meta:
         abstract = True
-        
+
     # Fonction pour vérifier le statut administrateur d'un utilisateur
     def is_admin(self, instance):
         return request.user.is_superuser
-    
+
     # Fonction pour rendre certains champs non modifiables par les non administrateurs
     def get_readonly_fields(self, request, obj=None):
         if request.user.is_superuser:
@@ -44,19 +45,19 @@ class ActionAdmin(LeafletGeoAdmin):
             obj.maj = datetime.now()
             obj.login_maj = request.user
         if not request.user.is_superuser:
-            obj.createur = request.user    
+            obj.createur = request.user
         super(ActionAdmin, self).save_model(request, obj, form, change)
 
     # Fonction qui définit l'ordre et la présentation des champs.
     # description et nom_localisation viennent des sous classes par échelle
     def ordre_fieldsets(description, nom_localisation):
         fieldsets = []
-        fieldsets.append(        
+        fieldsets.append(
             (u'Informations générales', {
                 'fields': ('titre', 'description', 'validation', 'organisme', 'typeintervention', 'cible',),
                 'classes': ('wide',),
                 'description': "<i><p>L'action sera symbolisée par un marqueur de couleur " + description + ".</p><p>NB. Pour enregistrer des actions à d'autres échelles, veuillez retourner à la page d'accueil.</i>", 
-                })     
+                })
         )
         # Cette section n'existe pas pour les actions nationales (que l'utilisateur n'a pas à localiser sur une carte)
         if (nom_localisation is not None):
@@ -95,13 +96,13 @@ class ActionAdmin(LeafletGeoAdmin):
             })
         )
         return tuple(fieldsets)
-            
+
 ###################
 class ActionNationaleAdmin(ActionAdmin):
     fieldsets = ActionAdmin.ordre_fieldsets("sur la capitale", None) 
     model = ActionTananarive
     filter_horizontal = ('cible', 'typeintervention')
-        
+
     # L'action est positionnée sur la capitale
     def save_model(self, request, obj, form, change):
         obj.mpoint = GEOSPoint(-18.933333, 47.516667, srid=4326)
@@ -128,7 +129,7 @@ class ActionLocaleAdmin(ActionAdmin):
     fieldsets = ActionAdmin.ordre_fieldsets("sur la commune", ECHELLE) # TODO préciser couleur
     model = ActionTananarive
     filter_horizontal = ('cible', 'typeintervention', ECHELLE)
-    
+
 
 ###################
 # Pages d'administration pour les modèles Action pas encore validés (4 modèles virtuels ou "proxy" du fichier models.py)
@@ -190,7 +191,7 @@ admin.site.register(ActionNationaleAValider, ActionNationaleAValiderAdmin)
 admin.site.register(ActionTananariveAValider, ActionTananariveAValiderAdmin)
 admin.site.register(ActionRegionaleAValider, ActionRegionaleAValiderAdmin)
 admin.site.register(ActionLocaleAValider, ActionLocaleAValiderAdmin)
-
+admin.site.register(Feedback)
 
 ###################
 # Cas spécifique de la gestion des utilisateurs (classe User de Django et Profile de models.py)

@@ -1,0 +1,55 @@
+{% extends 'cnls/base.html' %}
+
+{% load staticfiles %}
+
+{% block content %}
+    <div class="container details">
+      <div class="header">
+        <h1>Outil de remontée d'informations</h1>
+        <p><em>Faites-nous part de vos suggestions et d'éventuels problèmes rencontrés. Nous sommes à votre écoute pour améliorer cet outil.</em></p>
+      </div>
+       <div class="row" style="padding:20px;">
+          <form role="form" action="{% url 'bugs' %}" method="post">
+           {% csrf_token %} <!-- CSRF token is rendered by Django in forms to avoid CSRF attacks -->
+          
+           <!-- If there are non-field errors in the form,
+                iterate over them one by one and display them.
+            -->
+           {% if form.non_field_errors %}
+            <p class="error">
+		          {% for error in form.non_field_errors %}
+		            {{ error }}
+		          {% endfor %}
+            </p>
+           {% endif %}
+
+           {% for field in form %}
+            <div class="form-group">
+              <!-- Render the field label tag -->
+		          {{ field.label_tag }}
+              <!-- If the field is required, display a * next to the field label -->
+              {% if field.field.required %}
+              *
+              {% endif %}
+              <br/>
+              <!-- Render the input field -->
+		          {{ field }}
+		        <!-- Iterate over the field's errors, if any and display
+                 them one by one in a error alert
+            -->
+		        {% if field.errors %}
+		          <p class="error">
+		          {% for error in field.errors %}
+		            {{ error }}
+		          {% endfor %}
+		          </p>
+		        {% endif %}
+            </div>
+          {% endfor %}
+                <p><em>(Les champs marqués d'une * sont obligatoires)</em></p>
+    		<input type="submit" class="btn" value="Submit" />
+   	  </form>
+      </div>
+    </div>
+{% endblock content %}
+

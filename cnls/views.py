@@ -17,12 +17,12 @@ from cnls.models import DICT_ECHELLES, ActionNationale, ActionTananarive, Action
 # La page d'accueil du site (index.html)
 def home(request):
 #    return redirect('http://cartong.github.io/mada-front/dist/atlas/index.html', permanent=True)
-    template = loader.get_template('index.html')
+    template = loader.get_template('cnls/index.html')
     def to_json(echelle):
         # Convertit en GeoJson les actions validées par un administrateur, grâce au "serializer" personnalisé de geojson_serializer_with_id.py
         return GeojsonWithIdSerializer().serialize(echelle.objects.filter(validation='valide'), srid='4326', use_natural_foreign_keys=True)
         # NB GeojsonWithIdSerializer a été configuré pour ne renvoyer que les champs qui sont utilisés dans le popup - comportement à modifier si besoin dans geojson_serializer_with_id.py
-    
+
     # Données envoyées à index.html, comprenant les différents niveaux d'échelle, les cibles et types d'intervention (pour les filtres)
     return HttpResponse(template.render(Context({
         'actionsN' : to_json(ActionNationale),
@@ -30,7 +30,7 @@ def home(request):
         'actionsR' : to_json(ActionRegionale),
         'actionsL' : to_json(ActionLocale),
         'typesinterventions' : TypeIntervention.objects.all(),
-        'cibles' : Cible.objects.all(),        
+        'cibles' : Cible.objects.all(),
         })))
 
 ####################
