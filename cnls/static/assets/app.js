@@ -389,7 +389,7 @@ function init() {
         maxZoom: 10
     });
     // TODO check tile server's terms of use
-    L.tileLayer('http://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Tiles by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank''>CC0</a>)."} ).addTo(map);
+    L.tileLayer('//a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Tiles by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank''>CC0</a>)."} ).addTo(map);
 
 
     regionsListContainer = $('.js-regions');

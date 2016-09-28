@@ -1,3 +1,4 @@
+
 .bottomLeftLogo {
   position: absolute;
   bottom: 10px;
@@ -29,16 +30,25 @@ body
     width:100%;
 }
 
+.navbar {
+    min-height:40px !important;
+}
 .navbar-nav > li > a, .navbar-brand {
-    padding:10px 5px 0 5px !important; 
+    padding:8px 5px 0 5px !important; 
     height: 40px;
 }
-.navbar {
-  min-height:40px !important;
+.navbar-default .navbar-nav > .active > a {
+    font-weight: bold;
 }
 .navbar-nav img {
     width: 30px;
 }
+/*.navbar-default .dropdown-menu > ul {
+.dropdown-open.ul.li.a {
+    width: 50px;
+}*/
+
+
 
 #map {
     width: 100%;
@@ -57,10 +67,13 @@ a.underline {
 
 #filters {
     z-index: 99;
-    right: 20px;
-    top: 70px;
+    right: 0px;
+    top: 40px;
     width: 300px;
-    height: calc(100% - 110px);
+    height: calc(100% - 80px);
+
+    border: 0;
+    background-color: transparent;
 }
 
 .filters-inner {
@@ -134,8 +147,15 @@ a.underline {
 }
 
 .panel {
-    border: 0;
-    background-color: transparent;
+/*    border: 0;
+    background-color: transparent;*/
+
+/*    z-index: 99;
+    right: 0px;
+    top: 40px;
+    width: 300px;
+    height: calc(100% - 80px);*/
+
 }
 
 .panel-body {
@@ -344,7 +364,7 @@ label {
     top      : 50px;
     bottom   : 0; 
     overflow : auto;
-    padding  : 10px;
+    padding  : 20px;
 }
 .details .btn-default {
     float            : right;
@@ -366,8 +386,10 @@ label {
     width       : 30%;
     text-align  : right;
 }
-/*.details h3 {
+.details h2 {
     text-align: center;
-}*/
+}
 
-
+#id_description, #id_suggestion {
+    width: 100%;
+}

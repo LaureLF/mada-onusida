@@ -2,11 +2,14 @@
 
 {% load staticfiles %}
 
+{% block title %}CNLS - bugs{% endblock %}
+
 {% block content %}
     <div class="container details">
       <div class="header">
-        <h1>Outil de remontée d'informations</h1>
+        <h2><u>Outil de remontée d'informations</u></h2><br>
         <p><em>Faites-nous part de vos suggestions et d'éventuels problèmes rencontrés. Nous sommes à votre écoute pour améliorer cet outil.</em></p>
+        <p><em>(Les champs marqués d'une * sont obligatoires)</em></p>
       </div>
        <div class="row" style="padding:20px;">
           <form role="form" action="{% url 'bugs' %}" method="post">
@@ -16,11 +19,11 @@
                 iterate over them one by one and display them.
             -->
            {% if form.non_field_errors %}
-            <p class="error">
+            <div class="alert alert-danger">
 		          {% for error in form.non_field_errors %}
-		            {{ error }}
+		            {{ error|escape }}
 		          {% endfor %}
-            </p>
+            </div>
            {% endif %}
 
            {% for field in form %}
@@ -38,16 +41,15 @@
                  them one by one in a error alert
             -->
 		        {% if field.errors %}
-		          <p class="error">
+		          <div class="alert alert-danger">
 		          {% for error in field.errors %}
-		            {{ error }}
+		            {{ error|escape }}
 		          {% endfor %}
 		          </p>
 		        {% endif %}
             </div>
           {% endfor %}
-                <p><em>(Les champs marqués d'une * sont obligatoires)</em></p>
-    		<input type="submit" class="btn" value="Submit" />
+    		<br><input type="submit" class="btn" value="Submit" />
    	  </form>
       </div>
     </div>
