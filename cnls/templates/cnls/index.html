@@ -19,6 +19,8 @@ var actionsLocales = {{actionsL|safe}};
 
 {% block onglet_carte %}class="active"{% endblock %}
 
+{% block drapeau %}<img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}">{% endblock %}
+
 {% block content %}
   <button id="filters-button" type="button" class="btn btn-warning js-showfilters" aria-hidden="true">
     Filtrer <span class="glyphicon glyphicon-triangle-top" ></span>
