@@ -21,11 +21,10 @@ function printObject(obj)
 //////////
 //variables
 //////////
-var regionsGeoJson;
-var regionsShapes;
+var regionsGeoJson, regionsShapes;
 
-var map, popupTpl, modalTpl, regionsListContainer, regionListItemTpl, datePickerItemTpl, datePickerStatusTpl, datePickerContainers;
-var markerClusters, geojsonLayer;
+var map, popupTpl, modalTpl, regionsListContainer, regionListItemTpl, datePickerItemTpl, datePickerStatusTpl, datePickerContainers,
+    markerClusters, geojsonLayer, osmLayer;
 
 var ilayers = [];
 
@@ -56,7 +55,7 @@ for (var key in actionsLocales.features) {
 var filterFunctions = {
     checkboxes: function(filter, feature) {
         var featureFilters = filter.values;
-        
+
         if (filter.field == 'echelle') {
             for (var k in featureFilters) {
                 if (feature.properties.classe == featureFilters[k]) {
@@ -240,12 +239,12 @@ function updateFilters(newDate) {
     $('.js-filter-dates-end-month .js-lbl').html( datePickerContainers.endMonth.data('dateFormatted') )
     $('.js-filter-dates-end-year .js-lbl').html( datePickerContainers.endYear.data('dateFormatted') )
 
-    $('.js-filter-dates-status').html(datePickerStatusTpl({
-        startMonth: moment.monthsShort()[datePickerContainers.startMonth.data('date')],
-        endMonth: moment.monthsShort()[datePickerContainers.endMonth.data('date')],
-        startYear: datePickerContainers.startYear.data('date'),
-        endYear: datePickerContainers.endYear.data('date')
-    }));
+//    $('.js-filter-dates-status').html(datePickerStatusTpl({
+//        startMonth: moment.monthsShort()[datePickerContainers.startMonth.data('date')],
+//        endMonth: moment.monthsShort()[datePickerContainers.endMonth.data('date')],
+//        startYear: datePickerContainers.startYear.data('date'),
+//        endYear: datePickerContainers.endYear.data('date')
+//    }));
 }
 
 //////////
@@ -376,6 +375,13 @@ function initDatePicker() {
     }
 }
 
+//////////
+// openModal()
+//////////
+function openModal() {
+    $("#attribution").html(osmLayer.getAttribution());$("#attributionModal").modal("show"); return false;
+}
+
 /////////////////////////////////////////////////////////////
 
 //////////
@@ -386,11 +392,26 @@ function init() {
         center: [-18.766947, 49],
         zoom: 6,
         minZoom: 4,
-        maxZoom: 10
+        maxZoom: 10,
+        attributionControl: false
     });
-    // TODO check tile server's terms of use
-    L.tileLayer('//a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Tiles by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank''>CC0</a>)."} ).addTo(map);
 
+    osmLayer = L.tileLayer('//a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Tiles by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank''>CC0</a>)."} );
+    osmLayer.addTo(map);
+
+    var attributionControl = L.control({
+        position: "bottomright"
+    });
+
+    attributionControl.onAdd = function (map) {
+        var div = L.DomUtil.create("div", "leaflet-control-attribution");
+        div.innerHTML = "<span class='hidden-xs'>" + osmLayer.getAttribution() + "</span>\
+                         <span class='visible-xs'>\
+                         <a href='#' onclick='openModal();'>Attribution</a>\
+                         </span>";
+        return div;
+    };
+    map.addControl(attributionControl);
 
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');
