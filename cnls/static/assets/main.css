@@ -13,6 +13,7 @@ CNLS/BASE.HTML
 *******************/
 body
 {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
   overflow:hidden;
   width:100%;
 }
@@ -32,7 +33,9 @@ body
 .navbar-nav img {
     width: 20px;
 }
-
+.navbar-default .navbar-brand {
+    color: #ccc;
+}
 .navbar .dropdown-menu {
     background-color: #555555;
 }
