@@ -36,7 +36,7 @@ def home(request):
 ####################
 # Page de détail d'une action dont la primary key est id
 def detail(request, classe, id):
-    template = loader.get_template('detail.html')
+    template = loader.get_template('cnls/detail.html')
     model = get_model('cnls', classe)
     # Si l'id n'est pas trouvé dans la classe, renvoie une erreur 404 (not found)
     return HttpResponse(template.render(Context({'action' : get_object_or_404(model.objects.prefetch_related(), pk=id)})))
