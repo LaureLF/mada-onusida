@@ -23,6 +23,9 @@ body
     min-height:40px !important;
     margin-bottom:0;
 }
+.navbar-static-top {
+    z-index : 1001;
+}
 .navbar-nav > li > a, .navbar-brand {
     padding:8px 5px 0 5px !important; 
     height: 40px;
@@ -145,6 +148,15 @@ CNLS/INDEX.HTML
 
 
 /* FILTERS */
+#bug {
+    color: red;
+    text-align: center;
+    font-weight : underline;
+}
+#bug:hover {
+    font-weight : bold;
+}
+
 #filters, #filters-button {
     position: absolute;
 }
@@ -236,7 +248,9 @@ CNLS/INDEX.HTML
     border-top-left-radius: 0px;
     border-top-right-radius: 0px;
 }
-
+.panel-title {
+    font-size:14px;
+}
 .panel-title .panel-title-inner {
     width: 100%;
     display: inline-block;

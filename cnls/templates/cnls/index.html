@@ -42,6 +42,18 @@ var actionsLocales = {{actionsL|safe}};
 
       <div class="panel-group" role="tablist" aria-multiselectable="true">
       
+        <!--bug link panel -->
+        <div class="panel  panel--inner">
+          <div class="panel-heading" role="tab">
+            <h4 class="panel-title">
+              <a class="collapsed panel-title-inner" id="bug" href="{% url 'bugs' %}">&#8594; Signaler un bug</a>
+            </h4>
+          </div>
+          <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">
+
+          </div>
+        </div><!--/bug link panel -->
+
       <!--echelles panel -->
         <div class="panel panel--inner">
           <div class="panel-heading" role="tab" id="actionTypeHeading">
@@ -246,11 +258,9 @@ var actionsLocales = {{actionsL|safe}};
 
         <!--export panel -->
         <div class="panel  panel--inner">
-          <div class="panel-heading" role="tab" id="populationHeading">
+          <div class="panel-heading" role="tab">
             <h4 class="panel-title">
-              <a class="collapsed panel-title-inner" id="export" href="javascript:exportCSV();">Exporter la sélection au format .csv
-<!--                  <button type="button" onclick="location.href='./actions/'">Exporter la sélection au format .csv</button> -->
-              </a>
+              <a class="collapsed panel-title-inner" id="export" href="javascript:exportCSV();">Exporter la sélection au format .csv</a>
             </h4>
           </div>
           <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">
