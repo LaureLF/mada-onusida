@@ -1,6 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 from django.contrib import admin
 from cnls import views
 
@@ -18,6 +18,12 @@ urlpatterns = patterns('',
     url(r'^actions$', views.export_csv, name='export_csv'),
     # La vue détaillée de l'action choisir
     url(r'^(?P<classe>[a-zA-Z]+)\/(?P<id>\d+)\/.*$', views.detail, name='detail'),
+    #favicons
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/media/favicons/favicon.ico', permanent=True)),
+    url(r'^android-chrome-192x192\.png$', RedirectView.as_view(url='/static/media/favicons/android-chrome-192x192.png', permanent=True)),
+    url(r'^browserconfig\.xml$', RedirectView.as_view(url='/static/media/favicons/browserconfig.xml', permanent=True)),
+    url(r'^mstile-150x150\.png$', RedirectView.as_view(url='/static/media/favicons/mstile-150x150.png', permanent=True)),
+    # Inusité
     #url(r'^faritra/$', views.get_faritra, name='faritra'),
 )
 
