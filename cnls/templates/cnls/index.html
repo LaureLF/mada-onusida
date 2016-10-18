@@ -22,7 +22,10 @@ var actionsLocales = {{actionsL|safe}};
 {% block drapeau %}<img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}">{% endblock %}
 
 {% block content %}
-  <button id="filters-button" type="button" class="btn btn-warning js-showfilters" aria-hidden="true">
+  <div class="container-fluid fill">
+
+  <!-- filters -->
+<!--  <button id="filters-button" type="button" class="btn btn-warning js-showfilters" aria-hidden="true">
     Filtrer <span class="glyphicon glyphicon-triangle-top" ></span>
   </button>
 
@@ -35,37 +38,28 @@ var actionsLocales = {{actionsL|safe}};
         <span class="close">×</span>
       </button>
     </div>
+-->
 
 
-    <div class="filters-inner">
+      <div class="panel-group" id="accordion" role="tablist">
 
-
-      <div class="panel-group" role="tablist" aria-multiselectable="true">
-      
-        <!--bug link panel -->
+        <!--bug link panel-->
         <div class="panel  panel--inner">
           <div class="panel-heading" role="tab">
             <h4 class="panel-title">
               <a class="collapsed panel-title-inner" id="bug" href="{% url 'bugs' %}">&#8594; Signaler un bug</a>
             </h4>
           </div>
-          <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">
-
+          <div class="panel-collapse collapse" role="tabpanel">
           </div>
-        </div><!--/bug link panel -->
+        </div><!--/bug link panel 
 
       <!--echelles panel -->
         <div class="panel panel--inner">
           <div class="panel-heading" role="tab" id="actionTypeHeading">
             <h4 class="panel-title">
-              <a data-toggle="collapse" href="#echelle" aria-expanded="true" aria-controls="echelle"  class="panel-title-inner">
+              <a data-toggle="collapse" href="#echelle" aria-expanded="true" aria-controls="echelle" class="panel-title-inner" data-parent="#accordion">
                 &Eacute;chelles d&#39;intervention
-
-                <span class="panelCollapsedStatus">
-                  <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                </span>
-
               </a>
             </h4>
           </div>
@@ -79,18 +73,10 @@ var actionsLocales = {{actionsL|safe}};
             </div>
             <div class="panel-body checkboxList js-filter-checkboxes" data-filter-checkboxes-field="echelle">
               
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="ActionNationale">Actions nationales
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="ActionTananarive">Actions &agrave; Tananarive
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="ActionRegionale">Actions r&eacute;gionales
-              </label>
-              <label>
-                <input type="checkbox" checked data-filter-checkbox-value="ActionLocale">Actions locales
-              </label>
+              <label><input type="checkbox" checked data-filter-checkbox-value="ActionNationale">Actions nationales</label>
+              <label><input type="checkbox" checked data-filter-checkbox-value="ActionTananarive">Actions &agrave; Tananarive</label>
+              <label><input type="checkbox" checked data-filter-checkbox-value="ActionRegionale">Actions r&eacute;gionales</label>
+              <label><input type="checkbox" checked data-filter-checkbox-value="ActionLocale">Actions locales</label>
             </div>
           </div>
         </div><!--/echelles panel -->
@@ -100,15 +86,8 @@ var actionsLocales = {{actionsL|safe}};
         <div class="panel panel--inner">
           <div class="panel-heading" role="tab" id="actionTypeHeading">
             <h4 class="panel-title">
-              <a class="collapsed panel-title-inner" data-toggle="collapse" href="#actionType" aria-expanded="false" aria-controls="actionType"  class="panel-title-inner">
+              <a class="collapsed panel-title-inner" data-toggle="collapse" data-parent="#accordion" href="#actionType" aria-expanded="false" aria-controls="actionType"  class="panel-title-inner">
                 Types d'actions
-                <!--<span class="panelFilterStatus" data-countof="actionType"></span>-->
-
-                <span class="panelCollapsedStatus">
-                  <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                </span>
-
               </a>
             </h4>
           </div>
@@ -139,13 +118,8 @@ var actionsLocales = {{actionsL|safe}};
         <div class="panel  panel--inner">
           <div class="panel-heading" role="tab" id="populationHeading">
             <h4 class="panel-title">
-              <a class="collapsed panel-title-inner" data-toggle="collapse"  href="#population" aria-expanded="false" aria-controls="population" >
+              <a class="collapsed panel-title-inner" data-toggle="collapse" data-parent="#accordion" href="#population" aria-expanded="false" aria-controls="population" >
                 Populations
-                <!--<span class="panelFilterStatus" data-countof="population"></span>-->
-                <span class="panelCollapsedStatus">
-                  <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                </span>
               </a>
             </h4>
           </div>
@@ -170,41 +144,12 @@ var actionsLocales = {{actionsL|safe}};
         </div><!--/population panel -->
 
 
-        <!--province panel -->
-<!--        <div class="panel panel--inner">
-          <div class="panel-heading" role="tab" id="provinceHeading">
-            <h4 class="panel-title">
-              <a class="collapsed panel-title-inner" data-toggle="collapse" href="#province" aria-expanded="false" aria-controls="province" class="panel-title-inner">
-                Faritras
-                <span class="panelCollapsedStatus">
-                  <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                </span>
-              </a>
-            </h4>
-          </div>
-
-          <div id="province" class="panel-collapse collapse" role="tabpanel" aria-labelledby="provinceHeading">
-            <div class="panel-body">
-                <select name="faritra" class="js-regions" onChange="javascript:initRegionsListEvents2(this);">
-                <!-- filled by app.js -->
-<!--                </select>
-            </div>
-
-          </div>
-        </div>--><!--/province panel -->
-
         <!-- date panel -->
         <div class="panel panel--inner">
           <div class="panel-heading" role="tab" id="dateHeading">
             <h4 class="panel-title">
-              <a class="collapsed panel-title-inner" data-toggle="collapse" href="#date" aria-expanded="false" aria-controls="date">
+              <a class="collapsed panel-title-inner" data-toggle="collapse" data-parent="#accordion" href="#date" aria-expanded="false" aria-controls="date">
                 Dates
-<!--                <span class="panelFilterStatus js-filter-dates-status">jan. 2010 → jan. 2015</span>-->
-                <span class="panelCollapsedStatus">
-                  <span class="glyphicon glyphicon-triangle-bottom" aria-hidden="true"></span>
-                  <span class="glyphicon glyphicon-triangle-right" aria-hidden="true"></span>
-                </span>
               </a>
             </h4>
           </div>
@@ -218,7 +163,6 @@ var actionsLocales = {{actionsL|safe}};
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="date_start_month">
-                    <!-- filled by app.js -->
                   </ul>
                 </div></td>
                 <td><div class="dropdown js-filter-dates-start-year">
@@ -227,7 +171,6 @@ var actionsLocales = {{actionsL|safe}};
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="date_start_year">
-                    <!-- filled by app.js -->
                   </ul>
                 </div></td></tr>
               
@@ -238,7 +181,6 @@ var actionsLocales = {{actionsL|safe}};
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="date_end_month">
-                    <!-- filled by app.js -->
                   </ul>
                 </div></td>
                 <td><div class="dropdown js-filter-dates-end-year">
@@ -247,7 +189,6 @@ var actionsLocales = {{actionsL|safe}};
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="date_end_month">
-                    <!-- filled by app.js -->
                   </ul>
                 </div></td></tr>
               </table>
@@ -260,7 +201,7 @@ var actionsLocales = {{actionsL|safe}};
         <div class="panel  panel--inner">
           <div class="panel-heading" role="tab">
             <h4 class="panel-title">
-              <a class="collapsed panel-title-inner" id="export" href="javascript:exportCSV();">Exporter la sélection au format .csv</a>
+              <a class="collapsed panel-title-inner" id="export" href="javascript:exportCSV();">Exporter la sélection (format .csv)</a>
             </h4>
           </div>
           <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">
@@ -270,15 +211,12 @@ var actionsLocales = {{actionsL|safe}};
 
 
       </div>  <!--/.panel-group -->
-    </div>
-  </div><!--/#filters -->
 
+<!--  </div><!--/#filters -->
 
+        <div id="map"></div>
 
-
-  <div id="map"></div>
-
-<div class="modal fade" id="attributionModal" tabindex="-1" role="dialog">
+  <div class="modal fade" id="attributionModal" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-body">
@@ -292,6 +230,7 @@ var actionsLocales = {{actionsL|safe}};
   <a class="bottomLeftLogo" href="http://www.cartong.org/">
     <img src="{% static "./assets/img/CartONG_logo.png" %}" alt="CartONG">
   </a>
+</div><!-- /container-fluid-->
 
 
   <script type="text/javascript">
