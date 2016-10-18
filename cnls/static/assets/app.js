@@ -105,9 +105,9 @@ function toggleAll(source, filterName) {
                 $(inputEl).prop('checked', source.checked)
             })
         }
-            
+
     })
- 
+
 //    var checkboxes = document.getElementsByName(filterName);
 //    for(var i=0 ; i < checkboxes.length; i++) {
 //      checkboxes[i].checked = source.checked;
@@ -239,12 +239,6 @@ function updateFilters(newDate) {
     $('.js-filter-dates-end-month .js-lbl').html( datePickerContainers.endMonth.data('dateFormatted') )
     $('.js-filter-dates-end-year .js-lbl').html( datePickerContainers.endYear.data('dateFormatted') )
 
-//    $('.js-filter-dates-status').html(datePickerStatusTpl({
-//        startMonth: moment.monthsShort()[datePickerContainers.startMonth.data('date')],
-//        endMonth: moment.monthsShort()[datePickerContainers.endMonth.data('date')],
-//        startYear: datePickerContainers.startYear.data('date'),
-//        endYear: datePickerContainers.endYear.data('date')
-//    }));
 }
 
 //////////
@@ -268,7 +262,7 @@ function getFilters() {
             }
         })
         filters.push(filter);
-        
+
     });
 
     var dateFormat = $('.js-filter-dates').data().filterDatesFormat;
@@ -297,10 +291,6 @@ function initRegionsListEvents() {
     regionsListContainer.find('a').on('click', function (e) {
         var latlonStr = $(e.currentTarget).data('latlon');
         var latlon = latlonStr.split(',');
-
-        //shift a bit to the west to compensate space taken by right controls
-        //TODO : only desktop
-        latlon[1] = parseFloat(latlon[1]) + 1;
         map.setView(latlon, 7);
 
         if (regionsShapes) {
@@ -318,7 +308,7 @@ function initRegionsListEvents() {
 function initRegionsListEvents2(selection) {
     var latlonStr = selection.value;
     var latlon = latlonStr.split(',');
-    latlon[1] = parseFloat(latlon[1]) + 1;
+
     map.setView(latlon, 7);
 
     if (regionsShapes) {
@@ -389,7 +379,7 @@ function openModal() {
 //////////
 function init() {
     map = L.map('map', {
-        center: [-18.766947, 49],
+        center: [-18.933333, 47.516667],
         zoom: 6,
         minZoom: 4,
         maxZoom: 10,
