@@ -36,6 +36,9 @@ body
     padding: 12px 15px 0 15px;
     margin: 0;
 }
+.navbar-toggle:hover > .glyphicon {
+    color: #ccc;
+}
 .navbar .dropdown-menu {
     background-color: #555555;
 }
@@ -65,16 +68,6 @@ CNLS/INDEX.HTML
   overflow-y: hidden;
 }
 
-#accordion {
-  display: block;
-  width: 250px;
-  height: 100%;
-  min-height: 100%;
-  max-width: 50%;
-  float: left;
-  overflow: auto;
-}
-
 #map {
   width: auto;
   height: 100%;
@@ -84,7 +77,7 @@ CNLS/INDEX.HTML
 .bottomLeftLogo {
   position: absolute;
   bottom: 0;
-  left: 250px;
+  left: 250px; /* TODO changer pour du relatif ou ça plante sur mobile*/
 }
 .bottomLeftLogo img {
   width: 120px;
@@ -169,6 +162,23 @@ CNLS/INDEX.HTML
 
 
 /* FILTERS */
+#accordion {
+/*  display: block;*/
+  width: 250px;
+  height: 100%;
+  min-height: 100%;
+  max-width: 75%;
+  float: left;
+  overflow: auto;
+  margin-bottom: 0;
+}
+#accordion .panel+.panel {
+    margin-top: 0;
+    border-top: 1px solid #ccc;
+}
+#accordion .panel--inner {
+    margin-bottom: 0;
+}
 #bug {
     color: red;
     text-align: center;
@@ -248,15 +258,6 @@ CNLS/INDEX.HTML
 .panel--inner {
     box-shadow: none;
     -webkit-box-shadow: none;
-}
-
-.panel-group {
-    margin-bottom: 0;
-}
-
-.panel-group .panel+.panel {
-    margin-top: 0;
-    border-top: 1px solid #ccc;
 }
 
 .panel--inner .panel-heading {
