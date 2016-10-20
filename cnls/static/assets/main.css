@@ -49,7 +49,7 @@ body
 .navbar .lang > li > a {
     padding: 4px 10px 6px 10px;
 }
-.navbar .glyphicon-search {
+.navbar .glyphicon {
     color: white;
     font-size: 1.2em;
 }
@@ -141,18 +141,6 @@ CNLS/INDEX.HTML
 .marker-cluster-small-blue div {
     background-color: rgba(110, 190, 220, 0.6);
 }
-.marker-cluster-small-purple {
-    background-color: rgba(195, 110, 220, 0.2);
-}
-.marker-cluster-small-purple div {
-    background-color: rgba(195, 110, 220, 0.6);
-}
-.marker-cluster-small-brown {
-    background-color: rgba(220, 140, 110, 0.2);
-}
-.marker-cluster-small-brown div {
-    background-color: rgba(220, 140, 110, 0.6);
-}
 .marker-cluster-small-grey {
     background-color: rgba(180, 180, 180, 0.2);
 }
@@ -162,8 +150,27 @@ CNLS/INDEX.HTML
 
 
 /* FILTERS */
+/*#slideout {
+  font-size: 0.8em;
+  background-color: #eee;
+  margin: 0;
+  padding: 10px 0;
+  border: 1px solid #ccc;
+  position: absolute;
+  top: 50%;
+  left: 250px; 
+}*/
+.slideout {
+  background-color: #eee !important;
+  margin: 0 !important;
+  padding: 5px 0 !important;
+  border-right:  1px solid #ccc !important;
+  border-bottom: 1px solid #ccc !important;
+}
+.slideout > a {
+  color: #000 !important;
+}
 #accordion {
-/*  display: block;*/
   width: 250px;
   height: 100%;
   min-height: 100%;
@@ -171,6 +178,7 @@ CNLS/INDEX.HTML
   float: left;
   overflow: auto;
   margin-bottom: 0;
+  border-right: 1px solid #ccc;
 }
 #accordion .panel+.panel {
     margin-top: 0;
@@ -285,6 +293,7 @@ CNLS/INDEX.HTML
     float: right;
     font-family: 'Glyphicons Halflings';
     margin-right: 5px;
+    font-size: 0.8em;
 }
 .panel-title > a.accordion-toggle.collapsed::after, #accordion a.collapsed[data-toggle="collapse"]::after {
     content:"\e259";

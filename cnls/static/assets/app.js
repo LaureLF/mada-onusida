@@ -383,11 +383,13 @@ function init() {
         zoom: 6,
         minZoom: 4,
         maxZoom: 10,
-        attributionControl: false
+        attributionControl: false,
     });
 
     osmLayer = L.tileLayer('//a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {attribution: "Map data &copy; <a href='https://www.openstreetmap.org/' target='_blank'>OpenStreetMap</a> contributors (<a href='http://www.opendatacommons.org/licenses/odbl' target='_blank'>ODbL</a>).<br/>Tiles by the <a href='https://hotosm.org/ target='_blank''>Humanitarian OSM Team</a> (<a href='https://creativecommons.org/publicdomain/zero/1.0/' target='_blank''>CC0</a>)."} );
     osmLayer.addTo(map);
+
+    map.zoomControl.setPosition('topright');
 
     var attributionControl = L.control({
         position: "bottomright"
@@ -402,6 +404,16 @@ function init() {
         return div;
     };
     map.addControl(attributionControl);
+
+    var slideOutButton = L.control({
+        position: "topleft"
+    });
+    slideOutButton.onAdd = function (map) {
+        this._div = L.DomUtil.create('div', 'slideout visible-xs'); // create a div with  class '...'
+        this._div.innerHTML = "<a href='#' data-toggle='collapse' data-target='#accordion'><b><span class='glyphicon glyphicon-menu-right'></b></a>";
+        return this._div;
+    };
+    map.addControl(slideOutButton);
 
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');

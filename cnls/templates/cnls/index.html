@@ -24,22 +24,6 @@ var actionsLocales = {{actionsL|safe}};
 {% block content %}
   <div class="container-fluid fill">
 
-  <!-- filters -->
-<!--  <button id="filters-button" type="button" class="btn btn-warning js-showfilters" aria-hidden="true">
-    Filtrer <span class="glyphicon glyphicon-triangle-top" ></span>
-  </button>
-
-  <div id="filters" class="panel panel--outer js-filters">
-
-    <div class="mobileFilterHeader" aria-hidden="true">
-      Filtres
-      <button class="mobileFilterHeader-close js-closeFilters">
-        Fermer
-        <span class="close">×</span>
-      </button>
-    </div>
--->
-
       <div class="collapse in" id="accordion">
 
         <!--bug link panel-->
@@ -203,33 +187,31 @@ var actionsLocales = {{actionsL|safe}};
               <a class="collapsed panel-title-inner" id="export" href="javascript:exportCSV();">Exporter la sélection (format .csv)</a>
             </h4>
           </div>
-          <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">
-            
+          <div id="export" class="panel-collapse collapse" role="tabpanel" aria-labelledby="exportHeading">    
           </div>
         </div><!--/export panel -->
-
-
       </div>  <!--/.panel-group -->
 
-<!--  </div><!--/#filters -->
 
-        <div id="map"></div>
+      <div id="map"></div>
 
-  <div class="modal fade" id="attributionModal" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-body">
-            <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
-            <div id="attribution"></div>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
-  <a class="bottomLeftLogo" href="http://www.cartong.org/">
-    <img src="{% static "./assets/img/CartONG_logo.png" %}" alt="CartONG">
-  </a>
-</div><!-- /container-fluid-->
+      <div class="modal fade" id="attributionModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <button class="close" type="button" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <div id="attribution"></div>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+
+      <a class="bottomLeftLogo" href="http://www.cartong.org/">
+        <img src="{% static "./assets/img/CartONG_logo.png" %}" alt="CartONG">
+      </a>
+
+  </div><!-- /container-fluid-->
 
 
   <script type="text/javascript">
