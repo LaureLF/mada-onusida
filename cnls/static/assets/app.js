@@ -287,6 +287,10 @@ function getFilters() {
 //////////
 // initRegionsListEvents()
 //////////
+if ($(window).width() <= 768) {
+    $("#accordion").removeClass("in");
+}
+
 function initRegionsListEvents() {
     regionsListContainer.find('a').on('click', function (e) {
         var latlonStr = $(e.currentTarget).data('latlon');
@@ -394,14 +398,13 @@ function init() {
     var attributionControl = L.control({
         position: "bottomright"
     });
-
     attributionControl.onAdd = function (map) {
-        var div = L.DomUtil.create("div", "leaflet-control-attribution");
-        div.innerHTML = "<span class='hidden-xs'>" + osmLayer.getAttribution() + "</span>\
+        this._div = L.DomUtil.create("div", "leaflet-control-attribution");
+        this._div.innerHTML = "<span class='hidden-xs'>" + osmLayer.getAttribution() + "</span>\
                          <span class='visible-xs'>\
                          <a href='#' onclick='openModal();'>Attribution</a>\
                          </span>";
-        return div;
+        return this._div;
     };
     map.addControl(attributionControl);
 
@@ -414,6 +417,16 @@ function init() {
         return this._div;
     };
     map.addControl(slideOutButton);
+
+    var logoCartong = L.control({
+        position: "bottomleft"
+    });
+    logoCartong.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'bottomLeftLogo');
+    this._div.innerHTML ="<a href='//www.cartong.org/' target='_blank'><img src='/static/assets/img/CartONG_logo.png' alt='CartONG'></a>";
+    return this._div;
+    };
+    map.addControl(logoCartong);
 
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');

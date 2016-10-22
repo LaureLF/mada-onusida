@@ -75,9 +75,7 @@ CNLS/INDEX.HTML
   display: block;
 }
 .bottomLeftLogo {
-  position: absolute;
-  bottom: 0;
-  left: 250px; /* TODO changer pour du relatif ou ça plante sur mobile*/
+  margin: 0 !important;
 }
 .bottomLeftLogo img {
   width: 120px;
@@ -150,22 +148,14 @@ CNLS/INDEX.HTML
 
 
 /* FILTERS */
-/*#slideout {
-  font-size: 0.8em;
-  background-color: #eee;
-  margin: 0;
-  padding: 10px 0;
-  border: 1px solid #ccc;
-  position: absolute;
-  top: 50%;
-  left: 250px; 
-}*/
 .slideout {
   background-color: #eee !important;
   margin: 0 !important;
   padding: 5px 0 !important;
   border-right:  1px solid #ccc !important;
   border-bottom: 1px solid #ccc !important;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 .slideout > a {
   color: #000 !important;
