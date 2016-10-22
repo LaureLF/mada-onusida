@@ -133,5 +133,5 @@ def export_csv(request, ids=None):
 ####################    
 # La page À propos
 def apropos(request):
-    template = loader.get_template('apropos.html')
+    template = loader.get_template('cnls/apropos.html')
     return HttpResponse(template.render())
