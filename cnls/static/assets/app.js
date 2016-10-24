@@ -413,20 +413,22 @@ function init() {
     });
     slideOutButton.onAdd = function (map) {
         this._div = L.DomUtil.create('div', 'slideout visible-xs'); // create a div with  class '...'
-        this._div.innerHTML = "<a href='#' data-toggle='collapse' data-target='#accordion'><b><span class='glyphicon glyphicon-menu-right'></b></a>";
+        this._div.innerHTML = "<button type='button' data-toggle='collapse' data-target='#accordion'><h3>&#xbb;</h3></button>";
+//\<a href='#' data-toggle='collapse' data-target='#accordion'><b><span class='glyphicon glyphicon-menu-right'></b></a>";
         return this._div;
     };
     map.addControl(slideOutButton);
 
-    var logoCartong = L.control({
+    var logos = L.control({
         position: "bottomleft"
     });
-    logoCartong.onAdd = function (map) {
+    logos.onAdd = function (map) {
     this._div = L.DomUtil.create('div', 'bottomLeftLogo');
-    this._div.innerHTML ="<a href='//www.cartong.org/' target='_blank'><img src='/static/assets/img/CartONG_logo.png' alt='CartONG'></a>";
+    this._div.innerHTML ="<a href='//www.unaids.org/fr' target='_blank'><img src='/static/assets/img/UNAIDS_logo_FR.gif' alt='ONUSIDA'></a><br/>\
+                          <a href='//www.cartong.org/' target='_blank'><img src='/static/assets/img/CartONG_logo.png' alt='CartONG'></a>";
     return this._div;
     };
-    map.addControl(logoCartong);
+    map.addControl(logos);
 
     regionsListContainer = $('.js-regions');
 //    regionListItemTpl = _.template('<li><a href="#" data-latlon="<%= center %>"><%= name %></a></li>');

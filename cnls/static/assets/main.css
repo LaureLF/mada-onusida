@@ -38,6 +38,7 @@ body
 }
 .navbar-toggle:hover > .glyphicon {
     color: #ccc;
+/*    font-family:'Glyphicons Halflings' !important;*/
 }
 .navbar .dropdown-menu {
     background-color: #555555;
@@ -79,6 +80,7 @@ CNLS/INDEX.HTML
 }
 .bottomLeftLogo img {
   width: 120px;
+  margin-top: 5px;
 }
 .leaflet-popup-content {
     margin: 0;
@@ -149,16 +151,26 @@ CNLS/INDEX.HTML
 
 /* FILTERS */
 .slideout {
+  margin: 0 !important;
+}
+.slideout > button {
+  color: #000;
   background-color: #eee !important;
   margin: 0 !important;
-  padding: 5px 0 !important;
-  border-right:  1px solid #ccc !important;
-  border-bottom: 1px solid #ccc !important;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
+/*  padding: 18px 5px !important;*/
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  border-left: 0;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: O;
+  border-bottom-right-radius: 10px;
+  border-top-right-radius: 10px;
 }
-.slideout > a {
-  color: #000 !important;
+.slideout > button > h3 {
+  margin: 0;
+  padding-bottom: 15px;
+  padding-top: 10px;
 }
 #accordion {
   width: 250px;
