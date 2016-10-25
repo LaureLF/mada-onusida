@@ -1,6 +1,9 @@
 {% extends 'cnls/base.html' %}
+{% load staticfiles %}
 
 {% block onglet_apropos %}class="active"{% endblock %}
+
+{% block drapeau %}<img alt="Français" src="{% static "./assets/img/locale_fr-FR.png" %}">{% endblock %}
 
 {% block content %}
   <div class="details"><!-- classe pour profiter du css qui décale le haut du texte vers le bas (sinon recouvert par la navbar)-->
