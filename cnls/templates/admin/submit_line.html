@@ -1,6 +1,6 @@
 {% load i18n admin_urls %}
 <div class="submit-row">
-{% if show_save %}<a href="../"><input type="submit" name="cancel" value="{% trans 'Cancel' %}"></a>
+{% if show_save %}<a href="../"><input type="button" name="cancel" value="{% trans 'Cancel' %}"></a>
 <input type="submit" value="{% trans 'Save' %}" class="default" name="_save" />{% endif %}
 {% if show_delete_link %}
     {% url opts|admin_urlname:'delete' original.pk|admin_urlquote as delete_url %}
