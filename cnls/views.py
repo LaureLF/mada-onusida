@@ -48,7 +48,7 @@ def get_geoactions(request):
     def to_json(echelle):
         return GeojsonWithIdSerializer().serialize(echelle.objects.all(), srid='4326', use_natural_foreign_keys=True)
         #return serializers.serialize('geojson', echelle.objects.all(), srid='4326', use_natural_foreign_keys=True)
-    
+
     data = {
         to_json(ActionNationale),
         to_json(ActionTananarive),
@@ -74,10 +74,10 @@ def export_csv(request, ids=None):
     # Le fichier téléchargé par l'utilisateur d'appelera CNLS_selection.csv
     response['Content-Disposition'] = 'attachment; filename="CNLS_selection.csv"'
 
-    writer = csv.writer(response)
+    writer = csv.writer(response, quoting=csv.QUOTE_NONNUMERIC)
     # On crée les colonnes correspondants aux champs qui seront exportés
     writer.writerow(["Titre", "Description", "Organisme maître d'œuvre", "Types d'interventions", "Publics cibles", "Echelle", "Localisation", "Coordonnées géographiques", "Date de démarrage", "Date de fin", "Durée de l'action", "Etat d'avancement", "Nombre de personnes visées", "Opérateur en lien avec l'action", "Priorité du PSN que l'activité appuie", "Résultat par rapport à l'année précédente", "Montant prévu", "Montant disponible", "Devise", "Bailleur de fond", "Origine de la donnée", "Commentaires", "Nom du responsable de la fiche", "Fiche créée le", "Dernière modification le"])
-    # On récupère les échelles transmise par l'url (paramètre e après le ?
+    # On récupère les échelles transmise par l'url (paramètre e après le ? )
     echelles = request.GET.getlist('e', '')
     if echelles:
         #try:
@@ -92,45 +92,45 @@ def export_csv(request, ids=None):
             champ_localisation = DICT_ECHELLES[model.__name__]['champ']
             # On récupère les objets de la base de données validant les différents filtres
             queryset = model.objects.all().filter(validation='valide').filter(typeintervention__in = types).filter(Q(date_debut__lte = datetime.strptime(request.GET.get('f'), '%Y-%m-%d').date()) | Q(date_debut__isnull=True)).filter(Q(date_fin__gte = datetime.strptime(request.GET.get('d'), '%Y-%m-%d').date()) | Q(date_fin__isnull=True))
-            
+
             # On écrit une ligne par objet dans le CSV
             for action in queryset:
                 test = getattr(action, champ_localisation).all()
                 # Pour l'objet considéré, on écrit les valeurs des différentes colonnes dans le même ordre que les colonnes définies ci-dessous
                 writer.writerow([
-                    action.titre, 
-                    action.description, 
-                    action.organisme, 
-                    ', '.join([str(t) for t in action.typeintervention.all()]), 
-                    ', '.join([str(c) for c in action.cible.all()]), 
-                    DICT_ECHELLES[model.__name__]['adj_fr'], 
-                    ', '.join([str(l) for l in getattr(action, champ_localisation).all()]), 
-                    action.mpoint, 
-                    action.date_debut, 
-                    action.date_fin, 
-                    action.duree, 
-                    action.avancement, 
-                    action.objectif, 
-                    action.operateur, 
-                    action.priorite_psn, 
-                    action.resultat_cf_annee_ant, 
-                    action.montant_prevu, 
-                    action.montant_disponible, 
-                    action.devise, 
-                    action.bailleur, 
-                    action.origine, 
-                    action.commentaire, 
-                    action.createur, 
-                    action.creation, 
+                    action.titre,
+                    action.description,
+                    action.organisme,
+                    ', '.join([str(t) for t in action.typeintervention.all()]),
+                    ', '.join([str(c) for c in action.cible.all()]),
+                    DICT_ECHELLES[model.__name__]['adj_fr'],
+                    ', '.join([str(l) for l in getattr(action, champ_localisation).all()]),
+                    action.mpoint,
+                    action.date_debut,
+                    action.date_fin,
+                    action.duree,
+                    action.avancement,
+                    action.objectif,
+                    action.operateur,
+                    action.priorite_psn,
+                    action.resultat_cf_annee_ant,
+                    action.montant_prevu,
+                    action.montant_disponible,
+                    action.devise,
+                    action.bailleur,
+                    action.origine,
+                    action.commentaire,
+                    action.createur,
+                    action.creation,
                     action.maj
                 ])
-           
+
     # normalement ce cas n'est pas rencontré car filtré par le JavaScript mais au cas où une URL serait écrite à la main:
     else:
         return
     return response
 
-####################    
+####################
 # La page À propos
 def apropos(request):
     template = loader.get_template('cnls/apropos.html')
