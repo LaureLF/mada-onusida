@@ -10,6 +10,14 @@ from cnls.models import Organisme, Bailleur, Action,  ActionTananarive, ActionNa
 from feedback.models import Feedback
 
 ###################
+# Titre du site et de diverses sections
+###################
+admin.site.site_title = 'Atlas CNLS' # Text to put at the end of each page's <title>.
+admin.site.site_header = 'Application CNLS - Administration' # Text to put in each page's <h1>.
+admin.site.index_title = 'Gestion des actions de lutte contre le SIDA' # Text to put at the top of the admin index page.
+#admin.site.site_url = None # Remove the "View on site" link from the admin change view
+
+###################
 # Pages d'administration pour les modèles Action (abstraite + 4 échelles)
 ###################
 class ActionAdmin(LeafletGeoAdmin):

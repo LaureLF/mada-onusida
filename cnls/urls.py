@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 from django.conf.urls import patterns, include, url
 from django.views.generic import TemplateView, RedirectView
-from django.contrib import admin
 from cnls import views
 
 urlpatterns = patterns('',
@@ -26,9 +25,3 @@ urlpatterns = patterns('',
     # Inusité
     #url(r'^faritra/$', views.get_faritra, name='faritra'),
 )
-
-# Titre du site et de diverses sections
-admin.site.site_header = 'Administration' # Text to put in each page's <h1>.
-admin.site.site_title = 'Atlas CNLS' # Text to put at the end of each page's <title>.
-admin.site.index_title = 'Gestion des actions de lutte contre le SIDA' # Text to put at the top of the admin index page.
-admin.site.site_url = None # Remove the "View on site" link from the admin change view
