@@ -32,6 +32,9 @@ body
 .navbar-default .navbar-brand {
     color: #ccc;
 }
+.navbar-default .navbar-brand:hover {
+    color: #ccc;
+}
 .navbar-toggle {
     padding: 12px 15px 0 15px;
     margin: 0;
