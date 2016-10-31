@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrastyle %}
+<style>
+#header{ 
+  color: #fff;
+  background-color: #333; 
+}
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+  color: #ccc; 
+}
+.module h2, .module caption, .inline-group h2 {
+    background: #333; /* For browsers that do not support gradients */
+    background: -webkit-linear-gradient(#333, #ccc); /* For Safari 5.1 to 6.0 */
+    background: -o-linear-gradient((#333, #ccc); /* For Opera 11.1 to 12.0 */
+    background: -moz-linear-gradient((#333, #ccc); /* For Firefox 3.6 to 15 */
+    background: linear-gradient((#333, #ccc); /* Standard syntax */
+}
+</style>
+{% endblock %}
+
+{% block branding %}
+<!--<h1 id="site-name"><a href="{% url 'admin:index' %}">{{ site_header|default:_('Django administration') }}</a></h1>-->
+<h1 id="site-name">{{ site_header|default:_('Django administration') }}</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
