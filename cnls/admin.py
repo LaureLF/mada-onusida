@@ -211,24 +211,27 @@ class ProfilInline(admin.StackedInline):
     fields = ('organisme','poste','photo')
     can_delete = False
     verbose_name_plural = 'Données professionnelles'
-  
-# Le fonctionnement en 2 écrans successifs (add_view puis change_view dans la foulée) vient de la classe User de Django 
+
+# Le fonctionnement en 2 écrans successifs (add_view puis change_view dans la foulée) vient de la classe User de Django
 # mais pose des problèmes pour les champs obligatoires de Profile (NB non résolu)
 class CustomUserAdmin(UserAdmin):
     # Premier écran : les informations de base et de connexion
     add_form = CustomUserCreationForm
     # Les champs qu'on veut sur le premier écran d'enregistrement d'un utilisateur
-    # (parmi un choix très restreint proposé par Django)
     add_fieldsets = (
-        (None, {'fields': ('username', 'email', 'password1', 'password2')}),)
+        (None, {'fields': ('username', ('first_name', 'last_name'), 'email', 'password1', 'password2') }),
+        (_('Permissions'), {'fields': ('is_active', 'is_superuser', 'groups', )}),
+        (_('Données professionnelles'), {'fields': ('organisme', 'poste', 'photo', )}),
+        )
     # Second écran : informations plus détaillées
     form = CustomUserChangeForm
     # Les champs qu'on veut sur le second écran d'enregistrement d'un utilisateur
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password', ('first_name', 'last_name'))}),
-        (_('Permissions'), {'fields': ('is_active', 'is_superuser', 'groups', )}), 
+        (_('Permissions'), {'fields': ('is_active', 'is_superuser', 'groups', )}),
+        # Les données du modèle Profil sont chargées dans le ProfilInline
     )
-    filter_horizontal = ()
+    filter_horizontal = ('groups',)
 
     def add_view(self, *args, **kwargs):
       self.inlines = []
@@ -240,12 +243,12 @@ class CustomUserAdmin(UserAdmin):
       return super(CustomUserAdmin, self).change_view(*args, **kwargs)
 
     # Tout utilisateur est considéré comme staff par défaut (ie ayant accès à l'interface d'administration),
-    # puisque c'est la seule raison d'enregistrer les utilisateurs dans notre projet.    
+    # puisque c'est la seule raison d'enregistrer les utilisateurs dans notre projet.
     def save_model(self, request, obj, form, change):
         obj.is_staff = True
         super(CustomUserAdmin, self).save_model(request, obj, form, change)
-        
-# Annule l'enregistrement de l'interface admin par défaut de gestion des utilisateurs 
+
+# Annule l'enregistrement de l'interface admin par défaut de gestion des utilisateurs
 # et remplace par la nôtre (définie ci-dessus)
 try:
     admin.site.unregister(User)
