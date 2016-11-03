@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib import admin
+from django.contrib.auth.models import User, Group
 from django.contrib.gis.geos import Point, MultiPoint
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django.core.exceptions import ValidationError
@@ -17,6 +18,8 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
 
+    # Personnalisation du choix du groupe
+    groups = forms.ModelChoiceField(queryset=Group.objects.all().order_by('-name'), widget=forms.RadioSelect, empty_label=None, initial=1)
     # Champs supplémentaires du modèle Profil
     organisme = forms.ModelChoiceField(queryset=Organisme.objects.all(), to_field_name="nom")
     poste = forms.CharField(max_length=250, required=True)

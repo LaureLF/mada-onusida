@@ -1,5 +1,5 @@
 from django.contrib.gis import admin
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.admin import UserAdmin
 from django.utils.translation import ugettext_lazy as _
 from django.template.defaultfilters import slugify
@@ -200,6 +200,8 @@ admin.site.register(ActionTananariveAValider, ActionTananariveAValiderAdmin)
 admin.site.register(ActionRegionaleAValider, ActionRegionaleAValiderAdmin)
 admin.site.register(ActionLocaleAValider, ActionLocaleAValiderAdmin)
 admin.site.register(Feedback)
+admin.site.unregister(Group)
+
 
 ###################
 # Cas spécifique de la gestion des utilisateurs (classe User de Django et Profile de models.py)
@@ -231,14 +233,14 @@ class CustomUserAdmin(UserAdmin):
         (_('Permissions'), {'fields': ('is_active', 'is_superuser', 'groups', )}),
         # Les données du modèle Profil sont chargées dans le ProfilInline
     )
-    filter_horizontal = ('groups',)
+#    filter_horizontal = ('groups',)
 
     def get_form(self, request, obj, **kwargs):
         form = super(CustomUserAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['username'].label = 'Identifiant'
         form.base_fields['is_active'].label = 'Compte en activité'
         form.base_fields['is_superuser'].label = 'Statut administrateur'
-        form.base_fields['groups'].label = 'Niveau de responsabilités'
+        form.base_fields['groups'].label = 'Statut'
 #        form.base_fields['is_superuser'].help_text = 'My help text'
         return form
 
@@ -263,8 +265,5 @@ class CustomUserAdmin(UserAdmin):
 
 # Annule l'enregistrement de l'interface admin par défaut de gestion des utilisateurs
 # et remplace par la nôtre (définie ci-dessus)
-try:
-    admin.site.unregister(User)
-except NotRegistered:
-    pass
+admin.site.unregister(User)
 admin.site.register(User, CustomUserAdmin)
