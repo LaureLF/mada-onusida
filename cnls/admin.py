@@ -248,6 +248,10 @@ class CustomUserAdmin(UserAdmin):
         obj.is_staff = True
         super(CustomUserAdmin, self).save_model(request, obj, form, change)
 
+    # Annule le comportement par défaut du bouton Save qui renvoie vers CustomUserChangeForm
+    def response_add(self, request, obj, post_url_continue=None):
+        return super(UserAdmin, self).response_add(request, obj, post_url_continue)
+
 # Annule l'enregistrement de l'interface admin par défaut de gestion des utilisateurs
 # et remplace par la nôtre (définie ci-dessus)
 try:
