@@ -233,6 +233,15 @@ class CustomUserAdmin(UserAdmin):
     )
     filter_horizontal = ('groups',)
 
+    def get_form(self, request, obj, **kwargs):
+        form = super(CustomUserAdmin, self).get_form(request, obj, **kwargs)
+        form.base_fields['username'].label = 'Identifiant'
+        form.base_fields['is_active'].label = 'Compte en activité'
+        form.base_fields['is_superuser'].label = 'Statut administrateur'
+        form.base_fields['groups'].label = 'Niveau de responsabilités'
+#        form.base_fields['is_superuser'].help_text = 'My help text'
+        return form
+
     def add_view(self, *args, **kwargs):
       self.inlines = []
       return super(CustomUserAdmin, self).add_view(*args, **kwargs)
