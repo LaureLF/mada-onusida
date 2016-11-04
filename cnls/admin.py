@@ -185,7 +185,6 @@ class ActionLocaleAValiderAdmin(ActionLocaleAdmin):
 ###################
 admin.site.register(Organisme)
 admin.site.register(Bailleur)
-#admin.site.register(Profil)
 admin.site.register(ActionNationale,ActionNationaleAdmin)
 admin.site.register(ActionTananarive,ActionTananariveAdmin)
 admin.site.register(ActionRegionale,ActionRegionaleAdmin)
@@ -200,7 +199,7 @@ admin.site.register(ActionTananariveAValider, ActionTananariveAValiderAdmin)
 admin.site.register(ActionRegionaleAValider, ActionRegionaleAValiderAdmin)
 admin.site.register(ActionLocaleAValider, ActionLocaleAValiderAdmin)
 admin.site.register(Feedback)
-admin.site.unregister(Group)
+#admin.site.unregister(Group)
 
 
 ###################
@@ -214,15 +213,26 @@ class ProfilInline(admin.StackedInline):
     can_delete = False
     verbose_name_plural = 'Données professionnelles'
 
-# Le fonctionnement en 2 écrans successifs (add_view puis change_view dans la foulée) vient de la classe User de Django
-# mais pose des problèmes pour les champs obligatoires de Profile (NB non résolu)
+# Création et modification des utilisateurs
 class CustomUserAdmin(UserAdmin):
+    # Affichage personnalisé de la liste des utilisateurs
+    list_filter = ['groups', 'is_superuser']
+    list_display = ['username','first_name', 'last_name', 'get_organisme', 'get_groups']
+    def get_organisme(self, obj):
+        return obj.profil.organisme
+    get_organisme.short_description = 'Organisme'
+    get_organisme.admin_order_field = 'organisme'
+    def get_groups(self, obj):
+        return ', '.join([group.name for group in obj.groups.all()])
+    get_groups.short_description = 'Statut'
+    get_groups.admin_order_field = 'groups'
+
     # Premier écran : les informations de base et de connexion
     add_form = CustomUserCreationForm
     # Les champs qu'on veut sur le premier écran d'enregistrement d'un utilisateur
     add_fieldsets = (
         (None, {'fields': ('username', ('first_name', 'last_name'), 'email', 'password1', 'password2') }),
-        (_('Permissions'), {'fields': ('is_active', 'is_superuser', 'groups', )}),
+        (_('Permissions'), {'fields': ('is_active', 'groups', )}),
         (_('Données professionnelles'), {'fields': ('organisme', 'poste', 'photo', )}),
         )
     # Second écran : informations plus détaillées
@@ -230,7 +240,7 @@ class CustomUserAdmin(UserAdmin):
     # Les champs qu'on veut sur le second écran d'enregistrement d'un utilisateur
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password', ('first_name', 'last_name'))}),
-        (_('Permissions'), {'fields': ('is_active', 'is_superuser', 'groups', )}),
+        (_('Permissions'), {'fields': ('is_active', 'groups', )}),
         # Les données du modèle Profil sont chargées dans le ProfilInline
     )
 #    filter_horizontal = ('groups',)
@@ -239,9 +249,8 @@ class CustomUserAdmin(UserAdmin):
         form = super(CustomUserAdmin, self).get_form(request, obj, **kwargs)
         form.base_fields['username'].label = 'Identifiant'
         form.base_fields['is_active'].label = 'Compte en activité'
-        form.base_fields['is_superuser'].label = 'Statut administrateur'
         form.base_fields['groups'].label = 'Statut'
-#        form.base_fields['is_superuser'].help_text = 'My help text'
+#        form.base_fields['is_active'].help_text = 'My help text'
         return form
 
     def add_view(self, *args, **kwargs):
