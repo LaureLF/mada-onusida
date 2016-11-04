@@ -18,16 +18,25 @@ class CustomUserCreationForm(UserCreationForm):
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
 
-    # Personnalisation du choix du groupe
-    groups = forms.ModelChoiceField(queryset=Group.objects.all().order_by('-name'), widget=forms.RadioSelect, empty_label=None, initial=1)
     # Champs supplémentaires du modèle Profil
     organisme = forms.ModelChoiceField(queryset=Organisme.objects.all(), to_field_name="nom")
-    poste = forms.CharField(max_length=250, required=True)
+    poste = forms.CharField(max_length=250, required=False)
     photo = forms.ImageField(required=False)
 
     class Meta:
         model = User
         exclude = []
+
+    # Personnalisation du choix du groupe
+    groups = forms.ModelChoiceField(queryset=Group.objects.all().order_by('-name'), widget=forms.RadioSelect, empty_label=None, initial=1)
+    # Et comme Django attend une liste de groupes
+    def clean(self):
+        # D'abord la méthode par défaut
+        cleaned_data = super(CustomUserCreationForm, self).clean()
+        # puis on récupère le groupe pour en faire une liste
+        groupe = cleaned_data.get('groups')
+        cleaned_data['groups'] = [groupe,]
+        return cleaned_data
 
     # On enregistre le modèle User avec la procédure par défaut, et à part les champs du modèle Profil
     def save(self, commit=True):
@@ -38,10 +47,27 @@ class CustomUserCreationForm(UserCreationForm):
 
 class CustomUserChangeForm(UserChangeForm):
     def __init__(self, *args, **kwargs):
+        # du bricolage pour que le RadioButton soit content de ne recevoir qu'un groupe à la fois
+        # (s'il y en a plusieurs rien ne s'affichera dans le RadioButton et l'utilisateur devra en choisir un)
+        user = kwargs['instance']
+        if (user.groups.all().count() == 1):
+            (group,) = user.groups.all()
+            kwargs['initial'] = {'groups': group}
         super(CustomUserChangeForm, self).__init__(*args, **kwargs)
         self.fields['email'].required = True
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
+
+    # Personnalisation du choix du groupe
+    groups = forms.ModelChoiceField(queryset=Group.objects.all().order_by('-name'), widget=forms.RadioSelect, empty_label=None)
+    # Et comme Django attend une liste de groupes
+    def clean(self):
+        # D'abord la méthode par défaut
+        cleaned_data = super(CustomUserChangeForm, self).clean()
+        # puis on récupère le groupe pour en faire une liste
+        groupe = cleaned_data.get('groups')
+        cleaned_data['groups'] = [groupe,]
+        return cleaned_data
 
 
 ####################
