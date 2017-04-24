@@ -4,7 +4,7 @@
 'use strict';
 
 //////////
-// à enlever en production
+// outil de déboguage
 //////////
 function printObject(obj)
 {
@@ -105,7 +105,6 @@ function toggleAll(source, filterName) {
                 $(inputEl).prop('checked', source.checked)
             })
         }
-
     })
 
 //    var checkboxes = document.getElementsByName(filterName);
@@ -166,7 +165,7 @@ function exportCSV() {
 /*        var markers = cluster.getAllChildMarkers();
         var color = 'marker-cluster-small-';
 //        printObject(feature);
-        if (typeof markers[0].fokontany !== 'undefined') { 
+        if (typeof markers[0].fokontany !== 'undefined') {
             color += 'brown';
             nextMarker('fokontany');
         } else if (typeof markers[0].region !== 'undefined') {
@@ -215,6 +214,7 @@ function filterMarkers(filters) {
             markerClusters.removeLayer(ilayer);
         }
     })
+    $('#markersCount').html(countMarkers())
 }
 
 //////////
@@ -491,13 +491,13 @@ function init() {
             }
             if (typeof data.region !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>pr&eacute;fectorale</td></tr>';                
-                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region.join(', ') + '</td></tr>';
+//                html += '<tr><td>Pr&eacute;fecture(s)</td><td>'+ data.region.join(', ') + '</td></tr>';
             } else if (typeof data.fokontany !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>Tananarive</td></tr>';                
-                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany.join(', ') + '</td></tr>';
+//                html += '<tr><td>Fokontany(s)</td><td>'+ data.fokontany.join(', ') + '</td></tr>';
             } else if (typeof data.commune !== 'undefined') {
                 html += '<tr><td>&Eacute;chelle</td><td>communale</td></tr>';
-                html += '<tr><td>Commune(s)</td><td>'+ data.commune.join(', ') + '</td></tr>';
+//                html += '<tr><td>Commune(s)</td><td>'+ data.commune.join(', ') + '</td></tr>';
             } else {
                 html += '<tr><td>&Eacute;chelle</td><td>Madagascar</td></tr>';
             }
@@ -534,8 +534,9 @@ function init() {
     updateFilters();
     filterMarkers(getFilters());
 
+    $('#markersCount').html(countMarkers())
 
-       
+
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;
         // regionsShapes défini deux fois ?

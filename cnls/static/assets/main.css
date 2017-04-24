@@ -332,6 +332,11 @@ label {
 #date .btn:hover {
   background-color: #ddd;
 }
+.count {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  background-color: #fff !important;
+}
+
 
 /******************
 CNLS/DETAIL.HTML

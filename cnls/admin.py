@@ -40,7 +40,8 @@ class ActionAdmin(LeafletGeoAdmin):
 
     # Fonction pour rendre certains champs non modifiables par les non administrateurs
     def get_readonly_fields(self, request, obj=None):
-        if request.user.is_superuser:
+#        if request.user.is_superuser:
+        if request.user.groups.filter(name='Administrateur CNLS').exists():
             return []
         return ['createur', 'validation']
 
