@@ -534,9 +534,6 @@ function init() {
     updateFilters();
     filterMarkers(getFilters());
 
-    $('#markersCount').html(countMarkers())
-
-
     $.getJSON( window.appConfig.faritraGeoJsonPath, function(geojson) {
         regionsGeoJson = geojson;
         // regionsShapes défini deux fois ?
