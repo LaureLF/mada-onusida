@@ -11,6 +11,10 @@ body
   width:100%;
 }
 
+.bold-text {
+    font-weight: bold;
+}
+
 /* NAVBAR */
 .navbar {
     min-height:40px !important;
